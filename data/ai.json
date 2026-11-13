@@ -1,0 +1,17 @@
+{
+	"easy": {
+		"think_interval": 2.2, "target_workers": 3, "counter_chance": 0.0,
+		"attack_ratio": 2.0, "min_attack_value": 900, "income_mult": 0.85,
+		"weights": {"swordsman": 6, "spearman": 2, "archer": 2, "cavalry": 0}
+	},
+	"normal": {
+		"think_interval": 1.2, "target_workers": 5, "counter_chance": 0.5,
+		"attack_ratio": 1.35, "min_attack_value": 800, "income_mult": 1.0,
+		"weights": {"swordsman": 4, "spearman": 3, "archer": 3, "cavalry": 1}
+	},
+	"hard": {
+		"think_interval": 0.6, "target_workers": 7, "counter_chance": 0.9,
+		"attack_ratio": 1.1, "min_attack_value": 700, "income_mult": 1.15,
+		"weights": {"swordsman": 3, "spearman": 3, "archer": 3, "cavalry": 2}
+	}
+}

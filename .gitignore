@@ -1,0 +1,15 @@
+# Godot
+.godot/
+*.translation
+export_credentials.cfg
+# Build natijalari
+build/
+*.apk
+*.aab
+# Sirlar: hech qachon commit qilinmaydi
+*.keystore
+*.jks
+.env
+# Vaqtinchalik
+*.tmp.wav
+__pycache__/
