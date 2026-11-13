@@ -254,3 +254,44 @@ Balans va bosqich ma'lumotlari kodda emas, **JSON fayllarda** saqlanadi, shunda 
   zaxira qo'shin, sandiqlar va kunlik mukofot, tutorial, reklama (2×) va xaridlar, sayqal, test, store materiallari.
 - **Keyingi yangilanishlar:** "Fathlar" (1000+ avtomatik bosqich), kampaniyalarni 25 bosqichgacha kengaytirish,
   yangi qahramonlar (Bobur, Alp Arslon, Saladin), kunlik sinov va boshqalar.
+
+## 12. Foydalanuvchi namunasi asosida yangi tuzilma (2026-11-13)
+Foydalanuvchi janrdagi mashhur o'yindan skrinshotlar yubordi. G'oyalar (janr an'analari) olinadi,
+lekin nomlar, grafika, uslub va matnlar **nusxalanmaydi** — hammasi tarixiy-o'zbek uslubida o'ylab topiladi.
+
+**Xarita va bo'limlar**
+- Har qahramonning o'z tarixiy xaritasi (eski qog'oz-xarita uslubi, viloyat chegaralari, daryolar, tog'lar):
+  - Amir Temur: Temuriylar saltanati — Kesh, Samarqand, Buxoro, Xorazm, Farg'ona, Shosh, Balx, Hirot,
+    Xuroson, Isfahon, Tabriz, Bag'dod, Damashq, Dehli, Anqara.
+  - Chingizxon: Mo'g'uliston dashti (Onon, Kerulen, Naymanlar, Tatarlar, Oltoy ...).
+  - Jaloliddin: Xorazmshohlar davlati (O'tror, Buxoro, Samarqand, Urganch, Xuroson, G'azna, Sind).
+  - Boyazid: Anado'lu va Bolqon (Bursa, Edirne, Kosovo, Tirnovo, Nikopol, Konstantinopol, Anqara).
+- **Har viloyat = bitta bo'lim, bo'lim ichida maksimal 25 level.** Viloyat zabt etilgach xaritada
+  qahramon bayrog'i ko'chadi va keyingi viloyatga nuqtali yo'l ochiladi.
+- Oddiy levellar viloyat shabloni asosida avtomatik yaratiladi (fon, dushman tarkibi, modifikatorlar),
+  har viloyatning oxirgi leveli qo'lda yozilgan tarixiy boss-jang (fakt kartasi bilan).
+
+**Bosh menyu va bo'limlar (o'z nomlarimiz bilan)**
+- Bosh menyu: katta illyustratsiya, "O'YNASH" tugmasi; ostida: **Hiylalar**, **Libos**, **Sandiqlar**, **Bozor**;
+  pastda ikonkalar: kunlik mukofot (taqvim), yutuqlar (toj), reyting (kubok), sozlamalar.
+- **Rejim tanlash:** Kampaniya (xarita) · Haftalik vazifalar · Turnir (AI sarkardalarga qarshi pog'onali) ·
+  Cheksiz mudofaa. (Onlayn rejim — kelajakda.)
+- **Saqlash joylari:** 3 ta slot, har birida progress % va qiyinlik (O'rta / Qiyin / Afsona).
+- **Hiylalar (jang hiylalari):** bir martalik kuchlar, masalan "Tez qazish" (ishchilar 30 s 2× tez),
+  "O'q yomg'iri", "Qalqon devori", "Shifo", "Karvon" (darhol oltin), "Jangovar nog'ora" (tezlik).
+  Bir jangda cheklangan son — adolat uchun.
+- **Libos (skinlar):** har askar turi uchun kiyim to'plamlari (Temuriy, Mo'g'ul, Xorazm, Usmonli, Oltin ...).
+  Faqat ko'rinish, kuch bermaydi.
+- **Ustaxona (qurolxona):** tangalarga doimiy yaxshilanishlar (askar, qal'a, ishchi, qahramon).
+- **Sandiqlar:** kumush / oltin / la'l sandiq — tanga, la'l, hiyla, libos bo'laklari.
+  Google Play talabi bo'yicha har sandiqdagi ehtimollar ochiq ko'rsatiladi.
+- **Bozor:** premium valyuta **La'l** paketlari, sandiq to'plamlari, "Reklamasiz", bir martalik arzon
+  "Boshlang'ich to'plam", kuniga cheklangan "reklama ko'rib bepul la'l". Narxlar Google Play pog'onalari
+  bo'yicha va namunadagidan ancha adolatliroq (pulga yutiladigan o'yin bo'lmasin).
+
+**Grafika:** bu ekranlar uchun SVG illyustratsiyalar (ikonka uslubida) — xarita, bosh menyu foni,
+do'kon interyerlari (chodir, ustaxona, bozor rastasi), sandiq va la'l rasmlari.
+
+**Tartib:** 1.0 ga xarita+viloyatlar (har viloyatda dastlab 10 level, keyin 25 gacha), bosh menyu,
+rejim tanlash, ustaxona, hiylalar, libos, sandiqlar, bozor, kunlik mukofot, saqlash slotlari kiradi.
+Turnir, haftalik vazifalar va viloyatlarni 25 levelgacha to'ldirish — 1.0 dan keyingi yangilanishlarda.
