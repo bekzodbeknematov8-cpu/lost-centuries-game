@@ -29,13 +29,48 @@ static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float
 	var swing := 0.0
 	if u.attack_anim > 0.0:
 		swing = sin((1.0 - u.attack_anim / 0.35) * PI)
-	if u.type == "cavalry":
+	if is_mounted(u):
 		_draw_horse(ci, u, walk, alpha, t)
 		ci.draw_set_transform(pos + Vector2(0, -34 * scale_f).rotated(rot * u.facing), rot * u.facing, Vector2(u.facing * scale_f, scale_f))
+		if u.hero:
+			_draw_cape(ci, u, alpha, t)
 		_draw_rider(ci, u, cols, swing, alpha, flash)
 	else:
 		_draw_person(ci, u, cols, walk, swing, alpha, flash, t)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+	if u.is_alive() and u.stun > 0.0:
+		var top := pos + Vector2(0, (-118.0 if is_mounted(u) else -95.0) * scale_f)
+		for i in 3:
+			var ang := t * 5.0 + i * TAU / 3.0
+			_star(ci, top + Vector2(cos(ang) * 14.0, sin(ang) * 4.0), 4.0, Color(1, 0.9, 0.3))
+
+
+static func is_mounted(u: UnitState) -> bool:
+	return u.type == "cavalry" or bool(u.def.get("mount", false))
+
+
+static func _star(ci: CanvasItem, p: Vector2, r: float, c: Color) -> void:
+	var pts := PackedVector2Array()
+	for i in 10:
+		var rr := r if i % 2 == 0 else r * 0.45
+		pts.append(p + Vector2.from_angle(-PI / 2 + i * PI / 5) * rr)
+	ci.draw_colored_polygon(pts, c)
+
+
+static func _look_color(u: UnitState, key: String, fallback: Color) -> Color:
+	var look: Dictionary = u.def.get("look", {})
+	if look.has(key):
+		var a: Array = look[key]
+		return Color(a[0], a[1], a[2])
+	return fallback
+
+
+static func _draw_cape(ci: CanvasItem, u: UnitState, a: float, t: float) -> void:
+	var c := _look_color(u, "cape", Color(0.5, 0.1, 0.1))
+	var wave := sin(t * 6.0) * 4.0
+	var flow := 1.0 if u.moving else 0.4
+	var pts := PackedVector2Array([Vector2(-4, -40), Vector2(6, -40), Vector2(-14, -14 + wave), Vector2(-34 * flow - 8, -8 - wave), Vector2(-22 * flow - 6, -30)])
+	ci.draw_colored_polygon(pts, _c(c, a))
 
 
 static func _c(c: Color, a: float, flash := false) -> Color:
@@ -122,6 +157,39 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 		ci.draw_colored_polygon(PackedVector2Array([Vector2(-7, -96), Vector2(7, -96), Vector2(0, -86)]), Color(1, 0.85, 0.2, pulse))
 
 
+static func _draw_hero_head(ci: CanvasItem, u: UnitState, head: Vector2, a: float) -> void:
+	var look: Dictionary = u.def.get("look", {})
+	var plume := _look_color(u, "plume", Color.WHITE)
+	match str(look.get("helm", "")):
+		"fur":
+			# Mo'g'ulcha mo'ynali qalpoq va uchli tepa
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9, -3), head + Vector2(9, -3), head + Vector2(6, -14), head + Vector2(0, -24), head + Vector2(-6, -14)]), _c(Color(0.6, 0.12, 0.1), a))
+			ci.draw_line(head + Vector2(-11, -3), head + Vector2(11, -3), _c(Color(0.45, 0.32, 0.2), a), 6.0)
+			ci.draw_line(head + Vector2(0, -24), head + Vector2(0, -32), _c(GOLD, a), 2.5)
+			ci.draw_line(head + Vector2(0, -30), head + Vector2(-8, -24), _c(plume, a), 3.0)
+		"turban_helm":
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -2), head + Vector2(9.5, -2), head + Vector2(4, -13), head + Vector2(0, -22), head + Vector2(-4, -13)]), _c(STEEL, a))
+			ci.draw_line(head + Vector2(-10, -4), head + Vector2(10, -4), _c(Color(0.95, 0.95, 0.9), a), 6.0)
+			ci.draw_line(head + Vector2(0, -22), head + Vector2(-6, -30), _c(Color(0.15, 0.6, 0.35), a), 4.0)
+		"gold_dome":
+			ci.draw_circle(head + Vector2(0, -5), 10.0, _c(GOLD.darkened(0.05), a))
+			ci.draw_rect(Rect2(head + Vector2(-10.5, -5), Vector2(21, 5)), _c(Color(0.15, 0.3, 0.7), a))
+			ci.draw_line(head + Vector2(0, -15), head + Vector2(0, -22), _c(GOLD, a), 3.0)
+			ci.draw_circle(head + Vector2(0, -23), 2.5, _c(Color(0.9, 0.2, 0.2), a))
+			ci.draw_line(head + Vector2(0, -21), head + Vector2(-9, -27), _c(plume, a), 3.0)
+		"white_turban":
+			var pts := PackedVector2Array()
+			for i in 18:
+				var ang := TAU * i / 18.0
+				pts.append(head + Vector2(cos(ang) * 11.0, -12.0 + sin(ang) * 11.0))
+			ci.draw_colored_polygon(pts, _c(Color(0.97, 0.96, 0.92), a))
+			ci.draw_circle(head + Vector2(0, -20), 4.0, _c(Color(0.75, 0.12, 0.12), a))
+			ci.draw_line(head + Vector2(3, -14), head + Vector2(6, -27), _c(plume, a), 2.5)
+			ci.draw_circle(head + Vector2(3, -13), 2.0, _c(Color(0.2, 0.6, 0.9), a))
+		_:
+			_draw_headgear(ci, "cavalry", head, TEAM_COLORS[u.team], a)
+
+
 static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Array, a: float) -> void:
 	var trim: Color = cols[1]
 	match type:
@@ -140,6 +208,11 @@ static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Ar
 
 static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: float) -> void:
 	var coat := Color(0.45, 0.3, 0.2) if u.team == 0 else Color(0.25, 0.2, 0.18)
+	match u.type:
+		"chingiz": coat = Color(0.78, 0.76, 0.72)
+		"jaloliddin": coat = Color(0.15, 0.12, 0.12)
+		"temur": coat = Color(0.55, 0.3, 0.15)
+		"boyazid": coat = Color(0.92, 0.9, 0.86)
 	var gallop := u.walk_phase * 1.3 if u.moving else 0.0
 	var legs: Array[Vector2] = [Vector2(-22, -26), Vector2(-15, -26), Vector2(15, -26), Vector2(22, -26)]
 	for i in 4:
@@ -168,6 +241,13 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 	# Egar yopqichi
 	var cols: Array = TEAM_COLORS[u.team]
 	ci.draw_rect(Rect2(-12, -48 + bob, 24, 12), _c(cols[1], a))
+	if u.hero:
+		# Bezakli yopqich (bayroq rangi va oltin hoshiya)
+		var cape := _look_color(u, "cape", cols[0])
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(-26, -44 + bob), Vector2(14, -44 + bob), Vector2(10, -24 + bob), Vector2(-22, -24 + bob)]), _c(cape, a))
+		ci.draw_line(Vector2(-22, -24 + bob), Vector2(10, -24 + bob), _c(GOLD, a), 2.5)
+		for i in 4:
+			ci.draw_circle(Vector2(-18 + i * 8, -22 + bob), 2.0, _c(GOLD, a))
 
 
 static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float, a: float, flash: bool) -> void:
@@ -178,8 +258,25 @@ static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float,
 	var head := Vector2(1, -50)
 	ci.draw_circle(head, 8.0, _c(SKIN, a, flash))
 	ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
-	_draw_headgear(ci, "cavalry", head, cols, a)
+	if u.hero:
+		# Soqol va hero bosh kiyimi
+		ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-2, 3), head + Vector2(8, 3), head + Vector2(4, 13), head + Vector2(-1, 9)]), _c(Color(0.22, 0.15, 0.1), a))
+		_draw_hero_head(ci, u, head, a)
+	else:
+		_draw_headgear(ci, "cavalry", head, cols, a)
 	var shoulder := Vector2(0, -38)
+	if str(u.def.get("weapon", "")) == "bow":
+		var draw_k := 1.0 - clampf(u.cooldown / maxf(0.01, float(u.def.cooldown)), 0.0, 1.0)
+		var bow_c := shoulder + Vector2(18, 0)
+		ci.draw_line(shoulder, bow_c, _c(SKIN, a, flash), 5.0, true)
+		ci.draw_arc(bow_c, 20.0, -1.3, 1.3, 14, _c(WOOD, a), 3.5, true)
+		var top := bow_c + Vector2.from_angle(-1.3) * 20.0
+		var bot := bow_c + Vector2.from_angle(1.3) * 20.0
+		var pull := bow_c + Vector2(-6.0 - 10.0 * draw_k, 0)
+		ci.draw_line(top, pull, _c(Color(0.9, 0.9, 0.85), a), 1.2)
+		ci.draw_line(pull, bot, _c(Color(0.9, 0.9, 0.85), a), 1.2)
+		ci.draw_line(shoulder, pull, _c(SKIN.darkened(0.1), a, flash), 4.0, true)
+		return
 	var ang := lerpf(-2.4, 0.4, swing)
 	var hand := shoulder + Vector2(9, 8)
 	ci.draw_line(shoulder, hand, _c(SKIN, a, flash), 5.0, true)

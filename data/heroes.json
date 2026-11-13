@@ -1,0 +1,196 @@
+{
+	"chingiz": {
+		"name": "HERO_CHINGIZ",
+		"title": "HERO_CHINGIZ_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 700,
+		"pop": 0,
+		"hp": 780,
+		"damage": 26,
+		"range": 300,
+		"cooldown": 1.0,
+		"speed": 135,
+		"armor": 4,
+		"class": "ranged",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "bow",
+		"armor_type": "metal",
+		"projectile": "arrow",
+		"mount": true,
+		"bonus": {
+			"infantry": 1.2
+		},
+		"look": {
+			"cape": [
+				0.55,
+				0.12,
+				0.1
+			],
+			"helm": "fur",
+			"plume": [
+				0.95,
+				0.85,
+				0.7
+			]
+		},
+		"ability": {
+			"id": "arrow_rain",
+			"name": "ABIL_ARROW_RAIN",
+			"desc": "ABIL_ARROW_RAIN_DESC",
+			"cooldown": 28,
+			"dist": 330,
+			"radius": 210,
+			"damage": 20,
+			"ticks": 7,
+			"interval": 0.3
+		}
+	},
+	"jaloliddin": {
+		"name": "HERO_JALOLIDDIN",
+		"title": "HERO_JALOLIDDIN_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 700,
+		"pop": 0,
+		"hp": 1000,
+		"damage": 40,
+		"range": 38,
+		"cooldown": 0.85,
+		"speed": 150,
+		"armor": 5,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {
+			"ranged": 1.5
+		},
+		"look": {
+			"cape": [
+				0.1,
+				0.45,
+				0.3
+			],
+			"helm": "turban_helm",
+			"plume": [
+				0.95,
+				0.95,
+				0.9
+			]
+		},
+		"ability": {
+			"id": "leap",
+			"name": "ABIL_LEAP",
+			"desc": "ABIL_LEAP_DESC",
+			"cooldown": 24,
+			"dist": 280,
+			"duration": 0.55,
+			"radius": 150,
+			"damage": 95,
+			"knock": 90,
+			"stun": 1.0
+		}
+	},
+	"temur": {
+		"name": "HERO_TEMUR",
+		"title": "HERO_TEMUR_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 750,
+		"pop": 0,
+		"hp": 1200,
+		"damage": 36,
+		"range": 36,
+		"cooldown": 0.95,
+		"speed": 120,
+		"armor": 7,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {},
+		"look": {
+			"cape": [
+				0.12,
+				0.25,
+				0.6
+			],
+			"helm": "gold_dome",
+			"plume": [
+				0.2,
+				0.55,
+				0.95
+			]
+		},
+		"ability": {
+			"id": "rally",
+			"name": "ABIL_RALLY",
+			"desc": "ABIL_RALLY_DESC",
+			"cooldown": 34,
+			"duration": 10,
+			"damage_mult": 1.4,
+			"speed_mult": 1.25,
+			"heal": 0.3
+		}
+	},
+	"boyazid": {
+		"name": "HERO_BOYAZID",
+		"title": "HERO_BOYAZID_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 700,
+		"pop": 0,
+		"hp": 1000,
+		"damage": 34,
+		"range": 36,
+		"cooldown": 0.8,
+		"speed": 165,
+		"armor": 5,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {
+			"infantry": 1.2
+		},
+		"look": {
+			"cape": [
+				0.7,
+				0.1,
+				0.12
+			],
+			"helm": "white_turban",
+			"plume": [
+				0.95,
+				0.8,
+				0.2
+			]
+		},
+		"ability": {
+			"id": "lightning",
+			"name": "ABIL_LIGHTNING",
+			"desc": "ABIL_LIGHTNING_DESC",
+			"cooldown": 26,
+			"dist": 450,
+			"duration": 0.45,
+			"damage": 75,
+			"stun": 1.5
+		}
+	}
+}

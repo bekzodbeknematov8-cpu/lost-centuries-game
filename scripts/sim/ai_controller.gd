@@ -31,6 +31,19 @@ func update(sim: BattleSim, dt: float) -> void:
 	_think_cd = float(params.get("think_interval", 1.0))
 	_think_economy_and_army(sim)
 	_think_stance(sim)
+	_think_ability(sim)
+
+
+func _think_ability(sim: BattleSim) -> void:
+	## Qahramon maxsus kuchini kamida 3 dushmanga tegadigan paytda ishlatadi.
+	if not sim.ability_ready(team_idx):
+		return
+	var h := sim.hero_of(team_idx)
+	if h.controlled:
+		return
+	var need := int(params.get("ability_min_targets", 3))
+	if sim.ability_targets(team_idx) >= need:
+		sim.use_ability(team_idx)
 
 
 func _think_economy_and_army(sim: BattleSim) -> void:

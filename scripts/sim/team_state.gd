@@ -21,6 +21,13 @@ var damage_mult: float = 1.0
 var passive_income: float = 2.0
 var castle_shot_cd: float = 0.0
 var allowed: Array = []        ## Ushbu bosqichda yollash mumkin bo'lgan birliklar
+var hero_type: String = ""     ## "" bo'lsa qahramonsiz
+var hero_id: int = -1
+var hero_respawn: float = 0.0
+var ability_cd: float = 8.0
+var buff_time: float = 0.0
+var buff_dmg: float = 1.0
+var buff_speed: float = 1.0
 var stats: Dictionary = {"trained": 0, "killed": 0, "lost": 0, "gold_mined": 0}
 
 

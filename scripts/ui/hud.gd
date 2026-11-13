@@ -1,22 +1,28 @@
 extends CanvasLayer
 ## Jang ekranidagi boshqaruv paneli. Barcha elementlar koddan quriladi.
+## Hamma tugmalar ekranning pastki qismida (yer qatlami ustida) joylashgan,
+## shunda jang maydoni to'liq ochiq qoladi.
+
+const BAR_H := 128.0
 
 var battle: Node   ## battle.gd
 var _gold_label: Label
 var _pop_label: Label
 var _hp_bars: Array[ProgressBar] = []
-var _unit_buttons: Array = []
-var _stance_buttons: Array[Button] = []
-var _control_btn: Button
-var _control_pad: Control
+var _stance_buttons: Array = []
+var _command_box: HBoxContainer
+var _move_box: HBoxContainer
 var _attack_btn: Button
 var _end_panel: PanelContainer
 var _pause_panel: PanelContainer
 var _hint: Label
 var _hint_time := 7.0
-var _queue_bar: ProgressBar
+var _banner: Label
+var _banner_time := 0.0
 var _root: Control
 
+
+# --- Kichik chizilgan elementlar -----------------------------------------------
 
 class CoinIcon:
 	extends Control
@@ -26,6 +32,71 @@ class CoinIcon:
 		draw_circle(size * 0.5, 13.0, Color(0.75, 0.55, 0.1))
 		draw_circle(size * 0.5, 10.0, Painter.GOLD)
 		draw_circle(size * 0.5 + Vector2(-3, -3), 3.0, Color(1, 1, 0.85))
+
+
+class IconButton:
+	## Dumaloq, yarim shaffof tugma; ikonka kod bilan chiziladi.
+	extends Button
+	var icon_kind := ""
+	var caption := ""
+	var active := false
+	var hold_cb: Callable
+
+	func _init(kind: String, cap: String, sz := 74.0) -> void:
+		icon_kind = kind
+		caption = cap
+		custom_minimum_size = Vector2(sz, sz)
+		focus_mode = Control.FOCUS_NONE
+		var r := int(sz * 0.5)
+		add_theme_stylebox_override("normal", UITheme.box(Color(0.16, 0.1, 0.06, 0.78), Color(0.86, 0.6, 0.2, 0.7), r, 2))
+		add_theme_stylebox_override("hover", UITheme.box(Color(0.22, 0.14, 0.08, 0.85), UITheme.ACCENT, r, 2))
+		add_theme_stylebox_override("pressed", UITheme.box(Color(0.55, 0.33, 0.1, 0.9), UITheme.ACCENT, r, 3))
+		add_theme_stylebox_override("disabled", UITheme.box(Color(0.15, 0.13, 0.12, 0.6), Color(0.4, 0.36, 0.3, 0.6), r, 2))
+
+	func _process(_d: float) -> void:
+		queue_redraw()
+
+	func _draw() -> void:
+		var c := size * 0.5 - Vector2(0, 6 if caption != "" else 0)
+		var col := Color(1, 0.9, 0.55) if active else UITheme.PARCHMENT
+		if disabled:
+			col = Color(0.55, 0.5, 0.45)
+		if active:
+			draw_arc(size * 0.5, size.x * 0.5 - 2, 0, TAU, 32, Color(1, 0.8, 0.3, 0.9), 3.0)
+		var s := size.x / 74.0
+		match icon_kind:
+			"attack":
+				for i in 2:
+					var o := Vector2(-8 + i * 12, 0) * s
+					draw_colored_polygon(PackedVector2Array([c + o + Vector2(-6, -12) * s, c + o + Vector2(6, 0) * s, c + o + Vector2(-6, 12) * s, c + o + Vector2(-1, 0) * s]), col)
+			"retreat":
+				for i in 2:
+					var o := Vector2(8 - i * 12, 0) * s
+					draw_colored_polygon(PackedVector2Array([c + o + Vector2(6, -12) * s, c + o + Vector2(-6, 0) * s, c + o + Vector2(6, 12) * s, c + o + Vector2(1, 0) * s]), col)
+			"defend":
+				var sh := PackedVector2Array([c + Vector2(-12, -14) * s, c + Vector2(12, -14) * s, c + Vector2(12, 0) * s, c + Vector2(0, 15) * s, c + Vector2(-12, 0) * s])
+				draw_colored_polygon(sh, col)
+				draw_line(c + Vector2(0, -10) * s, c + Vector2(0, 9) * s, Color(0.3, 0.2, 0.1), 3.0)
+			"control":
+				# Toj — qahramonni boshqarish
+				draw_colored_polygon(PackedVector2Array([c + Vector2(-14, 8) * s, c + Vector2(-14, -8) * s, c + Vector2(-7, 0) * s, c + Vector2(0, -12) * s, c + Vector2(7, 0) * s, c + Vector2(14, -8) * s, c + Vector2(14, 8) * s]), col)
+			"release":
+				draw_line(c + Vector2(-10, -10) * s, c + Vector2(10, 10) * s, col, 4.0)
+				draw_line(c + Vector2(10, -10) * s, c + Vector2(-10, 10) * s, col, 4.0)
+			"left", "right":
+				var d := -1.0 if icon_kind == "left" else 1.0
+				draw_colored_polygon(PackedVector2Array([c + Vector2(14 * d, 0) * s, c + Vector2(-10 * d, -16) * s, c + Vector2(-10 * d, 16) * s]), col)
+			"strike":
+				# Qilich
+				draw_line(c + Vector2(-14, 14) * s, c + Vector2(12, -12) * s, col, 5.0)
+				draw_line(c + Vector2(-16, 4) * s, c + Vector2(-4, 16) * s, Painter.GOLD, 4.0)
+			"pause":
+				draw_rect(Rect2(c + Vector2(-9, -11) * s, Vector2(6, 22) * s), col)
+				draw_rect(Rect2(c + Vector2(3, -11) * s, Vector2(6, 22) * s), col)
+		if caption != "":
+			var font := get_theme_default_font()
+			draw_string_outline(font, Vector2(0, size.y - 9), caption, HORIZONTAL_ALIGNMENT_CENTER, size.x, 12, 3, Color(0, 0, 0, 0.8))
+			draw_string(font, Vector2(0, size.y - 9), caption, HORIZONTAL_ALIGNMENT_CENTER, size.x, 12, col)
 
 
 class UnitButton:
@@ -38,7 +109,8 @@ class UnitButton:
 	func _init(unit_type: String, b: Node) -> void:
 		type = unit_type
 		battle = b
-		custom_minimum_size = Vector2(104, 118)
+		custom_minimum_size = Vector2(92, 112)
+		focus_mode = Control.FOCUS_NONE
 		_u.type = type
 		_u.def = GameData.units[type]
 		_u.team = 0
@@ -46,6 +118,8 @@ class UnitButton:
 		_u.hp = 1.0
 		_u.max_hp = 1.0
 		_u.cooldown = 0.0
+		add_theme_stylebox_override("normal", UITheme.box(Color(0.2, 0.13, 0.08, 0.85), Color(0.86, 0.6, 0.2, 0.8), 12, 2))
+		add_theme_stylebox_override("disabled", UITheme.box(Color(0.15, 0.13, 0.12, 0.7), Color(0.4, 0.36, 0.3, 0.6), 12, 2))
 
 	func _process(delta: float) -> void:
 		_t += delta
@@ -53,23 +127,90 @@ class UnitButton:
 		queue_redraw()
 
 	func _draw() -> void:
-		var sc := 0.62 if type == "cavalry" else 0.82
-		Painter.draw_unit(self, _u, Vector2(50, 84 if type != "cavalry" else 80), sc, _t)
+		var sc := 0.56 if type == "cavalry" else 0.74
+		Painter.draw_unit(self, _u, Vector2(size.x * 0.5 - 2, 80 if type != "cavalry" else 77), sc, _t)
 		var font := get_theme_default_font()
 		var cost := int(_u.def.cost)
 		var col := Painter.GOLD if not disabled else Color(0.85, 0.4, 0.35)
-		draw_string_outline(font, Vector2(0, 110), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 20, 4, Color(0, 0, 0, 0.8))
-		draw_string(font, Vector2(0, 110), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 20, col)
-		draw_string_outline(font, Vector2(0, 20), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, 3, Color(0, 0, 0, 0.8))
-		draw_string(font, Vector2(0, 20), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, UITheme.PARCHMENT)
+		draw_string_outline(font, Vector2(0, 104), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 19, 4, Color(0, 0, 0, 0.8))
+		draw_string(font, Vector2(0, 104), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 19, col)
+		draw_string_outline(font, Vector2(0, 18), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, 3, Color(0, 0, 0, 0.8))
+		draw_string(font, Vector2(0, 18), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, UITheme.PARCHMENT)
 		var team: TeamState = battle.sim.teams[0]
 		var n := team.queue.count(type)
 		if n > 0:
-			draw_circle(Vector2(size.x - 14, 14), 12.0, Color(0.8, 0.2, 0.15))
-			draw_string(font, Vector2(size.x - 26, 21), str(n), HORIZONTAL_ALIGNMENT_CENTER, 24, 17, Color.WHITE)
+			draw_circle(Vector2(size.x - 12, 12), 11.0, Color(0.8, 0.2, 0.15))
+			draw_string(font, Vector2(size.x - 24, 18), str(n), HORIZONTAL_ALIGNMENT_CENTER, 24, 15, Color.WHITE)
 			if team.queue[0] == type:
 				var k := team.train_progress / float(_u.def.train_time)
-				draw_rect(Rect2(8, size.y - 8, (size.x - 16) * k, 4), Color(0.4, 0.9, 0.4))
+				draw_rect(Rect2(8, size.y - 7, (size.x - 16) * k, 4), Color(0.4, 0.9, 0.4))
+
+
+class AbilityButton:
+	## Qahramon portreti, maxsus kuch nomi va qayta tiklanish soati.
+	extends Button
+	var battle: Node
+	var _u := UnitState.new()
+	var _t := 0.0
+
+	func _init(b: Node) -> void:
+		battle = b
+		custom_minimum_size = Vector2(112, 112)
+		focus_mode = Control.FOCUS_NONE
+		add_theme_stylebox_override("normal", UITheme.box(Color(0.35, 0.12, 0.08, 0.85), UITheme.ACCENT, 56, 3))
+		add_theme_stylebox_override("hover", UITheme.box(Color(0.45, 0.16, 0.1, 0.9), UITheme.ACCENT, 56, 3))
+		add_theme_stylebox_override("pressed", UITheme.box(Color(0.7, 0.35, 0.1, 0.95), UITheme.ACCENT, 56, 3))
+		add_theme_stylebox_override("disabled", UITheme.box(Color(0.16, 0.12, 0.1, 0.75), Color(0.45, 0.4, 0.3), 56, 3))
+
+	func _process(delta: float) -> void:
+		_t += delta
+		var sim: BattleSim = battle.sim
+		var team := sim.teams[0]
+		visible = team.hero_type != ""
+		if not visible:
+			return
+		if _u.type != team.hero_type:
+			_u.type = team.hero_type
+			_u.def = sim.heroes[team.hero_type]
+			_u.team = 0
+			_u.facing = 1
+			_u.hp = 1.0
+			_u.max_hp = 1.0
+			_u.hero = true
+		disabled = not sim.ability_ready(0)
+		queue_redraw()
+
+	func _draw() -> void:
+		if _u.def.is_empty():
+			return
+		var sim: BattleSim = battle.sim
+		var team := sim.teams[0]
+		Painter.draw_unit(self, _u, Vector2(size.x * 0.5 - 4, 92), 0.62, _t)
+		var font := get_theme_default_font()
+		var c := size * 0.5
+		var hero_alive := sim.hero_of(0) != null
+		if not hero_alive:
+			draw_circle(c, size.x * 0.5 - 3, Color(0, 0, 0, 0.55))
+			var txt := "%d" % ceili(team.hero_respawn)
+			draw_string_outline(font, Vector2(0, c.y + 12), txt, HORIZONTAL_ALIGNMENT_CENTER, size.x, 34, 5, Color.BLACK)
+			draw_string(font, Vector2(0, c.y + 12), txt, HORIZONTAL_ALIGNMENT_CENTER, size.x, 34, UITheme.PARCHMENT)
+		elif team.ability_cd > 0.0:
+			var a: Dictionary = _u.def.ability
+			var k := team.ability_cd / float(a.cooldown)
+			var pts := PackedVector2Array([c])
+			for i in 33:
+				pts.append(c + Vector2.from_angle(-PI / 2 + TAU * k * i / 32.0) * (size.x * 0.5 - 3))
+			if k > 0.01:
+				draw_colored_polygon(pts, Color(0, 0, 0, 0.55))
+			var txt2 := "%d" % ceili(team.ability_cd)
+			draw_string_outline(font, Vector2(0, c.y + 10), txt2, HORIZONTAL_ALIGNMENT_CENTER, size.x, 28, 5, Color.BLACK)
+			draw_string(font, Vector2(0, c.y + 10), txt2, HORIZONTAL_ALIGNMENT_CENTER, size.x, 28, UITheme.PARCHMENT)
+		else:
+			var pulse := 0.5 + 0.5 * sin(_t * 5.0)
+			draw_arc(c, size.x * 0.5 - 2, 0, TAU, 40, Color(1, 0.85, 0.3, 0.6 + 0.4 * pulse), 4.0)
+		var name := tr(str(_u.def.ability.name))
+		draw_string_outline(font, Vector2(0, size.y - 6), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, 3, Color(0, 0, 0, 0.9))
+		draw_string(font, Vector2(0, size.y - 6), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, Painter.GOLD)
 
 
 class MiniMap:
@@ -79,15 +220,15 @@ class MiniMap:
 
 	func _init(b: Node) -> void:
 		battle = b
-		custom_minimum_size = Vector2(480, 30)
+		custom_minimum_size = Vector2(440, 26)
 		mouse_filter = Control.MOUSE_FILTER_STOP
 
 	func _process(_d: float) -> void:
 		queue_redraw()
 
 	func _gui_input(event: InputEvent) -> void:
-		var pressed: bool = (event is InputEventMouseButton and event.pressed) or event is InputEventMouseMotion and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0
-		if event is InputEventScreenTouch and event.pressed or event is InputEventScreenDrag:
+		var pressed: bool = (event is InputEventMouseButton and event.pressed) or (event is InputEventMouseMotion and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0)
+		if (event is InputEventScreenTouch and event.pressed) or event is InputEventScreenDrag:
 			pressed = true
 		if pressed:
 			battle.focus_x(clampf(event.position.x / size.x, 0.0, 1.0) * BattleSim.WORLD_LEN)
@@ -96,22 +237,28 @@ class MiniMap:
 	func _draw() -> void:
 		var sim: BattleSim = battle.sim
 		var k := size.x / BattleSim.WORLD_LEN
-		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.45))
-		draw_rect(Rect2(Vector2(0, size.y - 6), Vector2(size.x, 6)), Color(0.55, 0.47, 0.3, 0.8))
+		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.35))
+		draw_rect(Rect2(Vector2(0, size.y - 5), Vector2(size.x, 5)), Color(0.55, 0.47, 0.3, 0.7))
 		for t in sim.teams:
 			var col: Color = Painter.TEAM_COLORS[t.index][0]
-			draw_rect(Rect2(t.castle_x * k - 6, 4, 12, size.y - 8), col.lightened(0.3))
-			draw_circle(Vector2(t.mine_x * k, size.y - 6), 3.0, Painter.GOLD)
+			draw_rect(Rect2(t.castle_x * k - 5, 3, 10, size.y - 6), col.lightened(0.3))
+			draw_circle(Vector2(t.mine_x * k, size.y - 5), 3.0, Painter.GOLD)
 		for u in sim.units:
 			if not u.is_alive():
 				continue
 			var c: Color = Painter.TEAM_COLORS[u.team][0].lightened(0.35)
-			var y := 8.0 + u.lane * (size.y - 18.0)
-			draw_rect(Rect2(u.x * k - 1.5, y, 3, 4 if u.is_worker() else 6), c)
+			var y := 6.0 + u.lane * (size.y - 16.0)
+			if u.hero:
+				draw_circle(Vector2(u.x * k, size.y * 0.5), 5.0, Painter.GOLD)
+				draw_circle(Vector2(u.x * k, size.y * 0.5), 3.0, c)
+			else:
+				draw_rect(Rect2(u.x * k - 1.5, y, 3, 4 if u.is_worker() else 6), c)
 		var vw: float = battle.view_width()
 		var cx: float = battle.cam.position.x
 		draw_rect(Rect2((cx - vw * 0.5) * k, 1, vw * k, size.y - 2), Color(1, 0.9, 0.5, 0.9), false, 2.0)
 
+
+# --- Qurish ------------------------------------------------------------------
 
 func _ready() -> void:
 	_root = Control.new()
@@ -121,159 +268,158 @@ func _ready() -> void:
 	add_child(_root)
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_top()
-	_build_units()
-	_build_stances()
-	_build_control_pad()
+	_build_bottom()
 	_build_end_panel()
 	_build_pause_panel()
-	_hint = Label.new()
+	_hint = _center_label(24, 96)
 	_hint.text = tr("HINT_START")
-	_hint.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	_hint.position = Vector2(-450, 104)
-	_hint.size = Vector2(900, 40)
-	_hint.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	_hint.add_theme_font_size_override("font_size", 24)
-	_root.add_child(_hint)
+	_banner = _center_label(34, 150)
+	_banner.add_theme_color_override("font_color", Painter.GOLD)
+	_banner.add_theme_constant_override("outline_size", 8)
+	_banner.visible = false
+
+
+func _center_label(font_size: int, y: float) -> Label:
+	var l := Label.new()
+	l.set_anchors_preset(Control.PRESET_CENTER_TOP)
+	l.position = Vector2(-450, y)
+	l.size = Vector2(900, 40)
+	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	l.add_theme_font_size_override("font_size", font_size)
+	_root.add_child(l)
+	return l
 
 
 func _build_top() -> void:
 	var bar := HBoxContainer.new()
 	bar.set_anchors_preset(Control.PRESET_TOP_WIDE)
-	bar.offset_left = 16
-	bar.offset_right = -16
-	bar.offset_top = 10
-	bar.add_theme_constant_override("separation", 14)
+	bar.offset_left = 14
+	bar.offset_right = -14
+	bar.offset_top = 8
+	bar.add_theme_constant_override("separation", 12)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.add_child(bar)
 	var res := PanelContainer.new()
+	res.add_theme_stylebox_override("panel", UITheme.box(Color(0.16, 0.1, 0.06, 0.75), Color(0.86, 0.6, 0.2, 0.7), 14, 2))
 	var rh := HBoxContainer.new()
 	rh.add_theme_constant_override("separation", 8)
 	res.add_child(rh)
 	rh.add_child(CoinIcon.new())
 	_gold_label = Label.new()
-	_gold_label.custom_minimum_size = Vector2(70, 0)
-	_gold_label.add_theme_font_size_override("font_size", 26)
+	_gold_label.custom_minimum_size = Vector2(62, 0)
+	_gold_label.add_theme_font_size_override("font_size", 24)
 	rh.add_child(_gold_label)
 	_pop_label = Label.new()
-	_pop_label.add_theme_font_size_override("font_size", 20)
+	_pop_label.add_theme_font_size_override("font_size", 18)
 	rh.add_child(_pop_label)
 	bar.add_child(res)
-	var spacer := Control.new()
-	spacer.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	spacer.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bar.add_child(spacer)
+	bar.add_child(_spacer())
+	var mid := VBoxContainer.new()
+	mid.add_theme_constant_override("separation", 4)
+	mid.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	bar.add_child(mid)
+	var hp_row := HBoxContainer.new()
+	hp_row.add_theme_constant_override("separation", 10)
+	hp_row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mid.add_child(hp_row)
 	for i in 2:
 		var pb := ProgressBar.new()
-		pb.custom_minimum_size = Vector2(230, 26)
+		pb.custom_minimum_size = Vector2(205, 20)
 		pb.show_percentage = false
 		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		pb.add_theme_stylebox_override("fill", UITheme.fill(Painter.TEAM_COLORS[i][0].lightened(0.15)))
 		if i == 1:
 			pb.fill_mode = ProgressBar.FILL_END_TO_BEGIN
-		bar.add_child(pb)
+		hp_row.add_child(pb)
 		_hp_bars.append(pb)
 		if i == 0:
 			var vs := Label.new()
 			vs.text = "VS"
-			vs.add_theme_font_size_override("font_size", 22)
-			bar.add_child(vs)
-	var spacer2 := Control.new()
-	spacer2.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	spacer2.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	bar.add_child(spacer2)
-	var mm := MiniMap.new(battle)
-	mm.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	mm.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	mm.offset_top = 62
-	mm.offset_left = -240
-	mm.offset_right = 240
-	mm.offset_bottom = 92
-	_root.add_child(mm)
-	var pause := Button.new()
-	pause.text = "II"
-	pause.custom_minimum_size = Vector2(60, 56)
+			vs.add_theme_font_size_override("font_size", 18)
+			hp_row.add_child(vs)
+	mid.add_child(MiniMap.new(battle))
+	bar.add_child(_spacer())
+	var pause := IconButton.new("pause", "", 52.0)
 	pause.pressed.connect(_on_pause)
+	pause.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
 	bar.add_child(pause)
 
 
-func _build_units() -> void:
-	var box := HBoxContainer.new()
-	box.add_theme_constant_override("separation", 8)
-	box.set_anchors_preset(Control.PRESET_CENTER_BOTTOM)
-	box.grow_horizontal = Control.GROW_DIRECTION_BOTH
-	box.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	box.offset_bottom = -10
-	_root.add_child(box)
-	for type in ["worker", "swordsman", "spearman", "archer", "cavalry"]:
-		var b := UnitButton.new(type, battle)
-		b.pressed.connect(_on_train.bind(type))
-		box.add_child(b)
-		_unit_buttons.append(b)
+func _spacer() -> Control:
+	var c := Control.new()
+	c.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	c.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return c
 
 
-func _build_stances() -> void:
-	var col := VBoxContainer.new()
-	col.add_theme_constant_override("separation", 8)
-	col.set_anchors_preset(Control.PRESET_CENTER_RIGHT)
-	col.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	col.grow_vertical = Control.GROW_DIRECTION_BOTH
-	col.offset_right = -14
-	col.offset_top = -40
-	_root.add_child(col)
-	var defs := [["STANCE_ATTACK", TeamState.Stance.ATTACK, ">>"], ["STANCE_DEFEND", TeamState.Stance.DEFEND, "[ ]"], ["STANCE_RETREAT", TeamState.Stance.RETREAT, "<<"]]
+func _build_bottom() -> void:
+	var bar := HBoxContainer.new()
+	bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+	bar.offset_left = 12
+	bar.offset_right = -12
+	bar.offset_top = -BAR_H
+	bar.offset_bottom = -8
+	bar.add_theme_constant_override("separation", 8)
+	bar.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(bar)
+
+	# Chap: buyruqlar (yoki boshqaruv paytida chap/o'ng tugmalari)
+	_command_box = HBoxContainer.new()
+	_command_box.add_theme_constant_override("separation", 6)
+	_command_box.alignment = BoxContainer.ALIGNMENT_END
+	_command_box.size_flags_vertical = Control.SIZE_SHRINK_END
+	bar.add_child(_command_box)
+	var defs := [["attack", "STANCE_ATTACK", TeamState.Stance.ATTACK], ["defend", "STANCE_DEFEND", TeamState.Stance.DEFEND], ["retreat", "STANCE_RETREAT", TeamState.Stance.RETREAT]]
 	for d in defs:
-		var b := Button.new()
-		b.text = "%s  %s" % [d[2], tr(d[0])]
-		b.custom_minimum_size = Vector2(190, 62)
-		b.alignment = HORIZONTAL_ALIGNMENT_LEFT
-		b.pressed.connect(_on_stance.bind(d[1]))
-		col.add_child(b)
-		_stance_buttons.append(b)
-	_control_btn = Button.new()
-	_control_btn.text = tr("CONTROL")
-	_control_btn.custom_minimum_size = Vector2(190, 62)
-	_control_btn.pressed.connect(_on_control)
-	col.add_child(_control_btn)
+		var b := IconButton.new(d[0], tr(d[1]))
+		b.pressed.connect(_on_stance.bind(d[2]))
+		_command_box.add_child(b)
+		_stance_buttons.append([b, d[2]])
+	var ctrl := IconButton.new("control", tr("CONTROL"))
+	ctrl.pressed.connect(_on_control)
+	_command_box.add_child(ctrl)
 
-
-func _build_control_pad() -> void:
-	_control_pad = Control.new()
-	_control_pad.set_anchors_preset(Control.PRESET_FULL_RECT)
-	_control_pad.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	_control_pad.visible = false
-	_root.add_child(_control_pad)
-	var arrows := HBoxContainer.new()
-	arrows.add_theme_constant_override("separation", 12)
-	arrows.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
-	arrows.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	arrows.offset_left = 16
-	arrows.offset_bottom = -150
-	_control_pad.add_child(arrows)
+	_move_box = HBoxContainer.new()
+	_move_box.add_theme_constant_override("separation", 10)
+	_move_box.size_flags_vertical = Control.SIZE_SHRINK_END
+	_move_box.visible = false
+	bar.add_child(_move_box)
 	for d in [-1, 1]:
-		var b := Button.new()
-		b.text = "<" if d < 0 else ">"
-		b.add_theme_font_size_override("font_size", 44)
-		b.custom_minimum_size = Vector2(110, 110)
+		var b := IconButton.new("left" if d < 0 else "right", "", 104.0)
 		b.button_down.connect(func() -> void: battle.sim.control_dir = d)
 		b.button_up.connect(func() -> void:
 			if battle.sim.control_dir == d:
 				battle.sim.control_dir = 0)
-		arrows.add_child(b)
-	_attack_btn = Button.new()
-	_attack_btn.text = tr("ATTACK_BTN")
-	_attack_btn.add_theme_font_size_override("font_size", 28)
-	_attack_btn.custom_minimum_size = Vector2(150, 150)
-	_attack_btn.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
-	_attack_btn.grow_horizontal = Control.GROW_DIRECTION_BEGIN
-	_attack_btn.grow_vertical = Control.GROW_DIRECTION_BEGIN
-	_attack_btn.offset_right = -20
-	_attack_btn.offset_bottom = -20
-	_attack_btn.add_theme_stylebox_override("normal", UITheme.box(Color(0.6, 0.15, 0.1), UITheme.ACCENT, 75))
-	_attack_btn.add_theme_stylebox_override("pressed", UITheme.box(Color(0.85, 0.3, 0.15), UITheme.ACCENT, 75))
-	_attack_btn.add_theme_stylebox_override("hover", UITheme.box(Color(0.7, 0.2, 0.12), UITheme.ACCENT, 75))
+		_move_box.add_child(b)
+	var rel := IconButton.new("release", tr("CONTROL_RELEASE"), 74.0)
+	rel.pressed.connect(_on_control)
+	_move_box.add_child(rel)
+
+	bar.add_child(_spacer())
+	# O'rta: askar yollash kartalari
+	var units := HBoxContainer.new()
+	units.add_theme_constant_override("separation", 6)
+	units.size_flags_vertical = Control.SIZE_SHRINK_END
+	bar.add_child(units)
+	for type in ["worker", "swordsman", "spearman", "archer", "cavalry"]:
+		var b := UnitButton.new(type, battle)
+		b.pressed.connect(_on_train.bind(type))
+		units.add_child(b)
+	bar.add_child(_spacer())
+
+	# O'ng: zarba (boshqaruv paytida) va qahramon kuchi
+	_attack_btn = IconButton.new("strike", tr("ATTACK_BTN"), 104.0)
+	_attack_btn.size_flags_vertical = Control.SIZE_SHRINK_END
 	_attack_btn.button_down.connect(func() -> void: battle.sim.control_attack = true)
 	_attack_btn.button_up.connect(func() -> void: battle.sim.control_attack = false)
-	_control_pad.add_child(_attack_btn)
+	_attack_btn.visible = false
+	bar.add_child(_attack_btn)
+	var ab := AbilityButton.new(battle)
+	ab.size_flags_vertical = Control.SIZE_SHRINK_END
+	ab.pressed.connect(_on_ability)
+	bar.add_child(ab)
 
 
 func _make_center_panel() -> Array:
@@ -334,24 +480,36 @@ func _button_row(items: Array) -> HBoxContainer:
 	return h
 
 
+# --- Yangilash ---------------------------------------------------------------
+
 func _process(delta: float) -> void:
 	var sim: BattleSim = battle.sim
 	var team := sim.teams[0]
 	_gold_label.text = str(int(team.gold))
-	_pop_label.text = "  %d/%d" % [team.pop, team.pop_cap]
+	_pop_label.text = "%d/%d" % [team.pop, team.pop_cap]
 	for i in 2:
 		_hp_bars[i].max_value = sim.teams[i].castle_max_hp
 		_hp_bars[i].value = sim.teams[i].castle_hp
-	for i in _stance_buttons.size():
-		var active: bool = [TeamState.Stance.ATTACK, TeamState.Stance.DEFEND, TeamState.Stance.RETREAT][i] == team.stance
-		_stance_buttons[i].modulate = Color(1.25, 1.15, 0.8) if active else Color(0.85, 0.85, 0.85)
+	for sb in _stance_buttons:
+		sb[0].active = sb[1] == team.stance
 	var controlling := sim.controlled_unit() != null
-	_control_pad.visible = controlling
-	_control_btn.text = tr("CONTROL_RELEASE") if controlling else tr("CONTROL")
+	_command_box.visible = not controlling
+	_move_box.visible = controlling
+	_attack_btn.visible = controlling
 	if _hint_time > 0.0:
 		_hint_time -= delta
 		_hint.modulate.a = clampf(_hint_time, 0.0, 1.0)
 		_hint.visible = _hint_time > 0.0
+	if _banner_time > 0.0:
+		_banner_time -= delta
+		_banner.modulate.a = clampf(_banner_time * 2.0, 0.0, 1.0)
+		_banner.visible = _banner_time > 0.0
+
+
+func show_banner(text: String, life: float) -> void:
+	_banner.text = text
+	_banner_time = life
+	_banner.visible = true
 
 
 func _on_train(type: String) -> void:
@@ -377,12 +535,16 @@ func _on_control() -> void:
 		Sfx.play("deny", 0.6)
 
 
+func _on_ability() -> void:
+	if not battle.sim.use_ability(0):
+		Sfx.play("deny", 0.6)
+
+
 func on_control_lost() -> void:
-	_control_pad.visible = false
+	pass
 
 
 func show_end(victory: bool) -> void:
-	_control_pad.visible = false
 	var title: Label = _end_panel.find_child("Title", true, false)
 	title.text = tr("VICTORY") if victory else tr("DEFEAT")
 	title.add_theme_color_override("font_color", Painter.GOLD if victory else Color(0.9, 0.35, 0.3))

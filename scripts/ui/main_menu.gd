@@ -102,7 +102,7 @@ func _refresh_toggles() -> void:
 func _start(diff: String) -> void:
 	Sfx.play("click", 0.7)
 	GameState.difficulty = diff
-	get_tree().change_scene_to_file("res://scenes/battle.tscn")
+	get_tree().change_scene_to_file("res://scenes/hero_select.tscn")
 
 
 func _on_lang() -> void:

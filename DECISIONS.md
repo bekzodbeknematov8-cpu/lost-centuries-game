@@ -10,3 +10,7 @@
 | 2026-11-13 | Tarjimalar `data/strings.json` da, ish vaqtida TranslationServer'ga yuklanadi | CSV import bosqichiga bog'liq emas |
 | 2026-11-13 | Sinov APK: GitHub Actions → Releases "dev-latest" | Bulut konteynerida Android SDK yuklab bo'lmaydi; GitHub runner'larda SDK bor; telefondan yuklash qulay |
 | 2026-11-13 | Birliklar: ishchi, qilichboz, nayzachi, kamonchi, otliq | Tosh-qaychi-qog'oz: nayza>otliq>kamonchi>piyoda |
+| 2026-11-13 | HUD: barcha tugmalar pastki panelda, dumaloq ikonka-tugmalar | Foydalanuvchi: tugmalar jang maydonini to'sardi |
+| 2026-11-13 | Qahramon har jangda bepul, aholi joyi olmaydi, o'lsa 40 s da qaytadi | Har jangda qahramon markaziy rol o'ynashi uchun |
+| 2026-11-13 | Qahramonlar `data/heroes.json` da; dushman qahramoni tasodifiy (kampaniyada bosqichdan olinadi) | Balans JSON'da |
+| 2026-11-13 | Jaloliddin ingliz/turk tillarida tarixiy nomi bilan (Jalal al-Din Mingburnu / Celaleddin) | Tarixiy aniqlik |

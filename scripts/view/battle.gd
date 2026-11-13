@@ -25,12 +25,16 @@ func _ready() -> void:
 	_noise.frequency = 0.004
 	var diff := GameState.difficulty
 	var ai_p: Dictionary = GameData.ai.get(diff, GameData.ai.easy)
+	var my_hero := GameState.hero
+	var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero)
+	var enemy_hero: String = others[randi() % others.size()]
 	sim.setup(GameData.units, {
 		"seed": randi(),
 		"start_gold": 350,
 		"income_mult": [1.0, float(ai_p.get("income_mult", 1.0))],
 		"start_units": [["worker", "worker"], ["worker", "worker"]],
-	})
+		"heroes": [my_hero, enemy_hero],
+	}, GameData.heroes)
 	enemy_ai = AIController.new(1, ai_p, randi())
 	cam = Camera2D.new()
 	add_child(cam)
@@ -43,6 +47,11 @@ func _ready() -> void:
 	Sfx.play_music("battle")
 	if OS.get_cmdline_user_args().has("--autoplay"):
 		auto_player = AIController.new(0, GameData.ai.normal, 3)
+	_banner(tr(str(GameData.heroes[my_hero].name)) + "  VS  " + tr(str(GameData.heroes[enemy_hero].name)), 3.0)
+
+
+func _banner(text: String, life: float) -> void:
+	hud.show_banner(text, life)
 
 
 func _process(delta: float) -> void:
@@ -60,6 +69,11 @@ func _process(delta: float) -> void:
 		sim.take_control(0)
 		sim.control_dir = 1
 		sim.control_attack = true
+	if auto_player and OS.get_cmdline_user_args().has("--force_ability") and sim.ability_ready(0) and sim.ability_targets(0) >= 1:
+		sim.use_ability(0)
+		var h := sim.hero_of(0)
+		if h:
+			focus_x(h.x + 200.0)
 	_update_effects(delta)
 	_update_camera(delta)
 	if sim.winner >= 0 and not _ended:
@@ -178,6 +192,39 @@ func _on_event(e: Dictionary) -> void:
 				Sfx.play("horn_enemy", 0.55, 0.02)
 		"control_kill":
 			_shake = minf(1.0, _shake + 0.12)
+		"ability":
+			match str(e.id):
+				"arrow_rain":
+					Sfx.play("arrow_rain", 0.9, 0.03)
+				"leap":
+					Sfx.play("leap", 0.9, 0.03)
+					_add_dust(Vector2(x, _unit_y(0.55)), 6)
+				"lightning":
+					Sfx.play("thunder", 1.0, 0.03)
+					_effects.append({"kind": "lightning", "from": x, "to": float(e.to), "t": 0.0, "life": 0.6, "seed": randi()})
+					_shake = minf(1.2, _shake + 0.5)
+				"rally":
+					Sfx.play("rally", 1.0, 0.0)
+					_effects.append({"kind": "ring", "pos": Vector2(x, _unit_y(0.55) - 40.0), "t": 0.0, "life": 1.2, "color": Painter.GOLD})
+			if e.team == 0:
+				hud.show_banner(tr(str(GameData.heroes[e.hero].ability.name)) + "!", 1.6)
+			else:
+				hud.show_banner(tr(str(GameData.heroes[e.hero].name)) + ": " + tr(str(GameData.heroes[e.hero].ability.name)), 1.6)
+		"leap_land":
+			Sfx.play("castle_hit", _vol_at(x) * 0.7)
+			_shake = minf(1.2, _shake + 0.6)
+			_effects.append({"kind": "ring", "pos": Vector2(x, _unit_y(0.55)), "t": 0.0, "life": 0.6, "color": Color(0.85, 0.75, 0.55)})
+			_add_dust(Vector2(x, _unit_y(0.55)), 10)
+		"rain_tick":
+			Sfx.play("arrow_flesh", _vol_at(x) * 0.5)
+			for i in 9:
+				_effects.append({"kind": "fall_arrow", "pos": Vector2(x + randf_range(-200, 200) - (1.0 if e.team == 0 else -1.0) * 110.0, GROUND_Y - 300.0 - randf() * 80.0), "t": 0.0, "life": 0.42, "dir": 1.0 if e.team == 0 else -1.0})
+		"hero_down":
+			Sfx.play("hero_down", 0.9, 0.0)
+			hud.show_banner(tr("HERO_DOWN") % tr(str(GameData.heroes[e.hero].name)), 2.5)
+		"hero_spawn":
+			if sim.time > 1.0:
+				Sfx.play("horn_attack" if e.team == 0 else "horn_enemy", 0.6, 0.02)
 
 
 func _add_sparks(p: Vector2, n: int) -> void:
@@ -209,6 +256,8 @@ func _update_effects(delta: float) -> void:
 				fx.pos += fx.vel * delta
 			"text":
 				fx.pos.y -= 40.0 * delta
+			"fall_arrow":
+				fx.pos += Vector2(fx.dir * 260.0, 900.0) * delta
 		keep.append(fx)
 	_effects = keep
 
@@ -238,10 +287,21 @@ func _draw() -> void:
 		draw_set_transform(pos, 0.0, Vector2(1.0, 0.3))
 		draw_circle(Vector2.ZERO, 30.0 if u.type == "cavalry" else 16.0, Color(0, 0, 0, 0.18))
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
-		Painter.draw_unit(self, u, pos, 1.0, t)
-		if u.is_alive() and u.hp < u.max_hp:
-			var top := -112.0 if u.type == "cavalry" else -98.0
-			var w := 34.0
+		var sc := 1.2 if u.hero else 1.0
+		if u.is_alive() and sim.teams[u.team].buff_time > 0.0:
+			draw_set_transform(pos, 0.0, Vector2(1.0, 0.3))
+			draw_arc(Vector2.ZERO, 26.0, 0, TAU, 24, Color(1, 0.85, 0.3, 0.5 + 0.3 * sin(t * 8.0)), 4.0)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		Painter.draw_unit(self, u, pos, sc, t)
+		if u.hero and u.is_alive():
+			var font := ThemeDB.fallback_font
+			var name := tr(str(u.def.name))
+			var col := Color(0.75, 0.88, 1.0) if u.team == 0 else Color(1.0, 0.7, 0.65)
+			draw_string_outline(font, pos + Vector2(-110, -150), name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, 4, Color(0, 0, 0, 0.7))
+			draw_string(font, pos + Vector2(-110, -150), name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, col)
+		if u.is_alive() and (u.hp < u.max_hp or u.hero):
+			var top := (-140.0 if u.hero else (-112.0 if Painter.is_mounted(u) else -98.0))
+			var w := 54.0 if u.hero else 34.0
 			draw_rect(Rect2(pos.x - w * 0.5, pos.y + top, w, 5), Color(0, 0, 0, 0.5))
 			var col := Color(0.3, 0.85, 0.35) if u.team == 0 else Color(0.95, 0.3, 0.25)
 			draw_rect(Rect2(pos.x - w * 0.5, pos.y + top, w * u.hp / u.max_hp, 5), col)
@@ -308,6 +368,29 @@ func _draw_effects() -> void:
 				draw_circle(fx.pos, fx.r * (1.0 + k), Color(0.75, 0.68, 0.55, 0.45 * (1.0 - k)))
 			"debris":
 				draw_circle(fx.pos, fx.r, Color(0.55, 0.48, 0.4, 1.0 - k))
+			"fall_arrow":
+				var d := Vector2(fx.dir * 260.0, 900.0).normalized()
+				draw_line(fx.pos - d * 22.0, fx.pos, Painter.WOOD.lightened(0.2), 2.0)
+				draw_line(fx.pos - d * 22.0, fx.pos - d * 16.0 + d.orthogonal() * 4.0, Color(0.95, 0.95, 0.9), 1.5)
+			"ring":
+				var rc: Color = fx.color
+				rc.a = 1.0 - k
+				draw_set_transform(fx.pos, 0.0, Vector2(1.0, 0.35))
+				draw_arc(Vector2.ZERO, 30.0 + k * 220.0, 0, TAU, 40, rc, 6.0 * (1.0 - k) + 1.0)
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			"lightning":
+				var rng := RandomNumberGenerator.new()
+				rng.seed = fx.seed + int(fx.t * 20.0)
+				var pts := PackedVector2Array()
+				var n := 14
+				for i in n + 1:
+					var px: float = lerpf(fx.from, fx.to, float(i) / n)
+					pts.append(Vector2(px, _unit_y(0.55) - 60.0 + rng.randf_range(-35, 35)))
+				draw_polyline(pts, Color(1, 1, 0.8, 1.0 - k), 7.0)
+				draw_polyline(pts, Color(0.6, 0.8, 1.0, 0.8 * (1.0 - k)), 3.0)
+				if k < 0.25:
+					var vw := view_width()
+					draw_rect(Rect2(cam.position.x - vw, 0, vw * 2, VIEW_H), Color(1, 1, 1, 0.25 * (1.0 - k * 4.0)))
 			"text":
 				var c: Color = fx.color
 				c.a = 1.0 - k

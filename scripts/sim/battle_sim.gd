@@ -15,8 +15,11 @@ const DEFEND_ZONE := 430.0
 const ATTACK_AGGRO := 650.0
 const CORPSE_TIME := 3.0
 const CONTROL_BONUS := 1.25
+const HERO_RESPAWN := 40.0
 
 var defs: Dictionary = {}
+var heroes: Dictionary = {}
+var zones: Array[Dictionary] = []   ## Maydon ta'sirlari (masalan, o'q yomg'iri)
 var teams: Array[TeamState] = []
 var units: Array[UnitState] = []
 var projectiles: Array[Dictionary] = []
@@ -32,8 +35,10 @@ var _by_id: Dictionary = {}
 var _pending_hits: Array = []   ## Jang zarbalari qadam oxirida bir vaqtda qo'llanadi (adolat uchun)
 
 
-func setup(unit_defs: Dictionary, cfg: Dictionary = {}) -> void:
+func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = {}) -> void:
 	defs = unit_defs
+	heroes = hero_defs
+	zones.clear()
 	rng.seed = int(cfg.get("seed", 12345))
 	teams.clear()
 	units.clear()
@@ -60,6 +65,12 @@ func setup(unit_defs: Dictionary, cfg: Dictionary = {}) -> void:
 		for k in start_units.size():
 			var u := spawn_unit(i, start_units[k])
 			u.x += t.dir * (20.0 + k * 25.0)
+		var hv: Array = cfg.get("heroes", ["", ""])
+		t.hero_type = str(hv[i])
+		if t.hero_type != "" and heroes.has(t.hero_type):
+			_spawn_hero(t)
+		else:
+			t.hero_type = ""
 
 
 static func _pick(cfg: Dictionary, key: String, i: int, default: Variant) -> Variant:
@@ -110,13 +121,13 @@ func set_stance(team_idx: int, stance: int) -> void:
 		events.append({"type": "stance", "team": team_idx, "stance": stance})
 
 
-func spawn_unit(team_idx: int, type: String) -> UnitState:
+func spawn_unit(team_idx: int, type: String, def_override: Dictionary = {}) -> UnitState:
 	var t := teams[team_idx]
 	var u := UnitState.new()
 	u.id = _next_id
 	_next_id += 1
 	u.type = type
-	u.def = defs[type]
+	u.def = def_override if not def_override.is_empty() else defs[type]
 	u.team = team_idx
 	u.x = t.castle_x + t.dir * 40.0
 	u.lane = rng.randf()
@@ -128,8 +139,151 @@ func spawn_unit(team_idx: int, type: String) -> UnitState:
 	units.append(u)
 	_by_id[u.id] = u
 	t.pop += int(u.def.pop)
+	if not def_override.is_empty():
+		return u
 	t.stats.trained += 1
 	return u
+
+
+func _spawn_hero(t: TeamState) -> UnitState:
+	var h := spawn_unit(t.index, t.hero_type, heroes[t.hero_type])
+	h.hero = true
+	h.x = t.castle_x + t.dir * 70.0
+	h.lane = 0.55
+	t.hero_id = h.id
+	events.append({"type": "hero_spawn", "team": t.index, "x": h.x, "hero": t.hero_type})
+	return h
+
+
+func hero_of(team_idx: int) -> UnitState:
+	var h := get_unit(teams[team_idx].hero_id)
+	return h if h and h.is_alive() else null
+
+
+func ability_ready(team_idx: int) -> bool:
+	return hero_of(team_idx) != null and teams[team_idx].ability_cd <= 0.0 and winner < 0
+
+
+func ability_def(team_idx: int) -> Dictionary:
+	var t := teams[team_idx]
+	if t.hero_type == "":
+		return {}
+	return heroes[t.hero_type].get("ability", {})
+
+
+func ability_targets(team_idx: int) -> int:
+	## Maxsus kuch hozir nechta dushmanga tegishini taxminlaydi (AI uchun).
+	var h := hero_of(team_idx)
+	if h == null:
+		return 0
+	var a := ability_def(team_idx)
+	var dir := float(teams[team_idx].dir if not h.controlled else h.facing)
+	var n := 0
+	for e in units:
+		if e.team == team_idx or not e.is_alive():
+			continue
+		var dx := (e.x - h.x) * dir
+		match str(a.id):
+			"arrow_rain":
+				if absf(e.x - _rain_center(h, a, dir)) < float(a.radius): n += 1
+			"leap":
+				if absf(e.x - (h.x + dir * float(a.dist))) < float(a.radius): n += 1
+			"lightning":
+				if dx > -10.0 and dx < float(a.dist): n += 1
+			"rally":
+				if absf(e.x - h.x) < 500.0: n += 1
+	return n
+
+
+func _rain_center(h: UnitState, a: Dictionary, dir: float) -> float:
+	## Eng yaqin dushman to'dasiga qaratadi, bo'lmasa oldinga.
+	var best := h.x + dir * float(a.dist)
+	var best_d := INF
+	for e in units:
+		if e.team != h.team and e.is_alive() and (e.x - h.x) * dir > 0.0 and absf(e.x - h.x) < 650.0:
+			var d := absf(e.x - h.x)
+			if d < best_d:
+				best_d = d
+				best = e.x + dir * 60.0
+	return best
+
+
+func use_ability(team_idx: int) -> bool:
+	if not ability_ready(team_idx):
+		return false
+	var t := teams[team_idx]
+	var h := hero_of(team_idx)
+	var a := ability_def(team_idx)
+	var dir := float(h.facing if h.controlled else t.dir)
+	t.ability_cd = float(a.cooldown)
+	var ev := {"type": "ability", "team": team_idx, "id": a.id, "x": h.x, "hero": t.hero_type}
+	match str(a.id):
+		"arrow_rain":
+			var cx := _rain_center(h, a, dir)
+			zones.append({"kind": "arrow_rain", "team": team_idx, "x": cx, "radius": float(a.radius),
+				"damage": float(a.damage), "ticks": int(a.ticks), "interval": float(a.interval), "t": 0.0, "next": 0.4})
+			ev.x = cx
+			h.attack_anim = 0.35
+		"leap", "lightning":
+			h.facing = int(dir)
+			h.dash_kind = str(a.id)
+			h.dash_total = float(a.duration)
+			h.dash_time = h.dash_total
+			h.dash_from = h.x
+			h.dash_to = clampf(h.x + dir * float(a.dist), 40.0, WORLD_LEN - 40.0)
+			h.dash_hit = {}
+			ev.to = h.dash_to
+		"rally":
+			t.buff_time = float(a.duration)
+			t.buff_dmg = float(a.damage_mult)
+			t.buff_speed = float(a.speed_mult)
+			for u in units:
+				if u.team == team_idx and u.is_alive():
+					u.hp = minf(u.max_hp, u.hp + u.max_hp * float(a.heal))
+	events.append(ev)
+	return true
+
+
+func _update_dash(u: UnitState, dt: float) -> void:
+	var a: Dictionary = heroes[u.type].ability
+	u.dash_time -= dt
+	var k := clampf(1.0 - u.dash_time / u.dash_total, 0.0, 1.0)
+	u.x = lerpf(u.dash_from, u.dash_to, k)
+	u.moving = true
+	if u.dash_kind == "lightning":
+		for e in units:
+			if e.team != u.team and e.is_alive() and not u.dash_hit.has(e.id) and absf(e.x - u.x) < 34.0:
+				u.dash_hit[e.id] = true
+				_pending_hits.append([e, float(a.damage), "sabre", u])
+				e.stun = maxf(e.stun, float(a.stun))
+	if u.dash_time <= 0.0:
+		u.dash_time = 0.0
+		if u.dash_kind == "leap":
+			for e in units:
+				if e.team != u.team and e.is_alive() and absf(e.x - u.x) < float(a.radius):
+					_pending_hits.append([e, float(a.damage), "sabre", u])
+					e.stun = maxf(e.stun, float(a.stun))
+					if not e.hero:
+						e.x += signf(e.x - u.x if e.x != u.x else float(u.facing)) * float(a.knock)
+			events.append({"type": "leap_land", "team": u.team, "x": u.x})
+		u.dash_kind = ""
+
+
+func _update_zones(dt: float) -> void:
+	var keep: Array[Dictionary] = []
+	for z in zones:
+		z.t += dt
+		z.next -= dt
+		if z.next <= 0.0 and z.ticks > 0:
+			z.ticks -= 1
+			z.next = z.interval
+			for e in units:
+				if e.team != z.team and e.is_alive() and absf(e.x - z.x) < z.radius:
+					_pending_hits.append([e, z.damage, "arrow", null])
+			events.append({"type": "rain_tick", "team": z.team, "x": z.x})
+		if z.ticks > 0 or z.next > -0.5:
+			keep.append(z)
+	zones = keep
 
 
 func alive_units(team_idx: int, include_workers := true) -> Array[UnitState]:
@@ -183,7 +337,10 @@ func take_control(team_idx: int, unit_id: int = -1) -> UnitState:
 			best = null
 	else:
 		var t := teams[team_idx]
+		best = hero_of(team_idx)
 		for u in alive_units(team_idx, false):
+			if best and best.hero:
+				break
 			if best == null or u.x * t.dir > best.x * t.dir:
 				best = u
 	if best:
@@ -219,6 +376,7 @@ func step(dt: float = STEP) -> void:
 			_update_unit(u, dt)
 		else:
 			u.dead_time += dt
+	_update_zones(dt)
 	_resolve_pending_hits()
 	_update_projectiles(dt)
 	for t in teams:
@@ -239,6 +397,16 @@ func pop_events() -> Array[Dictionary]:
 
 func _update_team(t: TeamState, dt: float) -> void:
 	t.gold += t.passive_income * t.income_mult * dt
+	t.ability_cd = maxf(0.0, t.ability_cd - dt)
+	if t.buff_time > 0.0:
+		t.buff_time -= dt
+		if t.buff_time <= 0.0:
+			t.buff_dmg = 1.0
+			t.buff_speed = 1.0
+	if t.hero_type != "" and hero_of(t.index) == null:
+		t.hero_respawn -= dt
+		if t.hero_respawn <= 0.0:
+			_spawn_hero(t)
 	if t.queue.is_empty():
 		t.train_progress = 0.0
 		return
@@ -258,6 +426,14 @@ func _update_unit(u: UnitState, dt: float) -> void:
 	u.attack_anim = maxf(0.0, u.attack_anim - dt)
 	u.hurt_flash = maxf(0.0, u.hurt_flash - dt)
 	u.moving = false
+	if u.dash_time > 0.0:
+		_update_dash(u, dt)
+		u.walk_phase += dt * 14.0
+		u.x = clampf(u.x, 20.0, WORLD_LEN - 20.0)
+		return
+	if u.stun > 0.0:
+		u.stun -= dt
+		return
 	if u.controlled:
 		_update_controlled(u, dt)
 	elif u.is_worker():
@@ -275,7 +451,7 @@ func _move_towards(u: UnitState, dest: float, dt: float, speed_mult := 1.0) -> b
 	if absf(dx) < 4.0:
 		return true
 	u.facing = 1 if dx > 0 else -1
-	var stepv := float(u.def.speed) * speed_mult * dt
+	var stepv := float(u.def.speed) * speed_mult * teams[u.team].buff_speed * dt
 	u.x += clampf(dx, -stepv, stepv)
 	u.moving = true
 	return absf(dest - u.x) < 4.0
@@ -425,7 +601,7 @@ func _update_controlled(u: UnitState, dt: float) -> void:
 
 
 func _damage_against(att: UnitState, target_tags: Array) -> float:
-	var dmg := float(att.def.damage) * teams[att.team].damage_mult
+	var dmg := float(att.def.damage) * teams[att.team].damage_mult * teams[att.team].buff_dmg
 	var bonus: Dictionary = att.def.get("bonus", {})
 	for tag in target_tags:
 		if bonus.has(tag):
@@ -552,6 +728,9 @@ func _kill(u: UnitState, attacker: UnitState) -> void:
 	var t := teams[u.team]
 	t.pop -= int(u.def.pop)
 	t.stats.lost += 1
+	if u.hero:
+		t.hero_respawn = HERO_RESPAWN
+		events.append({"type": "hero_down", "team": u.team, "x": u.x, "hero": u.type})
 	teams[1 - u.team].stats.killed += 1
 	events.append({"type": "death", "x": u.x, "lane": u.lane, "team": u.team, "unit": u.type,
 		"controlled": u.controlled})

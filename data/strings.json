@@ -1,33 +1,308 @@
 {
-	"GAME_TITLE": {"uz": "JAHONGIRLAR", "en": "JAHONGIRLAR", "ru": "ДЖАХОНГИРЛАР", "tr": "CİHANGİRLER"},
-	"MENU_SUBTITLE": {"uz": "Buyuk sarkardalar jangi", "en": "Battles of the Great Conquerors", "ru": "Битвы великих полководцев", "tr": "Büyük Fatihlerin Savaşları"},
-	"MENU_PLAY_EASY": {"uz": "Jang: Oson", "en": "Battle: Easy", "ru": "Битва: Легко", "tr": "Savaş: Kolay"},
-	"MENU_PLAY_NORMAL": {"uz": "Jang: O'rta", "en": "Battle: Normal", "ru": "Битва: Средне", "tr": "Savaş: Orta"},
-	"MENU_PLAY_HARD": {"uz": "Jang: Qiyin", "en": "Battle: Hard", "ru": "Битва: Сложно", "tr": "Savaş: Zor"},
-	"MENU_LANGUAGE": {"uz": "Til: O'zbekcha", "en": "Language: English", "ru": "Язык: Русский", "tr": "Dil: Türkçe"},
-	"MENU_SOUND": {"uz": "Ovoz", "en": "Sound", "ru": "Звук", "tr": "Ses"},
-	"MENU_MUSIC": {"uz": "Musiqa", "en": "Music", "ru": "Музыка", "tr": "Müzik"},
-	"ON": {"uz": "yoqilgan", "en": "on", "ru": "вкл", "tr": "açık"},
-	"OFF": {"uz": "o'chirilgan", "en": "off", "ru": "выкл", "tr": "kapalı"},
-	"PROTOTYPE_NOTE": {"uz": "Prototip versiyasi", "en": "Prototype build", "ru": "Прототип", "tr": "Prototip sürümü"},
-	"UNIT_WORKER": {"uz": "Ishchi", "en": "Worker", "ru": "Рабочий", "tr": "İşçi"},
-	"UNIT_SWORDSMAN": {"uz": "Qilichboz", "en": "Swordsman", "ru": "Мечник", "tr": "Kılıççı"},
-	"UNIT_SPEARMAN": {"uz": "Nayzachi", "en": "Spearman", "ru": "Копейщик", "tr": "Mızrakçı"},
-	"UNIT_ARCHER": {"uz": "Kamonchi", "en": "Archer", "ru": "Лучник", "tr": "Okçu"},
-	"UNIT_CAVALRY": {"uz": "Otliq", "en": "Cavalry", "ru": "Всадник", "tr": "Süvari"},
-	"STANCE_ATTACK": {"uz": "Hujum", "en": "Attack", "ru": "Атака", "tr": "Saldırı"},
-	"STANCE_DEFEND": {"uz": "Himoya", "en": "Defend", "ru": "Защита", "tr": "Savunma"},
-	"STANCE_RETREAT": {"uz": "Chekinish", "en": "Retreat", "ru": "Отступ", "tr": "Geri çekil"},
-	"CONTROL": {"uz": "Boshqarish", "en": "Take control", "ru": "Управлять", "tr": "Kontrol et"},
-	"CONTROL_RELEASE": {"uz": "Qo'yib yuborish", "en": "Release", "ru": "Отпустить", "tr": "Bırak"},
-	"ATTACK_BTN": {"uz": "Zarba", "en": "Strike", "ru": "Удар", "tr": "Vur"},
-	"VICTORY": {"uz": "G'ALABA!", "en": "VICTORY!", "ru": "ПОБЕДА!", "tr": "ZAFER!"},
-	"DEFEAT": {"uz": "MAG'LUBIYAT", "en": "DEFEAT", "ru": "ПОРАЖЕНИЕ", "tr": "YENİLGİ"},
-	"RESTART": {"uz": "Qayta o'ynash", "en": "Play again", "ru": "Сыграть снова", "tr": "Tekrar oyna"},
-	"MENU": {"uz": "Menyu", "en": "Menu", "ru": "Меню", "tr": "Menü"},
-	"PAUSED": {"uz": "Pauza", "en": "Paused", "ru": "Пауза", "tr": "Duraklatıldı"},
-	"RESUME": {"uz": "Davom etish", "en": "Resume", "ru": "Продолжить", "tr": "Devam et"},
-	"STATS_FMT": {"uz": "Yollangan: %d   Yo'q qilingan: %d   Qazilgan oltin: %d   Vaqt: %s", "en": "Trained: %d   Defeated: %d   Gold mined: %d   Time: %s", "ru": "Нанято: %d   Повержено: %d   Добыто золота: %d   Время: %s", "tr": "Eğitilen: %d   Yenilen: %d   Kazılan altın: %d   Süre: %s"},
-	"HINT_START": {"uz": "Ishchilar oltin qazadi. Oltinga askar yollang va dushman qal'asini yiqiting!", "en": "Workers mine gold. Train soldiers with gold and destroy the enemy fortress!", "ru": "Рабочие добывают золото. Нанимайте воинов и разрушьте вражескую крепость!", "tr": "İşçiler altın kazar. Altınla asker eğitin ve düşman kalesini yıkın!"},
-	"HINT_CONTROL": {"uz": "Boshqariladigan jangchi 25% kuchliroq uradi!", "en": "A controlled warrior strikes 25% harder!", "ru": "Управляемый воин бьёт на 25% сильнее!", "tr": "Kontrol edilen savaşçı %25 daha güçlü vurur!"}
+	"GAME_TITLE": {
+		"uz": "JAHONGIRLAR",
+		"en": "JAHONGIRLAR",
+		"ru": "ДЖАХОНГИРЛАР",
+		"tr": "CİHANGİRLER"
+	},
+	"MENU_SUBTITLE": {
+		"uz": "Buyuk sarkardalar jangi",
+		"en": "Battles of the Great Conquerors",
+		"ru": "Битвы великих полководцев",
+		"tr": "Büyük Fatihlerin Savaşları"
+	},
+	"MENU_PLAY_EASY": {
+		"uz": "Jang: Oson",
+		"en": "Battle: Easy",
+		"ru": "Битва: Легко",
+		"tr": "Savaş: Kolay"
+	},
+	"MENU_PLAY_NORMAL": {
+		"uz": "Jang: O'rta",
+		"en": "Battle: Normal",
+		"ru": "Битва: Средне",
+		"tr": "Savaş: Orta"
+	},
+	"MENU_PLAY_HARD": {
+		"uz": "Jang: Qiyin",
+		"en": "Battle: Hard",
+		"ru": "Битва: Сложно",
+		"tr": "Savaş: Zor"
+	},
+	"MENU_LANGUAGE": {
+		"uz": "Til: O'zbekcha",
+		"en": "Language: English",
+		"ru": "Язык: Русский",
+		"tr": "Dil: Türkçe"
+	},
+	"MENU_SOUND": {
+		"uz": "Ovoz",
+		"en": "Sound",
+		"ru": "Звук",
+		"tr": "Ses"
+	},
+	"MENU_MUSIC": {
+		"uz": "Musiqa",
+		"en": "Music",
+		"ru": "Музыка",
+		"tr": "Müzik"
+	},
+	"ON": {
+		"uz": "yoqilgan",
+		"en": "on",
+		"ru": "вкл",
+		"tr": "açık"
+	},
+	"OFF": {
+		"uz": "o'chirilgan",
+		"en": "off",
+		"ru": "выкл",
+		"tr": "kapalı"
+	},
+	"PROTOTYPE_NOTE": {
+		"uz": "Prototip versiyasi",
+		"en": "Prototype build",
+		"ru": "Прототип",
+		"tr": "Prototip sürümü"
+	},
+	"UNIT_WORKER": {
+		"uz": "Ishchi",
+		"en": "Worker",
+		"ru": "Рабочий",
+		"tr": "İşçi"
+	},
+	"UNIT_SWORDSMAN": {
+		"uz": "Qilichboz",
+		"en": "Swordsman",
+		"ru": "Мечник",
+		"tr": "Kılıççı"
+	},
+	"UNIT_SPEARMAN": {
+		"uz": "Nayzachi",
+		"en": "Spearman",
+		"ru": "Копейщик",
+		"tr": "Mızrakçı"
+	},
+	"UNIT_ARCHER": {
+		"uz": "Kamonchi",
+		"en": "Archer",
+		"ru": "Лучник",
+		"tr": "Okçu"
+	},
+	"UNIT_CAVALRY": {
+		"uz": "Otliq",
+		"en": "Cavalry",
+		"ru": "Всадник",
+		"tr": "Süvari"
+	},
+	"STANCE_ATTACK": {
+		"uz": "Hujum",
+		"en": "Attack",
+		"ru": "Атака",
+		"tr": "Saldırı"
+	},
+	"STANCE_DEFEND": {
+		"uz": "Himoya",
+		"en": "Defend",
+		"ru": "Защита",
+		"tr": "Savunma"
+	},
+	"STANCE_RETREAT": {
+		"uz": "Chekinish",
+		"en": "Retreat",
+		"ru": "Отступ",
+		"tr": "Geri çekil"
+	},
+	"CONTROL": {
+		"uz": "Boshqarish",
+		"en": "Take control",
+		"ru": "Управлять",
+		"tr": "Kontrol et"
+	},
+	"CONTROL_RELEASE": {
+		"uz": "Qo'yib yuborish",
+		"en": "Release",
+		"ru": "Отпустить",
+		"tr": "Bırak"
+	},
+	"ATTACK_BTN": {
+		"uz": "Zarba",
+		"en": "Strike",
+		"ru": "Удар",
+		"tr": "Vur"
+	},
+	"VICTORY": {
+		"uz": "G'ALABA!",
+		"en": "VICTORY!",
+		"ru": "ПОБЕДА!",
+		"tr": "ZAFER!"
+	},
+	"DEFEAT": {
+		"uz": "MAG'LUBIYAT",
+		"en": "DEFEAT",
+		"ru": "ПОРАЖЕНИЕ",
+		"tr": "YENİLGİ"
+	},
+	"RESTART": {
+		"uz": "Qayta o'ynash",
+		"en": "Play again",
+		"ru": "Сыграть снова",
+		"tr": "Tekrar oyna"
+	},
+	"MENU": {
+		"uz": "Menyu",
+		"en": "Menu",
+		"ru": "Меню",
+		"tr": "Menü"
+	},
+	"PAUSED": {
+		"uz": "Pauza",
+		"en": "Paused",
+		"ru": "Пауза",
+		"tr": "Duraklatıldı"
+	},
+	"RESUME": {
+		"uz": "Davom etish",
+		"en": "Resume",
+		"ru": "Продолжить",
+		"tr": "Devam et"
+	},
+	"STATS_FMT": {
+		"uz": "Yollangan: %d   Yo'q qilingan: %d   Qazilgan oltin: %d   Vaqt: %s",
+		"en": "Trained: %d   Defeated: %d   Gold mined: %d   Time: %s",
+		"ru": "Нанято: %d   Повержено: %d   Добыто золота: %d   Время: %s",
+		"tr": "Eğitilen: %d   Yenilen: %d   Kazılan altın: %d   Süre: %s"
+	},
+	"HINT_START": {
+		"uz": "Ishchilar oltin qazadi. Oltinga askar yollang va dushman qal'asini yiqiting!",
+		"en": "Workers mine gold. Train soldiers with gold and destroy the enemy fortress!",
+		"ru": "Рабочие добывают золото. Нанимайте воинов и разрушьте вражескую крепость!",
+		"tr": "İşçiler altın kazar. Altınla asker eğitin ve düşman kalesini yıkın!"
+	},
+	"HINT_CONTROL": {
+		"uz": "Boshqariladigan jangchi 25% kuchliroq uradi!",
+		"en": "A controlled warrior strikes 25% harder!",
+		"ru": "Управляемый воин бьёт на 25% сильнее!",
+		"tr": "Kontrol edilen savaşçı %25 daha güçlü vurur!"
+	},
+	"CHOOSE_HERO": {
+		"uz": "Sarkardangizni tanlang",
+		"en": "Choose your commander",
+		"ru": "Выберите полководца",
+		"tr": "Komutanını seç"
+	},
+	"TO_BATTLE": {
+		"uz": "Jangga!",
+		"en": "To battle!",
+		"ru": "В бой!",
+		"tr": "Savaşa!"
+	},
+	"BACK": {
+		"uz": "Orqaga",
+		"en": "Back",
+		"ru": "Назад",
+		"tr": "Geri"
+	},
+	"HERO_DOWN": {
+		"uz": "%s yiqildi! 40 soniyadan so'ng qaytadi",
+		"en": "%s has fallen! Returns in 40 seconds",
+		"ru": "%s пал! Вернётся через 40 секунд",
+		"tr": "%s düştü! 40 saniye sonra dönecek"
+	},
+	"HERO_CHINGIZ": {
+		"uz": "Chingizxon",
+		"en": "Genghis Khan",
+		"ru": "Чингисхан",
+		"tr": "Cengiz Han"
+	},
+	"HERO_CHINGIZ_TITLE": {
+		"uz": "Mo'g'ul imperiyasi asoschisi (1162–1227)",
+		"en": "Founder of the Mongol Empire (1162–1227)",
+		"ru": "Основатель Монгольской империи (1162–1227)",
+		"tr": "Moğol İmparatorluğu'nun kurucusu (1162–1227)"
+	},
+	"HERO_JALOLIDDIN": {
+		"uz": "Jaloliddin Manguberdi",
+		"en": "Jalal al-Din Mingburnu",
+		"ru": "Джалаладдин Мангуберди",
+		"tr": "Celaleddin Harezmşah"
+	},
+	"HERO_JALOLIDDIN_TITLE": {
+		"uz": "Xorazmshohlarning so'nggi sultoni (1199–1231)",
+		"en": "Last sultan of the Khwarazmian Empire (1199–1231)",
+		"ru": "Последний султан Хорезмшахов (1199–1231)",
+		"tr": "Harezmşahlar'ın son sultanı (1199–1231)"
+	},
+	"HERO_TEMUR": {
+		"uz": "Amir Temur",
+		"en": "Amir Timur",
+		"ru": "Амир Темур",
+		"tr": "Timur"
+	},
+	"HERO_TEMUR_TITLE": {
+		"uz": "Temuriylar davlati asoschisi (1336–1405)",
+		"en": "Founder of the Timurid Empire (1336–1405)",
+		"ru": "Основатель империи Тимуридов (1336–1405)",
+		"tr": "Timurlu Devleti'nin kurucusu (1336–1405)"
+	},
+	"HERO_BOYAZID": {
+		"uz": "Boyazid Yildirim",
+		"en": "Bayezid the Thunderbolt",
+		"ru": "Баязид Молниеносный",
+		"tr": "Yıldırım Bayezid"
+	},
+	"HERO_BOYAZID_TITLE": {
+		"uz": "Usmonli sultoni (1360–1403)",
+		"en": "Ottoman sultan (1360–1403)",
+		"ru": "Османский султан (1360–1403)",
+		"tr": "Osmanlı padişahı (1360–1403)"
+	},
+	"ABIL_ARROW_RAIN": {
+		"uz": "Dasht bo'roni",
+		"en": "Steppe Storm",
+		"ru": "Степная буря",
+		"tr": "Bozkır Fırtınası"
+	},
+	"ABIL_ARROW_RAIN_DESC": {
+		"uz": "Dushman to'dasiga bir necha marta o'q yomg'iri yog'diradi.",
+		"en": "Rains volleys of arrows on an enemy group.",
+		"ru": "Обрушивает на врагов несколько залпов стрел.",
+		"tr": "Düşman grubuna ok yağmuru yağdırır."
+	},
+	"ABIL_LEAP": {
+		"uz": "Sind sakrashi",
+		"en": "Indus Leap",
+		"ru": "Прыжок через Инд",
+		"tr": "İndus Sıçrayışı"
+	},
+	"ABIL_LEAP_DESC": {
+		"uz": "Oldinga sakrab, qo'ngan joyida dushmanlarni uloqtiradi va hayratga soladi.",
+		"en": "Leaps forward, knocking back and stunning enemies where he lands.",
+		"ru": "Прыгает вперёд, отбрасывая и оглушая врагов при приземлении.",
+		"tr": "İleri sıçrar; indiği yerde düşmanları savurur ve sersemletir."
+	},
+	"ABIL_RALLY": {
+		"uz": "Kuch adolatda",
+		"en": "Strength in Justice",
+		"ru": "Сила в справедливости",
+		"tr": "Güç Adalettedir"
+	},
+	"ABIL_RALLY_DESC": {
+		"uz": "Butun qo'shinni davolaydi; 10 soniya davomida +40% kuch va +25% tezlik beradi.",
+		"en": "Heals the whole army; +40% damage and +25% speed for 10 seconds.",
+		"ru": "Лечит всё войско; +40% урона и +25% скорости на 10 секунд.",
+		"tr": "Tüm orduyu iyileştirir; 10 saniye boyunca +%40 hasar ve +%25 hız."
+	},
+	"ABIL_LIGHTNING": {
+		"uz": "Yashin hujumi",
+		"en": "Thunderbolt Charge",
+		"ru": "Молниеносный удар",
+		"tr": "Yıldırım Hücumu"
+	},
+	"ABIL_LIGHTNING_DESC": {
+		"uz": "Chaqmoqdek oldinga otilib, yo'lidagi barcha dushmanlarni uradi va hayratga soladi.",
+		"en": "Charges like lightning, striking and stunning every enemy in his path.",
+		"ru": "Молнией проносится вперёд, поражая и оглушая всех врагов на пути.",
+		"tr": "Yıldırım gibi atılır; yolundaki tüm düşmanları vurur ve sersemletir."
+	}
 }

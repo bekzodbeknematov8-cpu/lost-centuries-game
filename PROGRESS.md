@@ -1,6 +1,21 @@
 # Jarayon
 
-## Holat: 0-bosqich ✅ tugadi · 1-bosqich (prototip) ✅ asosiy qismi tayyor
+### 2026-11-13 (2) — foydalanuvchi fikri asosida
+**Foydalanuvchi aytdi:** boshqaruv tugmalari xunuk va o'ngdagi jangchilarni to'sadi; ikonka xunuk; qiziqarliroq qilish kerak.
+**Bajarildi**
+- HUD qayta qurildi: barcha tugmalar pastki panelda, ixcham dumaloq ikonka-tugmalar (kod bilan chizilgan),
+  jang maydoni to'liq ochiq. Boshqaruv rejimida chap/o'ng va Zarba ham pastki panelda.
+- Yangi ikonka (dubulg'a, chalishtirilgan qilichlar, quyosh) + Android adaptive ikonka.
+- 2-bosqich: 4 qahramon (Chingizxon — Dasht bo'roni, Jaloliddin — Sind sakrashi,
+  Amir Temur — Kuch adolatda, Boyazid — Yashin hujumi): o'z ko'rinishi, oti, plashi,
+  maxsus kuch tugmasi (qayta tiklanish soati), o'lsa 40 soniyada qaytadi, AI ham ishlatadi.
+- Qahramon tanlash ekrani (tarixiy sana va kuch tavsifi bilan), jang boshida "X VS Y" banneri.
+- 5 yangi ovoz (o'q yomg'iri, sakrash, momaqaldiroq, karnay-nog'ora chorlovi, qahramon yiqilishi).
+- Dushman endi ertaroq kichik to'lqinlar bilan hujum qiladi (jang tezroq qizishadi).
+- Testlar: 23 (7 tasi qahramonlar uchun), smoke test 3 sahna.
+
+
+## Holat: 0–1-bosqich ✅ · 2-bosqich (qahramonlar) ✅ asosiy qismi tayyor
 
 ### 2026-11-13
 **Bajarildi**

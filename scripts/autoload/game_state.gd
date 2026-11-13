@@ -4,6 +4,7 @@ extends Node
 const SETTINGS_PATH := "user://settings.json"
 
 var difficulty: String = "easy"
+var hero: String = "temur"
 var settings: Dictionary = {
 	"locale": "uz",
 	"music_volume": 0.7,

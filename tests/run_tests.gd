@@ -235,3 +235,111 @@ func test_difficulty_order() -> void:
 		if s.winner == 0:
 			hard_wins += 1
 	check(hard_wins >= 8, "qiyin bot faqat %d/%d marta yutdi" % [hard_wins, n])
+
+
+# --- Qahramonlar ------------------------------------------------------------
+
+func hero_sim(h0: String, h1: String = "") -> BattleSim:
+	var s := BattleSim.new()
+	s.setup(defs, {"start_units": [[], []], "heroes": [h0, h1]}, load_json("res://data/heroes.json"))
+	return s
+
+
+func place_enemies(s: BattleSim, type: String, xs: Array) -> Array:
+	var out := []
+	for x in xs:
+		var e := s.spawn_unit(1, type)
+		e.x = x
+		out.append(e)
+	s.teams[1].stance = TeamState.Stance.RETREAT
+	return out
+
+
+func test_hero_spawns_and_respawns() -> void:
+	var s := hero_sim("temur")
+	var h := s.hero_of(0)
+	check(h != null and h.hero, "qahramon paydo bo'lmadi")
+	check(s.teams[0].pop == 0, "qahramon aholi joyini egallamasligi kerak")
+	s._kill(h, null)
+	check(s.hero_of(0) == null, "qahramon o'lmadi")
+	run(s, BattleSim.HERO_RESPAWN + 1.0)
+	check(s.hero_of(0) != null, "qahramon qayta tug'ilmadi")
+
+
+func test_ability_cooldown() -> void:
+	var s := hero_sim("temur")
+	s.teams[0].ability_cd = 0.0
+	check(s.use_ability(0), "maxsus kuch ishlamadi")
+	check(not s.use_ability(0), "qayta tiklanish vaqti ishlamadi")
+
+
+func test_arrow_rain_hits_group() -> void:
+	var s := hero_sim("chingiz")
+	var h := s.hero_of(0)
+	h.x = 1000.0
+	var es := place_enemies(s, "swordsman", [1300.0, 1330.0, 1360.0])
+	s.teams[0].ability_cd = 0.0
+	s.teams[0].stance = TeamState.Stance.RETREAT
+	check(s.ability_targets(0) >= 3, "o'q yomg'iri nishonlarni ko'rmadi")
+	s.use_ability(0)
+	for i in 120:
+		for e in es:
+			e.x = clampf(e.x, 1290.0, 1370.0)
+		s.step()
+	var hurt := 0
+	for e in es:
+		if e.hp < e.max_hp:
+			hurt += 1
+	check(hurt == 3, "o'q yomg'iri faqat %d dushmanga tegdi" % hurt)
+
+
+func test_leap_moves_and_stuns() -> void:
+	var s := hero_sim("jaloliddin")
+	var h := s.hero_of(0)
+	h.x = 1000.0
+	var es := place_enemies(s, "spearman", [1280.0, 1300.0])
+	s.teams[0].ability_cd = 0.0
+	s.use_ability(0)
+	for i in 20:
+		s.step()
+	check(h.x > 1200.0, "sakrash qahramonni siljitmadi: %s" % h.x)
+	check(es[0].stun > 0.0 or es[1].stun > 0.0, "dushman hayratlanmadi")
+	check(es[0].hp < es[0].max_hp, "sakrash zarar bermadi")
+
+
+func test_rally_buffs_army() -> void:
+	var s := hero_sim("temur")
+	var a := s.spawn_unit(0, "swordsman")
+	a.hp = 50.0
+	s.teams[0].ability_cd = 0.0
+	var d0 := s._damage_against(a, ["infantry"])
+	s.use_ability(0)
+	check(s._damage_against(a, ["infantry"]) > d0 * 1.3, "kuch berish ishlamadi")
+	check(a.hp > 50.0, "davolash ishlamadi")
+
+
+func test_lightning_hits_line() -> void:
+	var s := hero_sim("boyazid")
+	var h := s.hero_of(0)
+	h.x = 1000.0
+	var es := place_enemies(s, "archer", [1100.0, 1250.0, 1400.0])
+	s.teams[0].ability_cd = 0.0
+	s.use_ability(0)
+	for i in 20:
+		s.step()
+	var hit := 0
+	for e in es:
+		if e.hp < e.max_hp:
+			hit += 1
+	check(hit == 3, "yashin hujumi faqat %d dushmanga tegdi" % hit)
+
+
+func test_hero_battle_finishes() -> void:
+	var hd := load_json("res://data/heroes.json")
+	var names := hd.keys()
+	for k in names.size():
+		var s := BattleSim.new()
+		s.setup(defs, {"seed": 300 + k, "heroes": [names[k], names[(k + 1) % names.size()]]}, hd)
+		var ais := [AIController.new(0, ai_params.normal, 1), AIController.new(1, ai_params.normal, 2)]
+		run(s, 900.0, ais)
+		check(s.winner >= 0, "%s vs %s: o'yin tugamadi" % [names[k], names[(k + 1) % names.size()]])

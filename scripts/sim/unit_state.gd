@@ -24,6 +24,14 @@ var hurt_flash: float = 0.0
 var dead_time: float = 0.0
 var controlled: bool = false
 var slot: float = 0.0          ## safdagi joy siljishi
+var hero: bool = false
+var stun: float = 0.0          ## >0 bo'lsa, hayratda (harakat qilolmaydi)
+var dash_time: float = 0.0     ## qahramon sakrashi/yashin hujumi davom etmoqda
+var dash_total: float = 0.0
+var dash_from: float = 0.0
+var dash_to: float = 0.0
+var dash_kind: String = ""
+var dash_hit: Dictionary = {}
 
 
 func is_alive() -> bool:
@@ -44,4 +52,4 @@ func is_ranged() -> bool:
 
 func value() -> float:
 	## Qo'shin kuchini baholash uchun (AI ishlatadi).
-	return float(def.get("cost", 0)) * (hp / max_hp)
+	return float(def.get("value", def.get("cost", 0))) * (hp / max_hp)

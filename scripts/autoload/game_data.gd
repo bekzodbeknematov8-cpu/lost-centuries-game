@@ -3,11 +3,13 @@ extends Node
 
 var units: Dictionary = {}
 var ai: Dictionary = {}
+var heroes: Dictionary = {}
 
 
 func _init() -> void:
 	units = load_json("res://data/units.json")
 	ai = load_json("res://data/ai.json")
+	heroes = load_json("res://data/heroes.json")
 
 
 static func load_json(path: String) -> Dictionary:

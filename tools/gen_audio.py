@@ -417,6 +417,57 @@ def sfx_defeat():
     return reverb(out, length=1.4, decay=0.5, wet=0.3)
 
 
+def sfx_arrow_rain():
+    out = np.zeros(int(1.6 * SR))
+    place(out, sfx_horn_attack()[: int(0.6 * SR)] * 0.5, 0.0)
+    for i in range(14):
+        place(out, sfx_bow() * 0.5, rng.uniform(0.0, 0.5))
+    for i in range(12):
+        w = band(noise(0.3), 1500, 4500) * np.sin(np.linspace(0, np.pi, int(0.3 * SR))) ** 2 * 0.3
+        place(out, w, rng.uniform(0.3, 1.0))
+    return reverb(out, length=0.8, decay=0.25, wet=0.2)
+
+
+def sfx_leap():
+    out = np.zeros(int(1.2 * SR))
+    place(out, sfx_swing() * 0.8, 0.0)
+    for at in [0.0, 0.08, 0.16]:
+        place(out, sfx_horse() * 0.5, at)
+    place(out, glide(70, 35, 0.7) * env_exp(0.7, 0.2) * 1.0, 0.45)
+    place(out, band(noise(0.5), 60, 700) * env_exp(0.5, 0.12) * 0.8, 0.45)
+    return out
+
+
+def sfx_thunder():
+    dur = 2.4
+    crack = band(noise(0.25), 1500, 9000) * env_exp(0.25, 0.04, 0.0005) * 1.4
+    rumble = band(noise(dur), 30, 350) * env_exp(dur, 0.7, 0.05) * 1.2
+    out = mix(crack, rumble)
+    for i in range(8):
+        place(out, band(noise(0.06), 800, 6000) * env_exp(0.06, 0.012) * 0.5, rng.uniform(0.0, 0.3))
+    place(out, sfx_horse() * 0.6, 0.05)
+    return reverb(out, length=1.4, decay=0.5, wet=0.3)
+
+
+def sfx_rally():
+    out = np.zeros(int(3.0 * SR))
+    place(out, karnay_phrase([(174.6, 0.18), (233.1, 0.18), (261.6, 0.18), (349.2, 0.9)], bright=1.0) * 0.8, 0.0)
+    for at in [0.0, 0.36, 0.72, 0.9, 1.08]:
+        place(out, nogora() * 0.8, at)
+    for i in range(10):
+        place(out, doira_tak() * 0.35, 1.1 + i * 0.07)
+    return reverb(out, length=1.0, decay=0.3, wet=0.22)
+
+
+def sfx_hero_down():
+    out = np.zeros(int(2.4 * SR))
+    place(out, brass(146.8, 0.5, bright=0.6) * 0.6, 0.0)
+    place(out, brass(110.0, 1.2, bright=0.5) * 0.6, 0.45)
+    place(out, nogora() * 0.9, 0.0)
+    place(out, nogora() * 0.7, 0.45)
+    return reverb(out, length=1.2, decay=0.4, wet=0.3)
+
+
 SFX = {
     "sword_clash": (sfx_sword_clash, 4), "sword_shield": (sfx_sword_shield, 3),
     "hit_flesh": (sfx_hit_flesh, 4), "spear_hit": (sfx_spear_hit, 3),
@@ -427,7 +478,8 @@ SFX = {
     "coin": (sfx_coin, 3), "pick": (sfx_pick, 3), "ready": (sfx_ready, 1), "click": (sfx_click, 1),
     "deny": (sfx_deny, 1), "horn_attack": (sfx_horn_attack, 1), "horn_retreat": (sfx_horn_retreat, 1),
     "horn_enemy": (sfx_horn_enemy, 1), "drum": (sfx_drum, 1), "victory": (sfx_victory, 1),
-    "defeat": (sfx_defeat, 1),
+    "defeat": (sfx_defeat, 1), "arrow_rain": (sfx_arrow_rain, 1), "leap": (sfx_leap, 1),
+    "thunder": (sfx_thunder, 1), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
 }
 
 
