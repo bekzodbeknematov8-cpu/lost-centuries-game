@@ -248,3 +248,9 @@ Balans va bosqich ma'lumotlari kodda emas, **JSON fayllarda** saqlanadi, shunda 
    kunlik sinov bosqichi, yutqazganda maslahat va "kuchaytirib qayta urinish", yangi qahramon/birlik
    har bir necha bosqichda ochiladi (doim yangi narsa kutilsin).
 4. Qiyinlik bot simulyatsiyasi bilan tekshiriladi: hech bir bosqichda keskin "devor" bo'lmasin.
+
+## 11. Chiqarish tartibi (foydalanuvchi tasdiqladi, 2026-11-13)
+- **1.0 versiya (Play Market):** 4 kampaniya × 10 bosqich, cheksiz mudofaa, yaxshilanishlar, qahramon ochish,
+  zaxira qo'shin, sandiqlar va kunlik mukofot, tutorial, reklama (2×) va xaridlar, sayqal, test, store materiallari.
+- **Keyingi yangilanishlar:** "Fathlar" (1000+ avtomatik bosqich), kampaniyalarni 25 bosqichgacha kengaytirish,
+  yangi qahramonlar (Bobur, Alp Arslon, Saladin), kunlik sinov va boshqalar.
