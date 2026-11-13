@@ -314,7 +314,8 @@ func test_rally_buffs_army() -> void:
 	s.teams[0].ability_cd = 0.0
 	var d0 := s._damage_against(a, ["infantry"])
 	s.use_ability(0)
-	check(s._damage_against(a, ["infantry"]) > d0 * 1.3, "kuch berish ishlamadi")
+	var mult := float(s.heroes.temur.ability.damage_mult)
+	check(s._damage_against(a, ["infantry"]) >= d0 * mult - 0.01 and mult > 1.0, "kuch berish ishlamadi")
 	check(a.hp > 50.0, "davolash ishlamadi")
 
 
