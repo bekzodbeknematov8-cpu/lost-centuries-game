@@ -344,3 +344,115 @@ func test_hero_battle_finishes() -> void:
 		var ais := [AIController.new(0, ai_params.normal, 1), AIController.new(1, ai_params.normal, 2)]
 		run(s, 900.0, ais)
 		check(s.winner >= 0, "%s vs %s: o'yin tugamadi" % [names[k], names[(k + 1) % names.size()]])
+
+
+# --- Kampaniya --------------------------------------------------------------
+
+func camp() -> Dictionary:
+	return load_json("res://data/campaigns.json")
+
+
+func test_campaign_data_valid() -> void:
+	var c := camp()
+	var hd := load_json("res://data/heroes.json")
+	var facts := load_json("res://data/facts.json")
+	check(c.order.size() == 4, "4 ta kampaniya bo'lishi kerak")
+	for cid in c.order:
+		var levels: Array = c.campaigns[cid].levels
+		check(levels.size() == 10, "%s: 10 ta bosqich bo'lishi kerak" % cid)
+		check(hd.has(c.campaigns[cid].hero), "%s: qahramon topilmadi" % cid)
+		for lv in levels:
+			for loc in ["uz", "en", "ru", "tr"]:
+				check(lv.name.has(loc), "%s: %s nomi yo'q" % [lv.id, loc])
+				check(facts.has(lv.id) and str(facts[lv.id].get(loc, "")) != "", "%s: %s fakti yo'q" % [lv.id, loc])
+			var eh := str(lv.get("enemy_hero", ""))
+			check(eh == "" or hd.has(eh), "%s: dushman qahramoni noto'g'ri" % lv.id)
+			check(str(lv.get("ai", "")) in ["easy", "normal", "hard"], "%s: AI profili noto'g'ri" % lv.id)
+
+
+func test_stars_rules() -> void:
+	var lv := {"par": 300}
+	check(Campaign.compute_stars(lv, false, 1.0, 10.0) == 0, "yutqazganda yulduz yo'q")
+	check(Campaign.compute_stars(lv, true, 0.3, 900.0) == 1, "g'alaba = 1 yulduz")
+	check(Campaign.compute_stars(lv, true, 0.6, 900.0) == 2, "qal'a 50%+ = 2 yulduz")
+	check(Campaign.compute_stars(lv, true, 0.85, 900.0) == 3, "qal'a 80%+ = 3 yulduz")
+	check(Campaign.compute_stars(lv, true, 0.6, 250.0) == 3, "tez g'alaba = 3 yulduz")
+
+
+func test_unlock_rules() -> void:
+	var c := camp()
+	var stars := {}
+	check(Campaign.level_unlocked(c, stars, "chingiz_01"), "birinchi bosqich ochiq bo'lishi kerak")
+	check(not Campaign.level_unlocked(c, stars, "chingiz_02"), "2-bosqich yopiq bo'lishi kerak")
+	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "2-kampaniya yopiq bo'lishi kerak")
+	stars["chingiz_01"] = 1
+	check(Campaign.level_unlocked(c, stars, "chingiz_02"), "g'alabadan keyin 2-bosqich ochilishi kerak")
+	for i in 10:
+		stars["chingiz_%02d" % (i + 1)] = 1
+	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "10 yulduz yetmasligi kerak (15 talab)")
+	for i in 10:
+		stars["chingiz_%02d" % (i + 1)] = 2
+	check(Campaign.campaign_unlocked(c, stars, "jaloliddin"), "20 yulduz bilan ochilishi kerak")
+	check(Campaign.next_level_id(c, "chingiz_03") == "chingiz_04", "keyingi bosqich noto'g'ri")
+	check(Campaign.next_level_id(c, "chingiz_10") == "", "oxirgi bosqichdan keyin bo'sh bo'lishi kerak")
+
+
+func test_star_requirements_reasonable() -> void:
+	## Talab: har bosqichdan o'rtacha 2 yulduzdan oshmasligi kerak (juda qiyin bo'lmasin).
+	var c := camp()
+	for i in range(1, c.order.size()):
+		var need := int(c.campaigns[c.order[i]].require_stars)
+		check(need <= i * 10 * 2, "%s: yulduz talabi juda yuqori (%d)" % [c.order[i], need])
+
+
+func test_survive_objective() -> void:
+	var s := BattleSim.new()
+	s.setup(defs, {"start_units": [[], []], "survive_time": 5.0})
+	run(s, 6.0)
+	check(s.winner == 0, "mudofaa vaqti tugaganda o'yinchi yutishi kerak")
+
+
+func test_every_level_builds() -> void:
+	var c := camp()
+	var hd := load_json("res://data/heroes.json")
+	for cid in c.order:
+		for lv in c.campaigns[cid].levels:
+			var bc := Campaign.battle_config(c, lv.id, ai_params, 1)
+			var s := BattleSim.new()
+			s.setup(defs, bc.cfg, hd)
+			check(s.hero_of(0) != null, "%s: o'yinchi qahramoni yo'q" % lv.id)
+			check(s.teams[0].allowed.size() >= 2, "%s: yollash ro'yxati bo'sh" % lv.id)
+			for k in 60:
+				s.step()
+
+
+func test_first_level_winnable_by_bot() -> void:
+	var c := camp()
+	var hd := load_json("res://data/heroes.json")
+	var wins := 0
+	for k in 4:
+		var bc := Campaign.battle_config(c, "chingiz_01", ai_params, 50 + k)
+		var s := BattleSim.new()
+		s.setup(defs, bc.cfg, hd)
+		var ais := [AIController.new(0, ai_params.normal, k + 1), AIController.new(1, bc.ai, k + 7)]
+		run(s, 900.0, ais)
+		if s.winner == 0:
+			wins += 1
+	check(wins >= 3, "1-bosqich juda qiyin: bot %d/4 yutdi" % wins)
+
+
+func test_progress_save_load() -> void:
+	var path := "user://test_progress.json"
+	var st := ProgressStore.new(path)
+	check(st.record_result("test_level", 2, 50) == 2, "yangi yulduzlar soni noto'g'ri")
+	check(st.record_result("test_level", 1, 10) == 0, "eski rekord saqlanishi kerak")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.stars.get("test_level", 0)) == 2, "saqlangan yulduz yuklanmadi")
+	check(int(st2.data.coins) == 60, "saqlangan tanga yuklanmadi")
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string("{buzilgan json")
+	f.close()
+	st2.load_file()
+	check(st2.data.stars.is_empty(), "buzilgan fayl xavfsiz o'qilishi kerak")
+	DirAccess.remove_absolute(path)

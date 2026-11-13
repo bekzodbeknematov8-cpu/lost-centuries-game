@@ -6,6 +6,26 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-13 (3) — 3-bosqich: kampaniyalar (rejali ish)
+**Bajarildi**
+- 4 kampaniya × 10 bosqich (`data/campaigns.json`): tarixiy joylar, mudofaa ("bardosh ber") bosqichlari,
+  boss bosqichlari (Sind: Jaloliddin vs Chingizxon; Anqara: Temur vs Boyazid va aksincha).
+- 1–3 yulduz: g'alaba / qal'a 50%+ / qal'a 80%+ yoki tez g'alaba. Kampaniyalar 15/35/55 ★ bilan ochiladi
+  (o'rtacha 1,5–1,8 ★/bosqich — yumshoq talab).
+- 40 ta tarixiy fakt kartasi, 4 tilda (`data/facts.json`), g'alaba oynasida chiqadi.
+- Kampaniya xaritasi ekrani, natija oynasida yulduz animatsiyasi, tanga, "Keyingi bosqich".
+- Saqlash: `ProgressStore` (atomik yozish, buzilgan faylga chidamli).
+- Bosh menyu: "Kampaniya" + "Erkin jang (Oson/O'rta/Qiyin)".
+- `tools/run_tests.sh`: SCRIPT ERROR bo'lsa ham test yiqiladi (CI ham shuni ishlatadi).
+
+**Sinovda topilgan va tuzatilgan**
+- Saqlash testi skript xatosida jim "o'tib" ketardi → qat'iy runner + ProgressStore ajratildi.
+- Mudofaa taymeri ekrandan chiqib ketardi; "Yollangan" boshlang'ich ishchilarni sanardi → tuzatildi.
+- Kampaniya juda oson edi (bot 1,5 daqiqada 100% 3★): qahramon yolg'iz qal'ani yiqitardi →
+  qahramonlar biroz susaytirildi, qal'a minorasi qahramonlarga 2× uradi, qahramonsiz bosqichlarga
+  "Dushman sardori" qo'shildi, qiyinlik egri chizig'i sozlandi. Natija (`docs/campaign-balance.md`):
+  bot g'alabasi 97% → 77% → 77% → ~80%, o'rtacha 2,3–2,9 ★.
+
 ### 2026-11-13 (2) — foydalanuvchi fikri asosida
 **Foydalanuvchi aytdi:** boshqaruv tugmalari xunuk va o'ngdagi jangchilarni to'sadi; ikonka xunuk; qiziqarliroq qilish kerak.
 **Bajarildi**
@@ -23,7 +43,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–1-bosqich ✅ · 2-bosqich (qahramonlar) ✅ asosiy qismi tayyor
+## Holat: 0–2-bosqich ✅ · 3-bosqich (kampaniya) ✅ asosiy qismi · keyingi: cheksiz mudofaa, so'ng 4-bosqich
 
 ### 2026-11-13
 **Bajarildi**

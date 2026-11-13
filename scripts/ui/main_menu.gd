@@ -53,14 +53,33 @@ func _build() -> void:
 	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	sub.add_theme_font_size_override("font_size", 28)
 	_content.add_child(sub)
-	_content.add_child(_gap(10))
+	_content.add_child(_gap(6))
+	var camp := Button.new()
+	camp.text = tr("MENU_CAMPAIGN")
+	camp.custom_minimum_size = Vector2(420, 76)
+	camp.add_theme_font_size_override("font_size", 34)
+	camp.add_theme_stylebox_override("normal", UITheme.box(Color(0.55, 0.15, 0.08), Painter.GOLD))
+	camp.add_theme_stylebox_override("hover", UITheme.box(Color(0.65, 0.2, 0.1), Painter.GOLD))
+	camp.pressed.connect(func() -> void:
+		Sfx.play("click", 0.7)
+		get_tree().change_scene_to_file("res://scenes/campaign_map.tscn"))
+	_content.add_child(camp)
+	var sk := Label.new()
+	sk.text = tr("MENU_SKIRMISH")
+	sk.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sk.add_theme_font_size_override("font_size", 18)
+	_content.add_child(sk)
+	var diff_row := HBoxContainer.new()
+	diff_row.alignment = BoxContainer.ALIGNMENT_CENTER
+	diff_row.add_theme_constant_override("separation", 10)
+	_content.add_child(diff_row)
 	for d in [["MENU_PLAY_EASY", "easy"], ["MENU_PLAY_NORMAL", "normal"], ["MENU_PLAY_HARD", "hard"]]:
 		var b := Button.new()
 		b.text = tr(d[0])
-		b.custom_minimum_size = Vector2(380, 64)
-		b.add_theme_font_size_override("font_size", 28)
+		b.custom_minimum_size = Vector2(190, 56)
+		b.add_theme_font_size_override("font_size", 20)
 		b.pressed.connect(_start.bind(d[1]))
-		_content.add_child(b)
+		diff_row.add_child(b)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 10)
@@ -102,6 +121,7 @@ func _refresh_toggles() -> void:
 func _start(diff: String) -> void:
 	Sfx.play("click", 0.7)
 	GameState.difficulty = diff
+	GameState.level_id = ""
 	get_tree().change_scene_to_file("res://scenes/hero_select.tscn")
 
 

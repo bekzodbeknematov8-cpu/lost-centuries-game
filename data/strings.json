@@ -12,22 +12,22 @@
 		"tr": "Büyük Fatihlerin Savaşları"
 	},
 	"MENU_PLAY_EASY": {
-		"uz": "Jang: Oson",
-		"en": "Battle: Easy",
-		"ru": "Битва: Легко",
-		"tr": "Savaş: Kolay"
+		"uz": "Oson",
+		"en": "Easy",
+		"ru": "Легко",
+		"tr": "Kolay"
 	},
 	"MENU_PLAY_NORMAL": {
-		"uz": "Jang: O'rta",
-		"en": "Battle: Normal",
-		"ru": "Битва: Средне",
-		"tr": "Savaş: Orta"
+		"uz": "O'rta",
+		"en": "Normal",
+		"ru": "Средне",
+		"tr": "Orta"
 	},
 	"MENU_PLAY_HARD": {
-		"uz": "Jang: Qiyin",
-		"en": "Battle: Hard",
-		"ru": "Битва: Сложно",
-		"tr": "Savaş: Zor"
+		"uz": "Qiyin",
+		"en": "Hard",
+		"ru": "Сложно",
+		"tr": "Zor"
 	},
 	"MENU_LANGUAGE": {
 		"uz": "Til: O'zbekcha",
@@ -304,5 +304,119 @@
 		"en": "Charges like lightning, striking and stunning every enemy in his path.",
 		"ru": "Молнией проносится вперёд, поражая и оглушая всех врагов на пути.",
 		"tr": "Yıldırım gibi atılır; yolundaki tüm düşmanları vurur ve sersemletir."
+	},
+	"CAMPAIGN": {
+		"uz": "Kampaniya",
+		"en": "Campaign",
+		"ru": "Кампания",
+		"tr": "Sefer"
+	},
+	"MENU_CAMPAIGN": {
+		"uz": "Kampaniya",
+		"en": "Campaign",
+		"ru": "Кампания",
+		"tr": "Sefer"
+	},
+	"MENU_SKIRMISH": {
+		"uz": "Erkin jang",
+		"en": "Skirmish",
+		"ru": "Свободный бой",
+		"tr": "Serbest Savaş"
+	},
+	"NEED_STARS": {
+		"uz": "Kerak: %d ★",
+		"en": "Requires %d ★",
+		"ru": "Нужно: %d ★",
+		"tr": "Gerekli: %d ★"
+	},
+	"LOCKED": {
+		"uz": "Yopiq",
+		"en": "Locked",
+		"ru": "Закрыто",
+		"tr": "Kilitli"
+	},
+	"UNLOCK_RULE": {
+		"uz": "Ochish uchun oldingi kampaniyani tugating va jami %d ★ to'plang.",
+		"en": "Finish the previous campaign and collect %d ★ in total to unlock.",
+		"ru": "Пройдите предыдущую кампанию и наберите всего %d ★.",
+		"tr": "Açmak için önceki seferi bitirin ve toplam %d ★ toplayın."
+	},
+	"OBJ_DESTROY": {
+		"uz": "Maqsad: dushman qal'asini yiqiting",
+		"en": "Goal: destroy the enemy fortress",
+		"ru": "Цель: разрушьте вражескую крепость",
+		"tr": "Hedef: düşman kalesini yıkın"
+	},
+	"OBJ_SURVIVE": {
+		"uz": "Maqsad: qal'ani %d soniya himoya qiling",
+		"en": "Goal: defend your fortress for %d seconds",
+		"ru": "Цель: удержите крепость %d секунд",
+		"tr": "Hedef: kalenizi %d saniye savunun"
+	},
+	"OBJ_SURVIVE_LEFT": {
+		"uz": "Bardosh bering: %d:%02d",
+		"en": "Hold on: %d:%02d",
+		"ru": "Держитесь: %d:%02d",
+		"tr": "Dayanın: %d:%02d"
+	},
+	"ENEMY_HERO": {
+		"uz": "Raqib: %s",
+		"en": "Rival: %s",
+		"ru": "Противник: %s",
+		"tr": "Rakip: %s"
+	},
+	"STARS_RULE": {
+		"uz": "★ g'alaba · ★★ qal'a 50%+ · ★★★ qal'a 80%+ yoki tez g'alaba",
+		"en": "★ win · ★★ fortress 50%+ · ★★★ fortress 80%+ or a fast win",
+		"ru": "★ победа · ★★ крепость 50%+ · ★★★ крепость 80%+ или быстрая победа",
+		"tr": "★ zafer · ★★ kale %50+ · ★★★ kale %80+ veya hızlı zafer"
+	},
+	"NEXT_LEVEL": {
+		"uz": "Keyingi bosqich ›",
+		"en": "Next level ›",
+		"ru": "Следующий уровень ›",
+		"tr": "Sonraki bölüm ›"
+	},
+	"COINS_EARNED": {
+		"uz": "Tanga: +%d",
+		"en": "Coins: +%d",
+		"ru": "Монеты: +%d",
+		"tr": "Altın: +%d"
+	},
+	"DID_YOU_KNOW": {
+		"uz": "Bilasizmi?",
+		"en": "Did you know?",
+		"ru": "А вы знали?",
+		"tr": "Biliyor muydunuz?"
+	},
+	"HINT_DEFEAT": {
+		"uz": "Maslahat: avval 4–5 ishchi yollang, raqib qo'shiniga qarshi birlik tanlang va qahramon kuchini to'dalarga ishlating.",
+		"en": "Tip: train 4–5 workers first, counter the enemy's units and use your hero's power on groups.",
+		"ru": "Совет: сначала наймите 4–5 рабочих, выбирайте войска против армии врага и применяйте силу героя по скоплениям.",
+		"tr": "İpucu: önce 4–5 işçi eğitin, düşmana karşı uygun birlik seçin ve kahraman gücünü gruplara kullanın."
+	},
+	"HERO_SARDOR": {
+		"uz": "Dushman sardori",
+		"en": "Enemy Commander",
+		"ru": "Вражеский военачальник",
+		"tr": "Düşman Komutanı"
+	},
+	"HERO_SARDOR_TITLE": {
+		"uz": "Raqib qo'shin boshlig'i",
+		"en": "Leader of the rival army",
+		"ru": "Предводитель вражеского войска",
+		"tr": "Rakip ordunun lideri"
+	},
+	"ABIL_WARCRY": {
+		"uz": "Jangovar hayqiriq",
+		"en": "War Cry",
+		"ru": "Боевой клич",
+		"tr": "Savaş Narası"
+	},
+	"ABIL_WARCRY_DESC": {
+		"uz": "Qo'shinga qisqa muddat kuch beradi.",
+		"en": "Briefly empowers the army.",
+		"ru": "Ненадолго усиливает войско.",
+		"tr": "Orduyu kısa süreliğine güçlendirir."
 	}
 }

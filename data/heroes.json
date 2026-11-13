@@ -6,8 +6,8 @@
 		"cost": 0,
 		"value": 700,
 		"pop": 0,
-		"hp": 780,
-		"damage": 26,
+		"hp": 580,
+		"damage": 21,
 		"range": 300,
 		"cooldown": 1.0,
 		"speed": 135,
@@ -56,8 +56,8 @@
 		"cost": 0,
 		"value": 700,
 		"pop": 0,
-		"hp": 1000,
-		"damage": 40,
+		"hp": 750,
+		"damage": 32,
 		"range": 38,
 		"cooldown": 0.85,
 		"speed": 150,
@@ -106,8 +106,8 @@
 		"cost": 0,
 		"value": 750,
 		"pop": 0,
-		"hp": 1200,
-		"damage": 36,
+		"hp": 900,
+		"damage": 29,
 		"range": 36,
 		"cooldown": 0.95,
 		"speed": 120,
@@ -152,8 +152,8 @@
 		"cost": 0,
 		"value": 700,
 		"pop": 0,
-		"hp": 1080,
-		"damage": 34,
+		"hp": 810,
+		"damage": 27,
 		"range": 36,
 		"cooldown": 0.8,
 		"speed": 165,
@@ -191,6 +191,53 @@
 			"duration": 0.45,
 			"damage": 85,
 			"stun": 1.5
+		}
+	},
+	"sardor": {
+		"name": "HERO_SARDOR",
+		"title": "HERO_SARDOR_TITLE",
+		"hero": true,
+		"selectable": false,
+		"cost": 0,
+		"value": 450,
+		"pop": 0,
+		"hp": 720,
+		"damage": 26,
+		"range": 34,
+		"cooldown": 0.95,
+		"speed": 125,
+		"armor": 4,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {},
+		"look": {
+			"cape": [
+				0.3,
+				0.28,
+				0.26
+			],
+			"helm": "",
+			"plume": [
+				0.8,
+				0.2,
+				0.2
+			]
+		},
+		"ability": {
+			"id": "rally",
+			"name": "ABIL_WARCRY",
+			"desc": "ABIL_WARCRY_DESC",
+			"cooldown": 40,
+			"duration": 8,
+			"damage_mult": 1.2,
+			"speed_mult": 1.15,
+			"heal": 0.15
 		}
 	}
 }

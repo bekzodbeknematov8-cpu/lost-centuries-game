@@ -14,3 +14,7 @@
 | 2026-11-13 | Qahramon har jangda bepul, aholi joyi olmaydi, o'lsa 40 s da qaytadi | Har jangda qahramon markaziy rol o'ynashi uchun |
 | 2026-11-13 | Qahramonlar `data/heroes.json` da; dushman qahramoni tasodifiy (kampaniyada bosqichdan olinadi) | Balans JSON'da |
 | 2026-11-13 | Jaloliddin ingliz/turk tillarida tarixiy nomi bilan (Jalal al-Din Mingburnu / Celaleddin) | Tarixiy aniqlik |
+| 2026-11-13 | Kampaniya ochilishi: oldingi kampaniya tugashi + jami 15/35/55 ★ | Foydalanuvchi: "yulduz kerak, lekin juda qiyin bo'lmasin" |
+| 2026-11-13 | Qahramonsiz bosqichlarda "Dushman sardori" (tanlab bo'lmaydi) | Aks holda o'yinchi qahramoni yolg'iz yutardi |
+| 2026-11-13 | Qal'a minorasi qahramonlarga 2× zarar | Qahramon qo'shinsiz qal'ani ololmasligi kerak |
+| 2026-11-13 | Saqlash `user://progress.json`, atomik yozish | Telefon o'chib qolsa ham progress buzilmaydi |

@@ -1,0 +1,607 @@
+{
+	"order": [
+		"chingiz",
+		"jaloliddin",
+		"temur",
+		"boyazid"
+	],
+	"campaigns": {
+		"chingiz": {
+			"name": {
+				"uz": "Dasht birlashuvi",
+				"en": "Unification of the Steppe",
+				"ru": "Объединение степи",
+				"tr": "Bozkırın Birliği"
+			},
+			"years": "1180–1206",
+			"require_stars": 0,
+			"hero": "chingiz",
+			"levels": [
+				{
+					"id": "chingiz_01",
+					"name": {
+						"uz": "Onon daryosi",
+						"en": "Onon River",
+						"ru": "Река Онон",
+						"tr": "Onon Nehri"
+					},
+					"ai": "easy",
+					"enemy_income": 0.75,
+					"allowed": [
+						"worker",
+						"swordsman"
+					],
+					"enemy_allowed": [
+						"worker",
+						"swordsman"
+					],
+					"par": 240,
+					"enemy_castle": 1400
+				},
+				{
+					"id": "chingiz_02",
+					"name": {
+						"uz": "Burxon Xaldun",
+						"en": "Burkhan Khaldun",
+						"ru": "Бурхан-Халдун",
+						"tr": "Burhan Haldun"
+					},
+					"ai": "easy",
+					"enemy_income": 0.8,
+					"allowed": [
+						"worker",
+						"swordsman",
+						"archer"
+					],
+					"enemy_allowed": [
+						"worker",
+						"swordsman",
+						"archer"
+					],
+					"par": 260,
+					"enemy_castle": 1500
+				},
+				{
+					"id": "chingiz_03",
+					"name": {
+						"uz": "Merkitlar yurti",
+						"en": "Merkit Lands",
+						"ru": "Земли меркитов",
+						"tr": "Merkit Toprakları"
+					},
+					"ai": "easy",
+					"enemy_income": 0.85,
+					"allowed": [
+						"worker",
+						"swordsman",
+						"archer",
+						"spearman"
+					],
+					"enemy_allowed": [
+						"worker",
+						"swordsman",
+						"archer",
+						"spearman"
+					],
+					"par": 280,
+					"enemy_castle": 1600
+				},
+				{
+					"id": "chingiz_04",
+					"name": {
+						"uz": "Tatarlar dashti",
+						"en": "Tatar Steppe",
+						"ru": "Татарская степь",
+						"tr": "Tatar Bozkırı"
+					},
+					"ai": "easy",
+					"enemy_income": 0.9,
+					"allowed": [
+						"worker",
+						"swordsman",
+						"archer",
+						"spearman"
+					],
+					"par": 280,
+					"enemy_castle": 1700
+				},
+				{
+					"id": "chingiz_05",
+					"name": {
+						"uz": "Kereytlar",
+						"en": "The Keraites",
+						"ru": "Кереиты",
+						"tr": "Kereyitler"
+					},
+					"ai": "normal",
+					"enemy_income": 0.85,
+					"par": 300,
+					"enemy_castle": 1800
+				},
+				{
+					"id": "chingiz_06",
+					"name": {
+						"uz": "Chakirmaut",
+						"en": "Chakirmaut",
+						"ru": "Чакирмаут",
+						"tr": "Çakırmaut"
+					},
+					"ai": "normal",
+					"enemy_income": 0.887,
+					"par": 300
+				},
+				{
+					"id": "chingiz_07",
+					"name": {
+						"uz": "Naymanlar tog'i",
+						"en": "Naiman Mountains",
+						"ru": "Горы найманов",
+						"tr": "Nayman Dağları"
+					},
+					"ai": "normal",
+					"enemy_income": 0.925,
+					"par": 300
+				},
+				{
+					"id": "chingiz_08",
+					"name": {
+						"uz": "Jamuqa bilan jang",
+						"en": "Battle with Jamukha",
+						"ru": "Битва с Джамухой",
+						"tr": "Camuka ile Savaş"
+					},
+					"ai": "normal",
+					"enemy_income": 0.963,
+					"par": 320
+				},
+				{
+					"id": "chingiz_09",
+					"name": {
+						"uz": "Oltoy etaklari",
+						"en": "Altai Foothills",
+						"ru": "Предгорья Алтая",
+						"tr": "Altay Etekleri"
+					},
+					"ai": "normal",
+					"enemy_income": 1.0,
+					"objective": "survive",
+					"survive": 210,
+					"par": 210
+				},
+				{
+					"id": "chingiz_10",
+					"name": {
+						"uz": "Buyuk qurultoy",
+						"en": "The Great Kurultai",
+						"ru": "Великий курултай",
+						"tr": "Büyük Kurultay"
+					},
+					"ai": "normal",
+					"enemy_income": 0.95,
+					"par": 340,
+					"enemy_castle": 2200
+				}
+			]
+		},
+		"jaloliddin": {
+			"name": {
+				"uz": "Xorazm qalqoni",
+				"en": "Shield of Khwarazm",
+				"ru": "Щит Хорезма",
+				"tr": "Harezm'in Kalkanı"
+			},
+			"years": "1219–1221",
+			"require_stars": 15,
+			"hero": "jaloliddin",
+			"levels": [
+				{
+					"id": "jaloliddin_01",
+					"name": {
+						"uz": "O'tror",
+						"en": "Otrar",
+						"ru": "Отрар",
+						"tr": "Otrar"
+					},
+					"ai": "normal",
+					"enemy_income": 0.95,
+					"objective": "survive",
+					"survive": 180,
+					"par": 180
+				},
+				{
+					"id": "jaloliddin_02",
+					"name": {
+						"uz": "Buxoro",
+						"en": "Bukhara",
+						"ru": "Бухара",
+						"tr": "Buhara"
+					},
+					"ai": "normal",
+					"enemy_income": 0.971,
+					"par": 300
+				},
+				{
+					"id": "jaloliddin_03",
+					"name": {
+						"uz": "Samarqand",
+						"en": "Samarkand",
+						"ru": "Самарканд",
+						"tr": "Semerkant"
+					},
+					"ai": "normal",
+					"enemy_income": 0.992,
+					"par": 300
+				},
+				{
+					"id": "jaloliddin_04",
+					"name": {
+						"uz": "Urganch mudofaasi",
+						"en": "Defense of Gurganj",
+						"ru": "Оборона Ургенча",
+						"tr": "Gürgenç Savunması"
+					},
+					"ai": "normal",
+					"enemy_income": 1.014,
+					"objective": "survive",
+					"survive": 240,
+					"par": 240
+				},
+				{
+					"id": "jaloliddin_05",
+					"name": {
+						"uz": "Niso",
+						"en": "Nisa",
+						"ru": "Ниса",
+						"tr": "Nisa"
+					},
+					"ai": "normal",
+					"enemy_income": 1.115,
+					"par": 300
+				},
+				{
+					"id": "jaloliddin_06",
+					"name": {
+						"uz": "G'azna",
+						"en": "Ghazni",
+						"ru": "Газни",
+						"tr": "Gazne"
+					},
+					"ai": "normal",
+					"enemy_income": 1.136,
+					"par": 320
+				},
+				{
+					"id": "jaloliddin_07",
+					"name": {
+						"uz": "Parvon jangi",
+						"en": "Battle of Parwan",
+						"ru": "Битва при Парване",
+						"tr": "Pervan Savaşı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.158,
+					"par": 320
+				},
+				{
+					"id": "jaloliddin_08",
+					"name": {
+						"uz": "Panjshir",
+						"en": "Panjshir",
+						"ru": "Панджшер",
+						"tr": "Pençşir"
+					},
+					"ai": "normal",
+					"enemy_income": 1.179,
+					"par": 320
+				},
+				{
+					"id": "jaloliddin_09",
+					"name": {
+						"uz": "Sind sohili",
+						"en": "Banks of the Indus",
+						"ru": "Берег Инда",
+						"tr": "İndus Kıyısı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.2,
+					"objective": "survive",
+					"survive": 240,
+					"par": 240
+				},
+				{
+					"id": "jaloliddin_10",
+					"name": {
+						"uz": "Sind jangi",
+						"en": "Battle of the Indus",
+						"ru": "Битва на Инде",
+						"tr": "İndus Savaşı"
+					},
+					"ai": "normal",
+					"enemy_income": 0.9,
+					"enemy_hero": "chingiz",
+					"par": 360,
+					"enemy_castle": 2400
+				}
+			]
+		},
+		"temur": {
+			"name": {
+				"uz": "Sohibqiron yo'li",
+				"en": "Path of the Sahibqiran",
+				"ru": "Путь Сахибкирана",
+				"tr": "Sahibkıran'ın Yolu"
+			},
+			"years": "1360–1402",
+			"require_stars": 35,
+			"hero": "temur",
+			"levels": [
+				{
+					"id": "temur_01",
+					"name": {
+						"uz": "Kesh",
+						"en": "Kesh",
+						"ru": "Кеш",
+						"tr": "Keş"
+					},
+					"ai": "normal",
+					"enemy_income": 1.0,
+					"par": 300
+				},
+				{
+					"id": "temur_02",
+					"name": {
+						"uz": "Seyiston",
+						"en": "Sistan",
+						"ru": "Систан",
+						"tr": "Sistan"
+					},
+					"ai": "normal",
+					"enemy_income": 1.021,
+					"objective": "survive",
+					"survive": 210,
+					"par": 210
+				},
+				{
+					"id": "temur_03",
+					"name": {
+						"uz": "Balx",
+						"en": "Balkh",
+						"ru": "Балх",
+						"tr": "Belh"
+					},
+					"ai": "normal",
+					"enemy_income": 1.043,
+					"par": 320
+				},
+				{
+					"id": "temur_04",
+					"name": {
+						"uz": "Xorazm",
+						"en": "Khwarazm",
+						"ru": "Хорезм",
+						"tr": "Harezm"
+					},
+					"ai": "normal",
+					"enemy_income": 1.0,
+					"par": 320
+				},
+				{
+					"id": "temur_05",
+					"name": {
+						"uz": "Hirot",
+						"en": "Herat",
+						"ru": "Герат",
+						"tr": "Herat"
+					},
+					"ai": "normal",
+					"enemy_income": 1.02,
+					"par": 320
+				},
+				{
+					"id": "temur_06",
+					"name": {
+						"uz": "Isfahon",
+						"en": "Isfahan",
+						"ru": "Исфахан",
+						"tr": "İsfahan"
+					},
+					"ai": "normal",
+					"enemy_income": 1.107,
+					"par": 330
+				},
+				{
+					"id": "temur_07",
+					"name": {
+						"uz": "Terek daryosi",
+						"en": "Terek River",
+						"ru": "Река Терек",
+						"tr": "Terek Nehri"
+					},
+					"ai": "normal",
+					"enemy_income": 1.129,
+					"par": 340
+				},
+				{
+					"id": "temur_08",
+					"name": {
+						"uz": "Dehli",
+						"en": "Delhi",
+						"ru": "Дели",
+						"tr": "Delhi"
+					},
+					"ai": "normal",
+					"enemy_income": 1.15,
+					"par": 340,
+					"enemy_castle": 2300
+				},
+				{
+					"id": "temur_09",
+					"name": {
+						"uz": "Damashq",
+						"en": "Damascus",
+						"ru": "Дамаск",
+						"tr": "Şam"
+					},
+					"ai": "hard",
+					"enemy_income": 0.95,
+					"par": 360
+				},
+				{
+					"id": "temur_10",
+					"name": {
+						"uz": "Anqara jangi",
+						"en": "Battle of Ankara",
+						"ru": "Анкарская битва",
+						"tr": "Ankara Savaşı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.0,
+					"enemy_hero": "boyazid",
+					"par": 380,
+					"enemy_castle": 2500
+				}
+			]
+		},
+		"boyazid": {
+			"name": {
+				"uz": "Yashin sultoni",
+				"en": "The Thunderbolt Sultan",
+				"ru": "Молниеносный султан",
+				"tr": "Yıldırım Sultan"
+			},
+			"years": "1389–1402",
+			"require_stars": 55,
+			"hero": "boyazid",
+			"levels": [
+				{
+					"id": "boyazid_01",
+					"name": {
+						"uz": "Kosovo",
+						"en": "Kosovo",
+						"ru": "Косово",
+						"tr": "Kosova"
+					},
+					"ai": "normal",
+					"enemy_income": 1.05,
+					"par": 320
+				},
+				{
+					"id": "boyazid_02",
+					"name": {
+						"uz": "Anado'lu beyliklari",
+						"en": "Anatolian Beyliks",
+						"ru": "Анатолийские бейлики",
+						"tr": "Anadolu Beylikleri"
+					},
+					"ai": "normal",
+					"enemy_income": 1.075,
+					"par": 320
+				},
+				{
+					"id": "boyazid_03",
+					"name": {
+						"uz": "Tirnovo",
+						"en": "Tarnovo",
+						"ru": "Тырново",
+						"tr": "Tırnova"
+					},
+					"ai": "normal",
+					"enemy_income": 1.1,
+					"par": 330
+				},
+				{
+					"id": "boyazid_04",
+					"name": {
+						"uz": "Bosfor qal'asi",
+						"en": "Bosphorus Fortress",
+						"ru": "Крепость на Босфоре",
+						"tr": "Boğaz Hisarı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.305,
+					"objective": "survive",
+					"survive": 240,
+					"par": 240
+				},
+				{
+					"id": "boyazid_05",
+					"name": {
+						"uz": "Konstantinopol",
+						"en": "Constantinople",
+						"ru": "Константинополь",
+						"tr": "Konstantinopolis"
+					},
+					"ai": "normal",
+					"enemy_income": 1.33,
+					"par": 340,
+					"enemy_castle": 2600
+				},
+				{
+					"id": "boyazid_06",
+					"name": {
+						"uz": "Dunay bo'yi",
+						"en": "The Danube",
+						"ru": "Берег Дуная",
+						"tr": "Tuna Kıyısı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.355,
+					"par": 340
+				},
+				{
+					"id": "boyazid_07",
+					"name": {
+						"uz": "Salib yurishi",
+						"en": "The Crusade",
+						"ru": "Крестовый поход",
+						"tr": "Haçlı Seferi"
+					},
+					"ai": "normal",
+					"enemy_income": 1.38,
+					"objective": "survive",
+					"survive": 270,
+					"par": 270
+				},
+				{
+					"id": "boyazid_08",
+					"name": {
+						"uz": "Nikopol",
+						"en": "Nicopolis",
+						"ru": "Никополь",
+						"tr": "Niğbolu"
+					},
+					"ai": "hard",
+					"enemy_income": 1.1,
+					"par": 360,
+					"enemy_castle": 2400
+				},
+				{
+					"id": "boyazid_09",
+					"name": {
+						"uz": "Bursa",
+						"en": "Bursa",
+						"ru": "Бурса",
+						"tr": "Bursa"
+					},
+					"ai": "hard",
+					"enemy_income": 1.1,
+					"par": 360
+				},
+				{
+					"id": "boyazid_10",
+					"name": {
+						"uz": "Anqara jangi",
+						"en": "Battle of Ankara",
+						"ru": "Анкарская битва",
+						"tr": "Ankara Savaşı"
+					},
+					"ai": "hard",
+					"enemy_income": 0.95,
+					"enemy_hero": "temur",
+					"par": 400,
+					"enemy_castle": 2600
+				}
+			]
+		}
+	}
+}

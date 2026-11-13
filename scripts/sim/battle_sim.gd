@@ -9,8 +9,8 @@ const MAX_QUEUE := 5
 const STEP := 1.0 / 30.0
 const CASTLE_HALF_W := 70.0
 const CASTLE_ARROW_RANGE := 380.0
-const CASTLE_ARROW_CD := 1.8
-const CASTLE_ARROW_DMG := 11.0
+const CASTLE_ARROW_CD := 1.4
+const CASTLE_ARROW_DMG := 16.0
 const DEFEND_ZONE := 430.0
 const ATTACK_AGGRO := 650.0
 const CORPSE_TIME := 3.0
@@ -27,6 +27,7 @@ var events: Array[Dictionary] = []
 var time: float = 0.0
 var winner: int = -1
 var rng := RandomNumberGenerator.new()
+var survive_time: float = 0.0     ## >0: o'yinchi shu vaqtgacha qal'ani saqlasa yutadi
 var control_dir: int = 0
 var control_attack: bool = false
 
@@ -47,6 +48,7 @@ func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = 
 	_by_id.clear()
 	time = 0.0
 	winner = -1
+	survive_time = float(cfg.get("survive_time", 0.0))
 	for i in 2:
 		var t := TeamState.new()
 		t.index = i
@@ -65,6 +67,7 @@ func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = 
 		for k in start_units.size():
 			var u := spawn_unit(i, start_units[k])
 			u.x += t.dir * (20.0 + k * 25.0)
+		t.stats.trained = 0   # boshlang'ich bepul birliklar hisobga kirmaydi
 		var hv: Array = cfg.get("heroes", ["", ""])
 		t.hero_type = str(hv[i])
 		if t.hero_type != "" and heroes.has(t.hero_type):
@@ -387,6 +390,9 @@ func step(dt: float = STEP) -> void:
 			t.castle_hp = 0.0
 			winner = 1 - t.index
 			events.append({"type": "castle_destroyed", "team": t.index, "x": t.castle_x})
+	if survive_time > 0.0 and winner < 0 and time >= survive_time:
+		winner = 0
+		events.append({"type": "survived", "team": 0, "x": teams[0].castle_x})
 
 
 func pop_events() -> Array[Dictionary]:
@@ -763,7 +769,9 @@ func _update_castle(t: TeamState, dt: float) -> void:
 			best = e
 	if best:
 		t.castle_shot_cd = CASTLE_ARROW_CD
-		_fire(t.index, t.castle_x, 150.0, best.id, -1, CASTLE_ARROW_DMG, "arrow", -1)
+		# Minora kamonchilari qahramonlarni nishonga oladi: qahramon yolg'iz qal'ani ololmaydi.
+		var dmg := CASTLE_ARROW_DMG * (2.0 if best.hero else 1.0)
+		_fire(t.index, t.castle_x, 150.0, best.id, -1, dmg, "arrow", -1)
 
 
 func _cleanup() -> void:

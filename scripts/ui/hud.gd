@@ -20,6 +20,9 @@ var _hint_time := 7.0
 var _banner: Label
 var _banner_time := 0.0
 var _root: Control
+var _objective: Label
+var _end_result: Dictionary = {}
+var _next_btn: Button
 
 
 # --- Kichik chizilgan elementlar -----------------------------------------------
@@ -213,6 +216,52 @@ class AbilityButton:
 		draw_string(font, Vector2(0, size.y - 6), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, Painter.GOLD)
 
 
+class StarRow:
+	## Uchta yulduz; to'ldirilganlari ketma-ket "chaqnab" paydo bo'ladi.
+	extends Control
+	var count := 0
+	var _t := 0.0
+	var _played := 0
+
+	func _init() -> void:
+		custom_minimum_size = Vector2(300, 96)
+
+	func _process(delta: float) -> void:
+		if not is_visible_in_tree():
+			return
+		_t += delta
+		var shown := mini(count, int(_t / 0.45))
+		if shown > _played:
+			_played = shown
+			Sfx.play("coin", 0.8, 0.0)
+		queue_redraw()
+
+	func reset(n: int) -> void:
+		count = n
+		_t = 0.0
+		_played = 0
+
+	func _draw() -> void:
+		for i in 3:
+			var c := Vector2(size.x * 0.5 + (i - 1) * 92.0, 52.0 - (10.0 if i == 1 else 0.0))
+			var lit := i < count and _t >= (i + 1) * 0.45
+			var r := 38.0 if i == 1 else 32.0
+			if lit:
+				var k := clampf((_t - (i + 1) * 0.45) / 0.2, 0.0, 1.0)
+				r *= 1.0 + 0.25 * (1.0 - k)
+			_star(c, r + 4.0, Color(0.25, 0.15, 0.05))
+			_star(c, r, Painter.GOLD if lit else Color(0.35, 0.3, 0.25))
+			if lit:
+				_star(c + Vector2(-r * 0.15, -r * 0.2), r * 0.35, Color(1, 1, 0.85, 0.7))
+
+	func _star(c: Vector2, r: float, col: Color) -> void:
+		var pts := PackedVector2Array()
+		for i in 10:
+			var rr := r if i % 2 == 0 else r * 0.45
+			pts.append(c + Vector2.from_angle(-PI / 2 + i * PI / 5) * rr)
+		draw_colored_polygon(pts, col)
+
+
 class MiniMap:
 	extends Control
 	## Butun jang maydonining kichik xaritasi. Bosib/surib kamerani ko'chirish mumkin.
@@ -273,6 +322,8 @@ func _ready() -> void:
 	_build_pause_panel()
 	_hint = _center_label(24, 96)
 	_hint.text = tr("HINT_START")
+	_objective = _center_label(20, 70)
+	_objective.visible = false
 	_banner = _center_label(34, 150)
 	_banner.add_theme_color_override("font_color", Painter.GOLD)
 	_banner.add_theme_constant_override("outline_size", 8)
@@ -281,9 +332,12 @@ func _ready() -> void:
 
 func _center_label(font_size: int, y: float) -> Label:
 	var l := Label.new()
-	l.set_anchors_preset(Control.PRESET_CENTER_TOP)
-	l.position = Vector2(-450, y)
-	l.size = Vector2(900, 40)
+	l.anchor_left = 0.5
+	l.anchor_right = 0.5
+	l.offset_left = -450
+	l.offset_right = 450
+	l.offset_top = y
+	l.offset_bottom = y + 40
 	l.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
@@ -446,13 +500,38 @@ func _build_end_panel() -> void:
 	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	title.add_theme_font_size_override("font_size", 64)
 	v.add_child(title)
+	var stars := StarRow.new()
+	stars.name = "Stars"
+	stars.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	v.add_child(stars)
 	var stats := Label.new()
 	stats.name = "Stats"
 	stats.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	stats.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	stats.custom_minimum_size = Vector2(580, 0)
+	stats.custom_minimum_size = Vector2(640, 0)
+	stats.add_theme_font_size_override("font_size", 18)
 	v.add_child(stats)
-	v.add_child(_button_row([["RESTART", _on_restart], ["MENU", _on_menu]]))
+	var fact := PanelContainer.new()
+	fact.name = "Fact"
+	fact.add_theme_stylebox_override("panel", UITheme.box(Color(0.93, 0.85, 0.66), Color(0.55, 0.38, 0.18), 10, 2))
+	var fl := Label.new()
+	fl.name = "FactText"
+	fl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	fl.custom_minimum_size = Vector2(640, 0)
+	fl.add_theme_color_override("font_color", Color(0.25, 0.15, 0.08))
+	fl.add_theme_constant_override("outline_size", 0)
+	fl.add_theme_font_size_override("font_size", 18)
+	fact.add_child(fl)
+	v.add_child(fact)
+	var row := _button_row([["RESTART", _on_restart], ["MENU", _on_menu]])
+	_next_btn = Button.new()
+	_next_btn.text = tr("NEXT_LEVEL")
+	_next_btn.custom_minimum_size = Vector2(220, 64)
+	_next_btn.add_theme_stylebox_override("normal", UITheme.box(Color(0.55, 0.15, 0.08), Painter.GOLD))
+	_next_btn.add_theme_stylebox_override("hover", UITheme.box(Color(0.65, 0.2, 0.1), Painter.GOLD))
+	_next_btn.pressed.connect(_on_next)
+	row.add_child(_next_btn)
+	v.add_child(row)
 
 
 func _build_pause_panel() -> void:
@@ -500,6 +579,9 @@ func _process(delta: float) -> void:
 		_hint_time -= delta
 		_hint.modulate.a = clampf(_hint_time, 0.0, 1.0)
 		_hint.visible = _hint_time > 0.0
+	if _objective.visible and sim.survive_time > 0.0 and sim.winner < 0:
+		var left := maxi(0, ceili(sim.survive_time - sim.time))
+		_objective.text = tr("OBJ_SURVIVE_LEFT") % [left / 60, left % 60]
 	if _banner_time > 0.0:
 		_banner_time -= delta
 		_banner.modulate.a = clampf(_banner_time * 2.0, 0.0, 1.0)
@@ -544,7 +626,14 @@ func on_control_lost() -> void:
 	pass
 
 
-func show_end(victory: bool) -> void:
+func show_objective(text: String) -> void:
+	_objective.text = text
+	_objective.visible = true
+
+
+func show_end(victory: bool, result: Dictionary = {}) -> void:
+	_end_result = result
+	_objective.visible = false
 	var title: Label = _end_panel.find_child("Title", true, false)
 	title.text = tr("VICTORY") if victory else tr("DEFEAT")
 	title.add_theme_color_override("font_color", Painter.GOLD if victory else Color(0.9, 0.35, 0.3))
@@ -552,7 +641,36 @@ func show_end(victory: bool) -> void:
 	var secs := int(battle.sim.time)
 	var stats: Label = _end_panel.find_child("Stats", true, false)
 	stats.text = tr("STATS_FMT") % [team.stats.trained, team.stats.killed, int(team.stats.gold_mined), "%d:%02d" % [secs / 60, secs % 60]]
+	var lv: Dictionary = result.get("level", {})
+	var star_row: StarRow = _end_panel.find_child("Stars", true, false)
+	var fact: PanelContainer = _end_panel.find_child("Fact", true, false)
+	star_row.visible = not lv.is_empty()
+	fact.visible = false
+	_next_btn.visible = false
+	if not lv.is_empty():
+		star_row.reset(int(result.stars))
+		if int(result.coins) > 0:
+			stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
+		if not victory:
+			stats.text += "\n" + tr("HINT_DEFEAT")
+		var f: Dictionary = GameData.facts.get(str(lv.id), {})
+		if victory and not f.is_empty():
+			var loc := TranslationServer.get_locale().substr(0, 2)
+			var fl: Label = fact.find_child("FactText", true, false)
+			fl.text = tr("DID_YOU_KNOW") + " " + str(f.get(loc, f.en))
+			fact.visible = true
+		var nxt := Campaign.next_level_id(GameData.campaigns, str(lv.id))
+		_next_btn.visible = victory and nxt != ""
 	_end_panel.visible = true
+
+
+func _on_next() -> void:
+	var lv: Dictionary = _end_result.get("level", {})
+	var nxt := Campaign.next_level_id(GameData.campaigns, str(lv.get("id", "")))
+	get_tree().paused = false
+	if nxt != "":
+		GameState.level_id = nxt
+		get_tree().reload_current_scene()
 
 
 func _on_pause() -> void:
@@ -569,4 +687,7 @@ func _on_restart() -> void:
 
 func _on_menu() -> void:
 	get_tree().paused = false
-	get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+	if GameState.level_id != "":
+		get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
+	else:
+		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")

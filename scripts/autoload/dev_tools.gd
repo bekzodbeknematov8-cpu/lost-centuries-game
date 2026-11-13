@@ -21,6 +21,8 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	if args.has("diff"):
 		GameState.difficulty = args.diff
+	if args.has("level"):
+		GameState.level_id = args.level
 	if args.has("hero"):
 		GameState.hero = args.hero
 	if args.has("locale"):

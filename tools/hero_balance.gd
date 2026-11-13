@@ -8,7 +8,7 @@ func _init():
 	var games := 6
 	for a in OS.get_cmdline_user_args():
 		if a.begins_with("--games="): games = int(a.split("=")[1])
-	var names = hd.keys()
+	var names = hd.keys().filter(func(h): return bool(hd[h].get("selectable", true)))
 	var line = "%-11s" % ""
 	for n in names: line += "%-11s" % n
 	print(line + "  (qator g'alaba foizi)")

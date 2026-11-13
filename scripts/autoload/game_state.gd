@@ -2,9 +2,14 @@ extends Node
 ## O'yinchi tanlovlari va sozlamalari (saqlanadi).
 
 const SETTINGS_PATH := "user://settings.json"
+const PROGRESS_PATH := "user://progress.json"
+const PROGRESS_VERSION := 1
 
 var difficulty: String = "easy"
 var hero: String = "temur"
+var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0}
+var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
 	"music_volume": 0.7,
@@ -18,6 +23,7 @@ const LOCALES := ["uz", "en", "ru", "tr"]
 func _ready() -> void:
 	_load_translations()
 	load_settings()
+	load_progress()
 	TranslationServer.set_locale(str(settings.locale))
 
 
@@ -57,3 +63,20 @@ func set_locale(loc: String) -> void:
 	settings.locale = loc
 	TranslationServer.set_locale(loc)
 	save_settings()
+
+
+# --- Kampaniya progressi ------------------------------------------------------
+
+func load_progress() -> void:
+	_store.load_file()
+	progress = _store.data
+
+
+func save_progress() -> void:
+	_store.data = progress
+	_store.save_file()
+
+
+func record_result(lid: String, stars: int, coins: int) -> int:
+	_store.data = progress
+	return _store.record_result(lid, stars, coins)

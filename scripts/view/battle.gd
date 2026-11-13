@@ -18,6 +18,7 @@ var _ended := false
 var _cam_target_x := 0.0
 var _follow := true
 var auto_player: AIController = null   ## Avtomatik sinov/demo rejimi uchun
+var level: Dictionary = {}              ## Kampaniya bosqichi (bo'sh bo'lsa erkin jang)
 
 
 func _ready() -> void:
@@ -26,15 +27,24 @@ func _ready() -> void:
 	var diff := GameState.difficulty
 	var ai_p: Dictionary = GameData.ai.get(diff, GameData.ai.easy)
 	var my_hero := GameState.hero
-	var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero)
-	var enemy_hero: String = others[randi() % others.size()]
-	sim.setup(GameData.units, {
-		"seed": randi(),
-		"start_gold": 350,
-		"income_mult": [1.0, float(ai_p.get("income_mult", 1.0))],
-		"start_units": [["worker", "worker"], ["worker", "worker"]],
-		"heroes": [my_hero, enemy_hero],
-	}, GameData.heroes)
+	var enemy_hero := ""
+	if GameState.level_id != "":
+		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi())
+		level = bc.level
+		ai_p = bc.ai
+		my_hero = str(bc.cfg.heroes[0])
+		enemy_hero = str(bc.cfg.heroes[1])
+		sim.setup(GameData.units, bc.cfg, GameData.heroes)
+	else:
+		var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero and bool(GameData.heroes[h].get("selectable", true)))
+		enemy_hero = others[randi() % others.size()]
+		sim.setup(GameData.units, {
+			"seed": randi(),
+			"start_gold": 350,
+			"income_mult": [1.0, float(ai_p.get("income_mult", 1.0))],
+			"start_units": [["worker", "worker"], ["worker", "worker"]],
+			"heroes": [my_hero, enemy_hero],
+		}, GameData.heroes)
 	enemy_ai = AIController.new(1, ai_p, randi())
 	cam = Camera2D.new()
 	add_child(cam)
@@ -47,7 +57,16 @@ func _ready() -> void:
 	Sfx.play_music("battle")
 	if OS.get_cmdline_user_args().has("--autoplay"):
 		auto_player = AIController.new(0, GameData.ai.normal, 3)
-	_banner(tr(str(GameData.heroes[my_hero].name)) + "  VS  " + tr(str(GameData.heroes[enemy_hero].name)), 3.0)
+	if not level.is_empty():
+		var loc := TranslationServer.get_locale().substr(0, 2)
+		var title: String = level.name.get(loc, level.name.en)
+		if level.get("objective", "destroy") == "survive":
+			hud.show_objective(tr("OBJ_SURVIVE") % int(level.survive))
+		else:
+			hud.show_objective(tr("OBJ_DESTROY"))
+		_banner(title, 3.0)
+	elif enemy_hero != "":
+		_banner(tr(str(GameData.heroes[my_hero].name)) + "  VS  " + tr(str(GameData.heroes[enemy_hero].name)), 3.0)
 
 
 func _banner(text: String, life: float) -> void:
@@ -74,13 +93,22 @@ func _process(delta: float) -> void:
 		var h := sim.hero_of(0)
 		if h:
 			focus_x(h.x + 200.0)
+	if OS.get_cmdline_user_args().has("--force_win") and sim.time > 6.0 and sim.winner < 0:
+		sim.teams[1].castle_hp = 0.0
 	_update_effects(delta)
 	_update_camera(delta)
 	if sim.winner >= 0 and not _ended:
 		_ended = true
 		Sfx.stop_music()
 		Sfx.play("victory" if sim.winner == 0 else "defeat", 1.0, 0.0)
-		hud.show_end(sim.winner == 0)
+		var won := sim.winner == 0
+		var result := {"won": won, "stars": 0, "coins": 0, "new_stars": 0, "level": level}
+		if not level.is_empty():
+			var castle := sim.teams[0].castle_hp / sim.teams[0].castle_max_hp
+			result.stars = Campaign.compute_stars(level, won, castle, sim.time)
+			result.coins = Campaign.coins_for(level, result.stars)
+			result.new_stars = GameState.record_result(str(level.id), result.stars, result.coins)
+		hud.show_end(won, result)
 	queue_redraw()
 
 
