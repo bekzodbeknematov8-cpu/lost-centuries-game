@@ -456,3 +456,43 @@ func test_progress_save_load() -> void:
 	st2.load_file()
 	check(st2.data.stars.is_empty(), "buzilgan fayl xavfsiz o'qilishi kerak")
 	DirAccess.remove_absolute(path)
+
+
+# --- Cheksiz mudofaa va reklama ---------------------------------------------
+
+func test_endless_waves_grow() -> void:
+	var s := BattleSim.new()
+	s.setup(defs, {"start_units": [[], []], "endless": true}, load_json("res://data/heroes.json"))
+	s.teams[0].castle_hp = 1.0e9
+	run(s, BattleSim.FIRST_WAVE + 1.0)
+	check(s.wave == 1, "1-to'lqin kelmadi")
+	var n1 := s.alive_units(1).size()
+	check(n1 >= 1, "to'lqinda askar yo'q")
+	check(BattleSim.wave_budget(10) > BattleSim.wave_budget(2) * 3.0, "to'lqinlar yetarlicha kuchaymaydi")
+	s.teams[1].castle_hp = 100.0
+	s._hit_castle(s.teams[1], 500.0, 0.0)
+	check(s.teams[1].castle_hp == 100.0, "cheksiz rejimda dushman qal'asi buzilmasligi kerak")
+
+
+func test_endless_ends_when_castle_falls() -> void:
+	var s := BattleSim.new()
+	s.setup(defs, {"start_units": [[], []], "endless": true, "castle_hp": [300, 2000]})
+	run(s, 400.0)
+	check(s.winner == 1, "qal'a qulaganda o'yin tugashi kerak")
+	check(s.wave >= 1, "kamida bitta to'lqin bo'lishi kerak")
+
+
+func test_ad_daily_limit() -> void:
+	var path := "user://test_ads.json"
+	var st := ProgressStore.new(path)
+	check(st.ads_left("2026-01-01") == ProgressStore.AD_DAILY_LIMIT, "kun boshida limit to'liq bo'lishi kerak")
+	for i in ProgressStore.AD_DAILY_LIMIT:
+		check(st.note_ad_reward("2026-01-01", 10), "reklama mukofoti berilmadi")
+	check(not st.note_ad_reward("2026-01-01", 10), "kunlik chegaradan oshib ketdi")
+	check(int(st.data.coins) == 10 * ProgressStore.AD_DAILY_LIMIT, "reklama tangalari noto'g'ri")
+	check(st.ads_left("2026-01-02") == ProgressStore.AD_DAILY_LIMIT, "yangi kunda limit tiklanishi kerak")
+	check(st.record_wave(7, 100) and not st.record_wave(5, 10), "rekord mantiqi noto'g'ri")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.best_wave) == 7 and int(st2.data.ad_count) == ProgressStore.AD_DAILY_LIMIT, "rekord/reklama holati saqlanmadi")
+	DirAccess.remove_absolute(path)

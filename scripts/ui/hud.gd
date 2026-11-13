@@ -23,6 +23,7 @@ var _root: Control
 var _objective: Label
 var _end_result: Dictionary = {}
 var _next_btn: Button
+var _ad_btn: Button
 
 
 # --- Kichik chizilgan elementlar -----------------------------------------------
@@ -511,6 +512,15 @@ func _build_end_panel() -> void:
 	stats.custom_minimum_size = Vector2(640, 0)
 	stats.add_theme_font_size_override("font_size", 18)
 	v.add_child(stats)
+	_ad_btn = Button.new()
+	_ad_btn.custom_minimum_size = Vector2(420, 58)
+	_ad_btn.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
+	_ad_btn.add_theme_font_size_override("font_size", 20)
+	_ad_btn.add_theme_stylebox_override("normal", UITheme.box(Color(0.12, 0.38, 0.18), Painter.GOLD))
+	_ad_btn.add_theme_stylebox_override("hover", UITheme.box(Color(0.16, 0.46, 0.22), Painter.GOLD))
+	_ad_btn.pressed.connect(_on_ad)
+	_ad_btn.visible = false
+	v.add_child(_ad_btn)
 	var fact := PanelContainer.new()
 	fact.name = "Fact"
 	fact.add_theme_stylebox_override("panel", UITheme.box(Color(0.93, 0.85, 0.66), Color(0.55, 0.38, 0.18), 10, 2))
@@ -647,6 +657,18 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 	star_row.visible = not lv.is_empty()
 	fact.visible = false
 	_next_btn.visible = false
+	_ad_btn.visible = false
+	if result.get("endless", false):
+		title.text = tr("ENDLESS_OVER")
+		title.add_theme_color_override("font_color", Painter.GOLD)
+		stats.text = tr("WAVES_SURVIVED") % int(result.waves)
+		if result.get("record", false):
+			stats.text += "   ★ " + tr("NEW_RECORD")
+		stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
+	if int(result.get("coins", 0)) > 0 and GameState.ads_left() > 0:
+		_ad_btn.text = "▶  " + tr("AD_DOUBLE") % [int(result.coins), GameState.ads_left()]
+		_ad_btn.disabled = false
+		_ad_btn.visible = true
 	if not lv.is_empty():
 		star_row.reset(int(result.stars))
 		if int(result.coins) > 0:
@@ -662,6 +684,17 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		var nxt := Campaign.next_level_id(GameData.campaigns, str(lv.id))
 		_next_btn.visible = victory and nxt != ""
 	_end_panel.visible = true
+
+
+func _on_ad() -> void:
+	_ad_btn.disabled = true
+	var bonus := int(_end_result.get("coins", 0))
+	Ads.show_rewarded(func(ok: bool) -> void:
+		if ok and GameState.reward_ad(bonus):
+			Sfx.play("coin", 1.0, 0.0)
+			_ad_btn.text = tr("AD_DONE") % (bonus * 2)
+		else:
+			_ad_btn.text = tr("AD_LIMIT"))
 
 
 func _on_next() -> void:

@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-13 (4) — cheksiz mudofaa va 2× reklama (rejali ish)
+**Bajarildi**
+- Cheksiz mudofaa: har 32 s da kuchayib boruvchi dushman to'lqini, har 5-to'lqinda sardor;
+  dushman qal'asi buzilmaydi; natija = yetib borilgan to'lqin, rekord saqlanadi, menyuda ko'rinadi.
+- Jang oxirida "Reklama ko'rib 2× olish" tugmasi (ixtiyoriy), kuniga 5 marta (`ProgressStore.AD_DAILY_LIMIT`).
+  Hozircha `Ads` autoload SINOV rejimida (3 s oyna); haqiqiy AdMob 7-bosqichda ulanadi.
+- 3 yangi test (34 jami), smoke test 12 tekshiruv.
+
 ### 2026-11-13 (3) — 3-bosqich: kampaniyalar (rejali ish)
 **Bajarildi**
 - 4 kampaniya × 10 bosqich (`data/campaigns.json`): tarixiy joylar, mudofaa ("bardosh ber") bosqichlari,
@@ -43,7 +51,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–2-bosqich ✅ · 3-bosqich (kampaniya) ✅ asosiy qismi · keyingi: cheksiz mudofaa, so'ng 4-bosqich
+## Holat: 0–3-bosqich ✅ · 4-bosqich boshlandi (2× reklama tayyor) · keyingi: yaxshilanishlar daraxti, qahramon ochish, zaxira qo'shin, tutorial
 
 ### 2026-11-13
 **Bajarildi**

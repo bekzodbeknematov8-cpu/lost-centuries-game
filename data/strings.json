@@ -418,5 +418,65 @@
 		"en": "Briefly empowers the army.",
 		"ru": "Ненадолго усиливает войско.",
 		"tr": "Orduyu kısa süreliğine güçlendirir."
+	},
+	"MENU_ENDLESS": {
+		"uz": "Cheksiz mudofaa",
+		"en": "Endless Defense",
+		"ru": "Бесконечная оборона",
+		"tr": "Sonsuz Savunma"
+	},
+	"OBJ_ENDLESS": {
+		"uz": "Dushman to'lqinlariga imkon qadar uzoq bardosh bering!",
+		"en": "Hold out against the enemy waves as long as you can!",
+		"ru": "Держитесь против волн врага как можно дольше!",
+		"tr": "Düşman dalgalarına olabildiğince uzun dayanın!"
+	},
+	"WAVE_N": {
+		"uz": "%d-to'lqin!",
+		"en": "Wave %d!",
+		"ru": "Волна %d!",
+		"tr": "%d. dalga!"
+	},
+	"ENDLESS_OVER": {
+		"uz": "Mudofaa tugadi",
+		"en": "Defense over",
+		"ru": "Оборона окончена",
+		"tr": "Savunma bitti"
+	},
+	"WAVES_SURVIVED": {
+		"uz": "Yetib borilgan to'lqin: %d",
+		"en": "Wave reached: %d",
+		"ru": "Достигнута волна: %d",
+		"tr": "Ulaşılan dalga: %d"
+	},
+	"NEW_RECORD": {
+		"uz": "Yangi rekord!",
+		"en": "New record!",
+		"ru": "Новый рекорд!",
+		"tr": "Yeni rekor!"
+	},
+	"AD_DOUBLE": {
+		"uz": "Reklama ko'rib 2× olish (+%d)   [bugun: %d]",
+		"en": "Watch an ad for 2× (+%d)   [today: %d]",
+		"ru": "Смотреть рекламу за 2× (+%d)   [сегодня: %d]",
+		"tr": "Reklam izle, 2× al (+%d)   [bugün: %d]"
+	},
+	"AD_DONE": {
+		"uz": "2× olindi! Jami: %d tanga",
+		"en": "Doubled! Total: %d coins",
+		"ru": "Удвоено! Всего: %d монет",
+		"tr": "İki katına çıktı! Toplam: %d altın"
+	},
+	"AD_LIMIT": {
+		"uz": "Bugungi reklama chegarasi tugadi",
+		"en": "Daily ad limit reached",
+		"ru": "Дневной лимит рекламы исчерпан",
+		"tr": "Günlük reklam sınırına ulaşıldı"
+	},
+	"AD_MOCK": {
+		"uz": "Reklama (sinov rejimi)\n%d",
+		"en": "Advertisement (test mode)\n%d",
+		"ru": "Реклама (тестовый режим)\n%d",
+		"tr": "Reklam (test modu)\n%d"
 	}
 }

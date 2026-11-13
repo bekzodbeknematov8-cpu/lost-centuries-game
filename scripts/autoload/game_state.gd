@@ -8,7 +8,8 @@ const PROGRESS_VERSION := 1
 var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0}
+var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -80,3 +81,23 @@ func save_progress() -> void:
 func record_result(lid: String, stars: int, coins: int) -> int:
 	_store.data = progress
 	return _store.record_result(lid, stars, coins)
+
+
+func record_wave(waves: int, coins: int) -> bool:
+	_store.data = progress
+	return _store.record_wave(waves, coins)
+
+
+static func today() -> String:
+	var d := Time.get_date_dict_from_system()
+	return "%04d-%02d-%02d" % [d.year, d.month, d.day]
+
+
+func ads_left() -> int:
+	_store.data = progress
+	return _store.ads_left(today())
+
+
+func reward_ad(bonus_coins: int) -> bool:
+	_store.data = progress
+	return _store.note_ad_reward(today(), bonus_coins)

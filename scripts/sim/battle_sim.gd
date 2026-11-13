@@ -28,6 +28,11 @@ var time: float = 0.0
 var winner: int = -1
 var rng := RandomNumberGenerator.new()
 var survive_time: float = 0.0     ## >0: o'yinchi shu vaqtgacha qal'ani saqlasa yutadi
+var endless: bool = false          ## Cheksiz mudofaa: dushman to'lqinlarda keladi
+var wave: int = 0                  ## Tugagan (chaqirilgan) to'lqinlar soni
+var wave_timer: float = 0.0
+const WAVE_INTERVAL := 32.0
+const FIRST_WAVE := 25.0
 var control_dir: int = 0
 var control_attack: bool = false
 
@@ -49,6 +54,9 @@ func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = 
 	time = 0.0
 	winner = -1
 	survive_time = float(cfg.get("survive_time", 0.0))
+	endless = bool(cfg.get("endless", false))
+	wave = 0
+	wave_timer = FIRST_WAVE
 	for i in 2:
 		var t := TeamState.new()
 		t.index = i
@@ -380,6 +388,8 @@ func step(dt: float = STEP) -> void:
 		else:
 			u.dead_time += dt
 	_update_zones(dt)
+	if endless:
+		_update_waves(dt)
 	_resolve_pending_hits()
 	_update_projectiles(dt)
 	for t in teams:
@@ -393,6 +403,37 @@ func step(dt: float = STEP) -> void:
 	if survive_time > 0.0 and winner < 0 and time >= survive_time:
 		winner = 0
 		events.append({"type": "survived", "team": 0, "x": teams[0].castle_x})
+
+
+static func wave_budget(n: int) -> float:
+	## n-to'lqin (1 dan) uchun dushman qo'shini qiymati (oltin hisobida).
+	return 260.0 + 210.0 * (n - 1) + 18.0 * (n - 1) * (n - 1)
+
+
+func _update_waves(dt: float) -> void:
+	var t1 := teams[1]
+	t1.stance = TeamState.Stance.ATTACK
+	wave_timer -= dt
+	if wave_timer > 0.0:
+		return
+	wave += 1
+	wave_timer = WAVE_INTERVAL
+	var budget := wave_budget(wave)
+	var pool: Array = ["swordsman", "spearman", "archer"]
+	if wave >= 3:
+		pool.append("cavalry")
+	var spawned := 0
+	while budget > 0.0 and spawned < 24:
+		var type: String = pool[rng.randi() % pool.size()]
+		budget -= float(defs[type].cost)
+		var u := spawn_unit(1, type)
+		u.x += t1.dir * rng.randf_range(0.0, 140.0)
+		t1.pop -= int(u.def.pop)   # to'lqin askarlari aholi chegarasiga kirmaydi
+		spawned += 1
+	if wave % 5 == 0 and heroes.has("sardor") and hero_of(1) == null:
+		t1.hero_type = "sardor"
+		_spawn_hero(t1)
+	events.append({"type": "wave", "team": 1, "wave": wave, "x": t1.castle_x})
 
 
 func pop_events() -> Array[Dictionary]:
@@ -749,6 +790,8 @@ func _kill(u: UnitState, attacker: UnitState) -> void:
 
 
 func _hit_castle(t: TeamState, dmg: float, x: float, weapon := "melee") -> void:
+	if endless and t.index == 1:
+		return   # Cheksiz rejimda dushman qal'asi buzilmaydi
 	t.castle_hp -= dmg
 	events.append({"type": "castle_hit", "team": t.index, "x": x, "weapon": weapon, "dmg": dmg})
 

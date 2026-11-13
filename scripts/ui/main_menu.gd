@@ -80,6 +80,18 @@ func _build() -> void:
 		b.add_theme_font_size_override("font_size", 20)
 		b.pressed.connect(_start.bind(d[1]))
 		diff_row.add_child(b)
+	var endless := Button.new()
+	endless.text = tr("MENU_ENDLESS")
+	if int(GameState.progress.get("best_wave", 0)) > 0:
+		endless.text += "  (★ %d)" % int(GameState.progress.best_wave)
+	endless.custom_minimum_size = Vector2(590, 52)
+	endless.add_theme_font_size_override("font_size", 20)
+	endless.pressed.connect(func() -> void:
+		Sfx.play("click", 0.7)
+		GameState.mode = "endless"
+		GameState.level_id = ""
+		get_tree().change_scene_to_file("res://scenes/hero_select.tscn"))
+	_content.add_child(endless)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 10)
@@ -122,6 +134,7 @@ func _start(diff: String) -> void:
 	Sfx.play("click", 0.7)
 	GameState.difficulty = diff
 	GameState.level_id = ""
+	GameState.mode = "skirmish"
 	get_tree().change_scene_to_file("res://scenes/hero_select.tscn")
 
 

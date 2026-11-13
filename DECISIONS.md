@@ -18,3 +18,5 @@
 | 2026-11-13 | Qahramonsiz bosqichlarda "Dushman sardori" (tanlab bo'lmaydi) | Aks holda o'yinchi qahramoni yolg'iz yutardi |
 | 2026-11-13 | Qal'a minorasi qahramonlarga 2× zarar | Qahramon qo'shinsiz qal'ani ololmasligi kerak |
 | 2026-11-13 | Saqlash `user://progress.json`, atomik yozish | Telefon o'chib qolsa ham progress buzilmaydi |
+| 2026-11-13 | 2× reklama kuniga 5 marta, faqat tugma bosilganda | Foydalanuvchi talabi; reklama bezor qilmasin, tangalar qadrsizlanmasin |
+| 2026-11-13 | Reklama `Ads` autoload orqali (hozir sinov rejimi) | AdMob plaginini keyin kod o'zgartirmasdan ulash uchun |

@@ -35,6 +35,14 @@ func _ready() -> void:
 		my_hero = str(bc.cfg.heroes[0])
 		enemy_hero = str(bc.cfg.heroes[1])
 		sim.setup(GameData.units, bc.cfg, GameData.heroes)
+	elif GameState.mode == "endless":
+		sim.setup(GameData.units, {
+			"seed": randi(),
+			"start_gold": 400,
+			"start_units": [["worker", "worker"], []],
+			"heroes": [my_hero, ""],
+			"endless": true,
+		}, GameData.heroes)
 	else:
 		var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero and bool(GameData.heroes[h].get("selectable", true)))
 		enemy_hero = others[randi() % others.size()]
@@ -65,6 +73,9 @@ func _ready() -> void:
 		else:
 			hud.show_objective(tr("OBJ_DESTROY"))
 		_banner(title, 3.0)
+	elif sim.endless:
+		hud.show_objective(tr("OBJ_ENDLESS"))
+		_banner(tr("MENU_ENDLESS"), 3.0)
 	elif enemy_hero != "":
 		_banner(tr(str(GameData.heroes[my_hero].name)) + "  VS  " + tr(str(GameData.heroes[enemy_hero].name)), 3.0)
 
@@ -78,7 +89,8 @@ func _process(delta: float) -> void:
 	_acc += minf(delta, 0.1)
 	while _acc >= BattleSim.STEP:
 		_acc -= BattleSim.STEP
-		enemy_ai.update(sim, BattleSim.STEP)
+		if not sim.endless:
+			enemy_ai.update(sim, BattleSim.STEP)
 		if auto_player:
 			auto_player.update(sim, BattleSim.STEP)
 		sim.step()
@@ -103,12 +115,19 @@ func _process(delta: float) -> void:
 		Sfx.play("victory" if sim.winner == 0 else "defeat", 1.0, 0.0)
 		var won := sim.winner == 0
 		var result := {"won": won, "stars": 0, "coins": 0, "new_stars": 0, "level": level}
+		if sim.endless:
+			result.endless = true
+			result.waves = sim.wave
+			result.coins = 15 * sim.wave
+			result.record = GameState.record_wave(sim.wave, result.coins)
 		if not level.is_empty():
 			var castle := sim.teams[0].castle_hp / sim.teams[0].castle_max_hp
 			result.stars = Campaign.compute_stars(level, won, castle, sim.time)
 			result.coins = Campaign.coins_for(level, result.stars)
 			result.new_stars = GameState.record_result(str(level.id), result.stars, result.coins)
 		hud.show_end(won, result)
+		if OS.get_cmdline_user_args().has("--press_ad"):
+			get_tree().create_timer(1.0).timeout.connect(func() -> void: hud._on_ad())
 	queue_redraw()
 
 
@@ -218,6 +237,9 @@ func _on_event(e: Dictionary) -> void:
 					_: Sfx.play("drum", 0.7, 0.02)
 			elif e.stance == TeamState.Stance.ATTACK:
 				Sfx.play("horn_enemy", 0.55, 0.02)
+		"wave":
+			Sfx.play("horn_enemy", 0.9, 0.0)
+			hud.show_banner(tr("WAVE_N") % int(e.wave), 2.0)
 		"control_kill":
 			_shake = minf(1.0, _shake + 0.12)
 		"ability":
