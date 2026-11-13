@@ -20,6 +20,17 @@
 - Jang qayerda ketayotgani ko'rinmasdi → mini-xarita qo'shildi.
 - GDScript tip xatolari (painter, hud) → tuzatildi; smoke test qo'shildi.
 
+**Balans sinovi (bot-vs-bot) natijasida topilgan va tuzatilgan**
+- Nayzachi hamma narsani yengardi, qilichboz juda zaif edi → statlar qayta sozlandi.
+- Simulyatsiyada nosimmetriklik: ro'yxatdagi tartib bir tomonga "birinchi zarba" berardi →
+  zarbalar qadam oxirida bir vaqtda qo'llanadi, yurish tartibi har qadamda aralashtiriladi (seed bilan).
+- Hamma bitta nishonga hujum qilardi (ortiqcha zarar) → nishonlar yaqin dushmanlar orasida taqsimlanadi.
+- Natija (teng narxli otryadlar): qilichboz > nayzachi > otliq > qilichboz; otliq > kamonchi.
+- Qiyinlik: qiyin bot o'rtani ~75%, osonni ~100% yengadi.
+
+**Ochiq masalalar**
+- Kamonchilar aralash qo'shinda hali yetarlicha foydali emas (6-bosqichda sozlanadi).
+- Haqiqiy telefonda sinov (foydalanuvchi): boshqaruv qulayligi, ovoz balandligi, tezlik.
+
 **Keyingi**
-- Balans hisobotini tahlil qilish va sozlash.
 - 2-bosqich: qahramonlar (Chingizxon, Jaloliddin, Amir Temur, Boyazid) va maxsus kuchlar.

@@ -29,6 +29,7 @@ var control_attack: bool = false
 
 var _next_id: int = 1
 var _by_id: Dictionary = {}
+var _pending_hits: Array = []   ## Jang zarbalari qadam oxirida bir vaqtda qo'llanadi (adolat uchun)
 
 
 func setup(unit_defs: Dictionary, cfg: Dictionary = {}) -> void:
@@ -205,11 +206,20 @@ func step(dt: float = STEP) -> void:
 	time += dt
 	for t in teams:
 		_update_team(t, dt)
-	for u in units:
+	# Har qadamda tartib aralashtiriladi: hech bir askar ro'yxatdagi o'rni tufayli
+	# doimiy "birinchi zarba" ustunligiga ega bo'lmaydi (seed bilan deterministik).
+	var order := units.duplicate()
+	for i in range(order.size() - 1, 0, -1):
+		var j := rng.randi_range(0, i)
+		var tmp: UnitState = order[i]
+		order[i] = order[j]
+		order[j] = tmp
+	for u in order:
 		if u.is_alive():
 			_update_unit(u, dt)
 		else:
 			u.dead_time += dt
+	_resolve_pending_hits()
 	_update_projectiles(dt)
 	for t in teams:
 		_update_castle(t, dt)
@@ -315,11 +325,15 @@ func _update_fighter(u: UnitState, dt: float) -> void:
 			var rally := t.defend_x() - t.dir * back
 			var target := _nearest_enemy(u, rally, DEFEND_ZONE + float(u.def.range))
 			if target:
+				target = _spread_target(u, target)
+			if target:
 				_engage(u, target, dt)
 			elif _move_towards(u, rally + u.slot, dt):
 				u.facing = t.dir
 		TeamState.Stance.ATTACK:
 			var target := _nearest_enemy(u, u.x, ATTACK_AGGRO + float(u.def.range))
+			if target:
+				target = _spread_target(u, target)
 			if target:
 				_engage(u, target, dt)
 			else:
@@ -340,6 +354,22 @@ func _nearest_enemy(u: UnitState, around: float, radius: float) -> UnitState:
 			best_d = du
 			best = e
 	return best
+
+
+func _spread_target(u: UnitState, nearest: UnitState) -> UnitState:
+	## Hamma bitta nishonga hujum qilmasligi uchun: yetib boradigan va eng yaqin nishonga
+	## yaqin turgan dushmanlar orasidan barqaror (id bo'yicha) tanlaydi.
+	var reach := float(u.def.range) + 2.0
+	if absf(nearest.x - u.x) > reach:
+		return nearest
+	var window := 90.0 if u.is_ranged() else 30.0
+	var cands: Array[UnitState] = []
+	for e in units:
+		if e.team != u.team and e.is_alive() and absf(e.x - nearest.x) < window and absf(e.x - u.x) <= reach:
+			cands.append(e)
+	if cands.size() <= 1:
+		return nearest
+	return cands[u.id % cands.size()]
 
 
 func _engage(u: UnitState, target: UnitState, dt: float) -> void:
@@ -411,7 +441,23 @@ func _attack_unit(u: UnitState, target: UnitState) -> void:
 	if u.def.has("projectile"):
 		_fire(u.team, u.x, 58.0, target.id, -1, _damage_against(u, target.def.get("tags", [])), u.def.projectile, u.id)
 	else:
-		_apply_damage(target, _damage_against(u, target.def.get("tags", [])), u.def.weapon, u)
+		_pending_hits.append([target, _damage_against(u, target.def.get("tags", [])), str(u.def.weapon), u])
+
+
+func _resolve_pending_hits() -> void:
+	## Bir qadamda berilgan barcha zarbalar birga qo'llanadi, shunda ro'yxat tartibi
+	## hech bir tomonga ustunlik bermaydi.
+	var hits := _pending_hits
+	_pending_hits = []
+	for h in hits:
+		var target: UnitState = h[0]
+		if target.state == UnitState.State.DEAD:
+			continue
+		_apply_damage_no_kill(target, h[1], h[2])
+	for h in hits:
+		var target2: UnitState = h[0]
+		if target2.state != UnitState.State.DEAD and target2.hp <= 0.0:
+			_kill(target2, h[3])
 
 
 func _attack_castle(u: UnitState, enemy: TeamState) -> void:
@@ -465,6 +511,12 @@ func _update_projectiles(dt: float) -> void:
 
 
 func _apply_damage(target: UnitState, raw: float, weapon: String, attacker: UnitState) -> void:
+	_apply_damage_no_kill(target, raw, weapon)
+	if target.hp <= 0.0:
+		_kill(target, attacker)
+
+
+func _apply_damage_no_kill(target: UnitState, raw: float, weapon: String) -> void:
 	var dmg := maxf(1.0, raw - float(target.def.armor))
 	target.hp -= dmg
 	target.hurt_flash = 0.15
@@ -472,8 +524,6 @@ func _apply_damage(target: UnitState, raw: float, weapon: String, attacker: Unit
 		"type": "hit", "x": target.x, "lane": target.lane, "team": target.team,
 		"sound": hit_sound(weapon, str(target.def.armor_type)), "dmg": dmg,
 	})
-	if target.hp <= 0.0:
-		_kill(target, attacker)
 
 
 static func hit_sound(weapon: String, armor_type: String) -> String:

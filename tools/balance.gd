@@ -18,6 +18,16 @@ func _init() -> void:
 	lines.append("# Balans hisoboti\n")
 	lines.append("Har bir juftlik uchun %d ta bot-vs-bot jang (chap tomon = qator).\n" % games)
 
+	if not args.has("units_only"):
+		_difficulty_table(lines, games)
+	_unit_table(lines, games)
+	if args.has("out"):
+		var f := FileAccess.open("res://" + str(args.out), FileAccess.WRITE)
+		f.store_string("\n".join(lines) + "\n")
+	quit()
+
+
+func _difficulty_table(lines: Array[String], games: int) -> void:
 	lines.append("## Qiyinlik darajalari\n")
 	lines.append("| Chap \\ O'ng | easy | normal | hard |")
 	lines.append("|---|---|---|---|")
@@ -29,6 +39,8 @@ func _init() -> void:
 		lines.append(row)
 		print(row)
 
+
+func _unit_table(lines: Array[String], games: int) -> void:
 	lines.append("\n## Bir turdagi qo'shinlar (tosh-qaychi-qog'oz tekshiruvi)\n")
 	var types := ["swordsman", "spearman", "archer", "cavalry"]
 	lines.append("| Chap \\ O'ng | " + " | ".join(types) + " |")
@@ -48,10 +60,6 @@ func _init() -> void:
 		print(row2)
 	lines.append("\nIzoh: 50% atrofidagi qiymat — teng kuch. Diagonal ~50% bo'lishi kerak.")
 	lines.append("Har bir birlik kamida bitta boshqa birlikka qarshi kuchli, kamida bittasiga qarshi zaif bo'lishi kerak.")
-	if args.has("out"):
-		var f := FileAccess.open("res://" + str(args.out), FileAccess.WRITE)
-		f.store_string("\n".join(lines) + "\n")
-	quit()
 
 
 func _series(pa: Dictionary, pb: Dictionary, games: int, cfg: Dictionary) -> Dictionary:
