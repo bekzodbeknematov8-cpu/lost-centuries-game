@@ -6,6 +6,23 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-13 (5) — §12(a): viloyatli tarixiy xaritalar (rejali ish)
+**Bajarildi**
+- 4 qahramon uchun tarixiy xarita (`tools/gen_maps.py` → `assets/maps/*.png`): eski qog'oz uslubi,
+  organik viloyat chegaralari, dengizlar (Kaspiy, Orol, Qora dengiz ...), daryolar, relyef belgilari.
+- Har viloyat = bo'lim: 9 ta avtomatik level (viloyat shabloni: qiyinlik silliq oshadi, mudofaa/
+  oldinroq boshlovchi dushman/qo'shimcha oltin modifikatorlari) + oxirida tarixiy boss (fakt kartasi bilan).
+  Jami 4 × 10 × 10 = **400 level** (1.0); keyin 25 gacha kengaytirish mumkin (`Campaign.REGION_LEVELS`).
+- Kampaniya ekrani: xarita (shader: yopiq — kulrang, zabt — qahramon rangi, tanlangan — yorqin),
+  zabt yo'li, qahramon bayrog'i, viloyatni bosib tanlash; o'ngda 10 level tugmasi (boss — toj).
+- Ochilish: keyingi qahramon = oldingisining 4 viloyati + 60/130/200 ★ (eng qisqa yo'lda ~1,6 ★/level).
+- Qiyinlik (bot, 3 jang/level, har viloyatdan 3 namuna): 94% / 86% / 90% / 95%, keskin "devor" yo'q.
+
+**Sinovda topilgan va tuzatilgan**
+- 4-kampaniya yulduz talabi (260) o'rtacha 2+ ★/level talab qilardi → 200 ga tushirildi (test ushladi).
+- Xarita tasodifiy urug'i Python hash'ga bog'liq edi (har safar boshqacha) → deterministik qilindi.
+- Uzun qahramon nomi tabda kesilardi → shrift avtomatik kichrayadi.
+
 ### 2026-11-13 (4) — cheksiz mudofaa va 2× reklama (rejali ish)
 **Bajarildi**
 - Cheksiz mudofaa: har 32 s da kuchayib boruvchi dushman to'lqini, har 5-to'lqinda sardor;
@@ -51,7 +68,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3-bosqich ✅ · 4-bosqich boshlandi (2× reklama tayyor) · keyingi: yaxshilanishlar daraxti, qahramon ochish, zaxira qo'shin, tutorial
+## Holat: 0–3 ✅ · §12(a) viloyatli xaritalar ✅ (400 level) · keyingi: §12(b) bosh menyu va rejim tanlash, so'ng ustaxona, hiylalar, sandiqlar
 
 ### 2026-11-13
 **Bajarildi**

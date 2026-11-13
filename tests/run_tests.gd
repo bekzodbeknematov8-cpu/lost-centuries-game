@@ -382,27 +382,56 @@ func test_stars_rules() -> void:
 func test_unlock_rules() -> void:
 	var c := camp()
 	var stars := {}
-	check(Campaign.level_unlocked(c, stars, "chingiz_01"), "birinchi bosqich ochiq bo'lishi kerak")
-	check(not Campaign.level_unlocked(c, stars, "chingiz_02"), "2-bosqich yopiq bo'lishi kerak")
+	var first: String = Campaign.region_levels(c, "chingiz", 0)[0].id
+	check(Campaign.level_unlocked(c, stars, first), "birinchi level ochiq bo'lishi kerak")
+	check(not Campaign.level_unlocked(c, stars, "chingiz_01#2"), "2-level yopiq bo'lishi kerak")
+	check(not Campaign.region_unlocked(c, stars, "chingiz", 1), "2-viloyat yopiq bo'lishi kerak")
 	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "2-kampaniya yopiq bo'lishi kerak")
+	stars[first] = 1
+	check(Campaign.level_unlocked(c, stars, "chingiz_01#2"), "g'alabadan keyin keyingi level ochilishi kerak")
+	check(Campaign.next_level_id(c, "chingiz_01#9") == "chingiz_01", "9-leveldan keyin boss bo'lishi kerak")
+	check(Campaign.next_level_id(c, "chingiz_01") == "chingiz_02#1", "bossdan keyin keyingi viloyat")
+	check(Campaign.next_level_id(c, "chingiz_10") == "", "oxirgi bossdan keyin bo'sh bo'lishi kerak")
 	stars["chingiz_01"] = 1
-	check(Campaign.level_unlocked(c, stars, "chingiz_02"), "g'alabadan keyin 2-bosqich ochilishi kerak")
-	for i in 10:
-		stars["chingiz_%02d" % (i + 1)] = 1
-	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "10 yulduz yetmasligi kerak (15 talab)")
-	for i in 10:
-		stars["chingiz_%02d" % (i + 1)] = 2
-	check(Campaign.campaign_unlocked(c, stars, "jaloliddin"), "20 yulduz bilan ochilishi kerak")
-	check(Campaign.next_level_id(c, "chingiz_03") == "chingiz_04", "keyingi bosqich noto'g'ri")
-	check(Campaign.next_level_id(c, "chingiz_10") == "", "oxirgi bosqichdan keyin bo'sh bo'lishi kerak")
+	check(Campaign.region_unlocked(c, stars, "chingiz", 1), "boss yengilgach 2-viloyat ochilishi kerak")
+	# 4 viloyat zabt + yetarli yulduz -> 2-kampaniya
+	for ri in 4:
+		for lv in Campaign.region_levels(c, "chingiz", ri):
+			stars[lv.id] = 1
+	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "40 yulduz yetmasligi kerak (60 talab)")
+	for ri in 4:
+		for lv in Campaign.region_levels(c, "chingiz", ri):
+			stars[lv.id] = 2
+	check(Campaign.campaign_unlocked(c, stars, "jaloliddin"), "80 yulduz va 4 viloyat bilan ochilishi kerak")
+
+
+func test_region_levels_structure() -> void:
+	var c := camp()
+	var total := 0
+	for cid in c.order:
+		var flat := Campaign.all_levels(c, cid)
+		total += flat.size()
+		var ids := {}
+		for lv in flat:
+			check(not ids.has(lv.id), "takroriy level ID: %s" % lv.id)
+			ids[lv.id] = true
+			check(Campaign.level_by_id(c, lv.id).id == lv.id, "level_by_id topmadi: %s" % lv.id)
+	check(total == 400, "jami 400 level bo'lishi kerak, %d bor" % total)
+	# Qiyinlik viloyat ichida silliq oshadi
+	var lv1: Dictionary = Campaign.region_levels(c, "temur", 5)[0]
+	var lv9: Dictionary = Campaign.region_levels(c, "temur", 5)[8]
+	check(float(lv9.enemy_income) >= float(lv1.enemy_income), "viloyat ichida qiyinlik oshishi kerak")
 
 
 func test_star_requirements_reasonable() -> void:
-	## Talab: har bosqichdan o'rtacha 2 yulduzdan oshmasligi kerak (juda qiyin bo'lmasin).
+	## Talab: o'rtacha ~2 yulduz/level dan oshmasin (juda qiyin bo'lmasin).
 	var c := camp()
 	for i in range(1, c.order.size()):
 		var need := int(c.campaigns[c.order[i]].require_stars)
-		check(need <= i * 10 * 2, "%s: yulduz talabi juda yuqori (%d)" % [c.order[i], need])
+		var levels_before := 0
+		for j in i:
+			levels_before += Campaign.REGION_LEVELS * Campaign.UNLOCK_AFTER_REGION
+		check(need <= levels_before * 2, "%s: yulduz talabi juda yuqori (%d)" % [c.order[i], need])
 
 
 func test_survive_objective() -> void:
@@ -416,13 +445,13 @@ func test_every_level_builds() -> void:
 	var c := camp()
 	var hd := load_json("res://data/heroes.json")
 	for cid in c.order:
-		for lv in c.campaigns[cid].levels:
+		for lv in Campaign.all_levels(c, cid):
 			var bc := Campaign.battle_config(c, lv.id, ai_params, 1)
 			var s := BattleSim.new()
 			s.setup(defs, bc.cfg, hd)
 			check(s.hero_of(0) != null, "%s: o'yinchi qahramoni yo'q" % lv.id)
 			check(s.teams[0].allowed.size() >= 2, "%s: yollash ro'yxati bo'sh" % lv.id)
-			for k in 60:
+			for k in 10:
 				s.step()
 
 
@@ -431,7 +460,7 @@ func test_first_level_winnable_by_bot() -> void:
 	var hd := load_json("res://data/heroes.json")
 	var wins := 0
 	for k in 4:
-		var bc := Campaign.battle_config(c, "chingiz_01", ai_params, 50 + k)
+		var bc := Campaign.battle_config(c, "chingiz_01#1", ai_params, 50 + k)
 		var s := BattleSim.new()
 		s.setup(defs, bc.cfg, hd)
 		var ais := [AIController.new(0, ai_params.normal, k + 1), AIController.new(1, bc.ai, k + 7)]

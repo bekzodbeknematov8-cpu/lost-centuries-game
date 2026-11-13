@@ -1,7 +1,7 @@
 extends SceneTree
 ## Kampaniya qiyinligi: har bosqichda "o'rta" bot o'yinchi o'rnida o'ynaydi.
 ##   godot --headless --path . -s res://tools/campaign_balance.gd -- --games=4 [--campaign=chingiz] [--out=docs/campaign-balance.md]
-## Maqsad: 1-kampaniya ~90%+, oxirgisi ~50-70% g'alaba; o'rtacha >= 2 yulduz yaqinida.
+## Har viloyatdan 3 level (1-, 5- va boss) sinaladi. Maqsad: 1-kampaniya ~90%+, oxirgisi ~50-70% g'alaba; o'rtacha >= 2 yulduz yaqinida.
 func _init():
 	var defs = JSON.parse_string(FileAccess.get_file_as_string("res://data/units.json"))
 	var ai = JSON.parse_string(FileAccess.get_file_as_string("res://data/ai.json"))
@@ -19,7 +19,13 @@ func _init():
 		if only != "" and cid != only: continue
 		var cw := 0.0
 		var cs := 0.0
-		for lv in camp.campaigns[cid].levels:
+		var sample: Array = []
+		for ri in Campaign.regions(camp, cid).size():
+			var rl: Array = Campaign.region_levels(camp, cid, ri)
+			sample.append(rl[0])
+			sample.append(rl[4])
+			sample.append(rl[rl.size() - 1])
+		for lv in sample:
 			var wins := 0
 			var stars := 0
 			var tsum := 0.0
@@ -43,7 +49,7 @@ func _init():
 			var line := "| %s | %d%% | %.1f | %d:%02d |" % [lv.id, int(100.0 * wins / games), float(stars) / games, int(tsum / games) / 60, int(tsum / games) % 60]
 			lines.append(line)
 			print(line)
-		var summary := "| **%s jami** | **%d%%** | **%.1f** | |" % [cid, int(cw * 10), cs / 10.0]
+		var summary := "| **%s jami** | **%d%%** | **%.1f** | |" % [cid, int(cw * 100.0 / sample.size()), cs / sample.size()]
 		lines.append(summary)
 		print(summary)
 	if out != "":

@@ -478,5 +478,35 @@
 		"en": "Advertisement (test mode)\n%d",
 		"ru": "Реклама (тестовый режим)\n%d",
 		"tr": "Reklam (test modu)\n%d"
+	},
+	"UNLOCK_RULE_REGIONS": {
+		"uz": "Ochish uchun oldingi qahramonning %d ta viloyatini zabt eting va jami %d ★ to'plang.",
+		"en": "Conquer %d regions with the previous hero and collect %d ★ in total to unlock.",
+		"ru": "Покорите %d областей предыдущим героем и наберите всего %d ★.",
+		"tr": "Açmak için önceki kahramanla %d bölgeyi fethedin ve toplam %d ★ toplayın."
+	},
+	"REGION_LOCKED": {
+		"uz": "Bu viloyat hali yopiq: avval oldingi viloyatni zabt eting.",
+		"en": "This region is locked: conquer the previous region first.",
+		"ru": "Эта область закрыта: сначала покорите предыдущую.",
+		"tr": "Bu bölge kilitli: önce önceki bölgeyi fethedin."
+	},
+	"REGION_PROGRESS": {
+		"uz": "%d-viloyat · %d/%d level",
+		"en": "Region %d · %d/%d levels",
+		"ru": "Область %d · %d/%d уровней",
+		"tr": "%d. bölge · %d/%d bölüm"
+	},
+	"BOSS_LEVEL": {
+		"uz": "Hal qiluvchi jang (boss)",
+		"en": "Decisive battle (boss)",
+		"ru": "Решающая битва (босс)",
+		"tr": "Belirleyici savaş (boss)"
+	},
+	"LEVEL_N": {
+		"uz": "%d-level",
+		"en": "Level %d",
+		"ru": "Уровень %d",
+		"tr": "%d. bölüm"
 	}
 }

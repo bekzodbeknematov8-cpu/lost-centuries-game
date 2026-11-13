@@ -68,6 +68,8 @@ func _ready() -> void:
 	if not level.is_empty():
 		var loc := TranslationServer.get_locale().substr(0, 2)
 		var title: String = level.name.get(loc, level.name.en)
+		if level.has("index"):
+			title += " — " + tr("LEVEL_N") % int(level.index)
 		if level.get("objective", "destroy") == "survive":
 			hud.show_objective(tr("OBJ_SURVIVE") % int(level.survive))
 		else:

@@ -16,7 +16,7 @@ for scene in res://scenes/main_menu.tscn res://scenes/hero_select.tscn res://sce
   done
 done
 # Kampaniya bosqichlari: mudofaa, boss va g'alaba oynasi (yulduz/fakt)
-for args in "--level=jaloliddin_04" "--level=temur_10" "--level=chingiz_01 --force_win" "--mode=endless --hero=boyazid"; do
+for args in "--level=jaloliddin_04" "--level=temur_10" "--level=chingiz_01 --force_win" "--mode=endless --hero=boyazid" "--level=temur_03#4" "--level=boyazid_07#2 --force_win"; do
   out=$(timeout 300 $GODOT --headless --path . -- --scene=res://scenes/battle.tscn $args --autoplay --speed=8 --quit_after=120 2>&1)
   errs=$(echo "$out" | grep -E "SCRIPT ERROR|Parse Error|Compile Error|Invalid call|Invalid access" | sort | uniq -c)
   if [ -n "$errs" ]; then echo "FAIL battle $args"; echo "$errs"; fail=1; else echo "OK   battle $args"; fi

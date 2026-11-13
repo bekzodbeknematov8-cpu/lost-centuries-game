@@ -16,7 +16,7 @@ Qahramonlar: Chingizxon, Jaloliddin Manguberdi, Amir Temur, Boyazid Yildirim.
 | scripts/view/ | Chizish: battle.gd (sahna, kamera, effektlar, ovoz), painter.gd (barcha grafika kodda) |
 | scripts/ui/ | HUD, bosh menyu, tema |
 | scripts/autoload/ | GameData (JSON), GameState (sozlamalar, tarjima), Sfx (ovoz), DevTools (avtotest) |
-| data/ | units.json, ai.json, heroes.json, campaigns.json, facts.json, strings.json (4 til: uz, en, ru, tr) |
+| data/ | units.json, ai.json, heroes.json, campaigns.json (viloyat bosslari), maps.json, facts.json, strings.json (4 til) |
 | tools/ | gen_audio.py (barcha ovoz/musiqa sintezi), balance.gd, smoke_test.sh |
 | tests/ | run_tests.gd (unit + bot-vs-bot) |
 
@@ -27,6 +27,7 @@ tools/run_tests.sh                                          # unit testlar (SCRI
 tools/smoke_test.sh                                         # barcha sahnalar xatosiz ishlashi
 godot --headless --path . -s res://tools/balance.gd -- --games=20 --out=docs/balance-report.md
 python3 tools/gen_audio.py                                  # ovozlarni qayta yaratish
+python3 tools/gen_maps.py                                   # qahramon xaritalarini qayta chizish (data/maps.json)
 godot --headless --path . -s res://tools/campaign_balance.gd -- --games=4   # kampaniya qiyinligi
 godot --headless --path . -s res://tools/hero_balance.gd -- --games=16     # qahramonlar balansi
 # Skrinshot (Xvfb bilan):
