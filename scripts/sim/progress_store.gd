@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -27,6 +27,7 @@ func load_file() -> void:
 		for k in p.stars:
 			data.stars[str(k)] = clampi(int(p.stars[k]), 0, 3)
 	data.coins = maxi(0, int(p.get("coins", 0)))
+	data.gems = maxi(0, int(p.get("gems", 0)))
 	data.best_wave = maxi(0, int(p.get("best_wave", 0)))
 	data.ad_day = str(p.get("ad_day", ""))
 	data.ad_count = maxi(0, int(p.get("ad_count", 0)))

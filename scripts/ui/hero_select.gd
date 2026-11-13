@@ -93,7 +93,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(180, 62)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
 	btns.add_child(back)
 	var go := Button.new()
 	go.text = tr("TO_BATTLE")

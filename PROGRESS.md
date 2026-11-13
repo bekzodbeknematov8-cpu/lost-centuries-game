@@ -6,6 +6,15 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-13 (6) — §12(b): yangi bosh menyu va rejim tanlash (rejali ish)
+**Bajarildi**
+- Bosh menyu: Registon uslubidagi siluetli kechki fon, katta qahramonlar, "O'YNASH",
+  Hiylalar / Libos / Sandiqlar / Bozor (hozircha "Tez orada"), tanga va la'l hisoblagichi,
+  pastda: kunlik mukofot, yutuqlar, reyting (tez orada), sozlamalar (til, ovoz, musiqa).
+- Rejim tanlash: Kampaniya · Erkin jang (qiyinlik oynasi) · Cheksiz mudofaa (rekord bilan) ·
+  Turnir va Haftalik vazifalar (yopiq, yangilanishda).
+- La'l (premium valyuta) saqlash formatiga qo'shildi; 36 test, smoke 16 tekshiruv.
+
 ### 2026-11-13 (5) — §12(a): viloyatli tarixiy xaritalar (rejali ish)
 **Bajarildi**
 - 4 qahramon uchun tarixiy xarita (`tools/gen_maps.py` → `assets/maps/*.png`): eski qog'oz uslubi,
@@ -68,7 +77,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) viloyatli xaritalar ✅ (400 level) · keyingi: §12(b) bosh menyu va rejim tanlash, so'ng ustaxona, hiylalar, sandiqlar
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) bosh menyu va rejim tanlash ✅ · keyingi: §12(c) ustaxona va qahramon ochish
 
 ### 2026-11-13
 **Bajarildi**

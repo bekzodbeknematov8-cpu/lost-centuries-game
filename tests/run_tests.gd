@@ -525,3 +525,14 @@ func test_ad_daily_limit() -> void:
 	st2.load_file()
 	check(int(st2.data.best_wave) == 7 and int(st2.data.ad_count) == ProgressStore.AD_DAILY_LIMIT, "rekord/reklama holati saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+func test_gems_persist() -> void:
+	var path := "user://test_gems.json"
+	var st := ProgressStore.new(path)
+	st.data.gems = 25
+	st.save_file()
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.gems) == 25, "la'l saqlanmadi")
+	DirAccess.remove_absolute(path)

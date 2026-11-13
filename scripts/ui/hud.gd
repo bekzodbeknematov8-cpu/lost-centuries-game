@@ -723,4 +723,4 @@ func _on_menu() -> void:
 	if GameState.level_id != "":
 		get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn")
+		get_tree().change_scene_to_file("res://scenes/mode_select.tscn")

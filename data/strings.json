@@ -508,5 +508,95 @@
 		"en": "Level %d",
 		"ru": "Уровень %d",
 		"tr": "%d. bölüm"
+	},
+	"PLAY": {
+		"uz": "O'YNASH",
+		"en": "PLAY",
+		"ru": "ИГРАТЬ",
+		"tr": "OYNA"
+	},
+	"MENU_TACTICS": {
+		"uz": "Hiylalar",
+		"en": "Tactics",
+		"ru": "Хитрости",
+		"tr": "Taktikler"
+	},
+	"MENU_OUTFITS": {
+		"uz": "Libos",
+		"en": "Outfits",
+		"ru": "Облачения",
+		"tr": "Kıyafetler"
+	},
+	"MENU_CHESTS": {
+		"uz": "Sandiqlar",
+		"en": "Chests",
+		"ru": "Сундуки",
+		"tr": "Sandıklar"
+	},
+	"MENU_MARKET": {
+		"uz": "Bozor",
+		"en": "Bazaar",
+		"ru": "Базар",
+		"tr": "Çarşı"
+	},
+	"SETTINGS": {
+		"uz": "Sozlamalar",
+		"en": "Settings",
+		"ru": "Настройки",
+		"tr": "Ayarlar"
+	},
+	"CLOSE": {
+		"uz": "Yopish",
+		"en": "Close",
+		"ru": "Закрыть",
+		"tr": "Kapat"
+	},
+	"COMING_SOON": {
+		"uz": "Tez orada!",
+		"en": "Coming soon!",
+		"ru": "Скоро!",
+		"tr": "Yakında!"
+	},
+	"MODE_CAMPAIGN_SUB": {
+		"uz": "400 level · 4 sarkarda",
+		"en": "400 levels · 4 commanders",
+		"ru": "400 уровней · 4 полководца",
+		"tr": "400 bölüm · 4 komutan"
+	},
+	"MODE_SKIRMISH_SUB": {
+		"uz": "Tezkor jang",
+		"en": "Quick battle",
+		"ru": "Быстрый бой",
+		"tr": "Hızlı savaş"
+	},
+	"MODE_ENDLESS_SUB": {
+		"uz": "To'lqinlarga bardosh",
+		"en": "Survive the waves",
+		"ru": "Выдержите волны",
+		"tr": "Dalgalara dayan"
+	},
+	"BEST_WAVE": {
+		"uz": "Rekord: %d-to'lqin",
+		"en": "Best: wave %d",
+		"ru": "Рекорд: волна %d",
+		"tr": "Rekor: %d. dalga"
+	},
+	"MODE_TOURNAMENT": {
+		"uz": "Turnir",
+		"en": "Tournament",
+		"ru": "Турнир",
+		"tr": "Turnuva"
+	},
+	"MODE_WEEKLY": {
+		"uz": "Haftalik vazifalar",
+		"en": "Weekly tasks",
+		"ru": "Задания недели",
+		"tr": "Haftalık görevler"
+	},
+	"CHOOSE_DIFFICULTY": {
+		"uz": "Qiyinlikni tanlang",
+		"en": "Choose difficulty",
+		"ru": "Выберите сложность",
+		"tr": "Zorluk seçin"
 	}
 }
