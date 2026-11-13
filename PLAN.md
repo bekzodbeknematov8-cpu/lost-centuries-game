@@ -209,3 +209,25 @@ Balans va bosqich ma'lumotlari kodda emas, **JSON fayllarda** saqlanadi, shunda 
 5. Release AAB'ni Play Console'ga yuklash va ichki test (8-bosqich).
    Diqqat: yangi shaxsiy akkauntlar uchun Google odatda 14 kun davomida kamida 12 ta
    testerdan iborat yopiq test talab qiladi.
+
+## 9. Foydalanuvchi talablari: progress va monetizatsiya (2026-11-13)
+
+**Yulduzlar va bosqichlar**
+- Har bosqich 1–3 yulduz beradi: g'alaba = 1; qal'a 50%+ saqlansa = 2; tez yutish yoki qal'a 80%+ = 3.
+- Keyingi kampaniyani ochish uchun yulduz kerak, lekin juda qiyin emas: taxminan har bosqichdan
+  o'rtacha 2 yulduz yetarli (masalan, 2-kampaniya uchun 15/30, 3-si uchun 35/60, 4-si uchun 55/90).
+- Qiyinlik silliq oshadi; har yo'qotishdan keyin maslahat ko'rsatiladi. Balans bot simulyatsiyasi bilan tekshiriladi.
+
+**Tangalar va reklama**
+- Har jang oxirida tanga (g'alaba/yulduzga qarab).
+- Natija oynasida "Reklama ko'rib 2× olish" tugmasi (ixtiyoriy rewarded reklama).
+- Kunlik chegara (masalan, kuniga 5 marta 2×), shunda reklama bezor qilmaydi va tangalar qadrsizlanmaydi.
+- Tangalarga: yaxshilanishlar, qahramonlarni ochish, zaxira qo'shinlar.
+
+**Xaridlar (adolatli narxlar)**
+- "Zaxira qo'shin" paketlari: masalan, 100 kamonchi ≈ 4 000 so'mgacha. Paketlar jangda
+  "qo'shimcha kuch" sifatida chaqiriladi (bir jangda cheklangan son, masalan 5 tagacha), shunda pul
+  to'lagan o'yinchi ustun keladi, lekin o'yin "pulga yutiladigan" bo'lib qolmaydi.
+- Qahramonlarni tanga bilan ham, pul bilan ham ochish mumkin (tanga yo'li uzoqroq, lekin mumkin).
+- "Reklamasiz" xaridi. Kosmetika (kiyimlar) — ixtiyoriy.
+- Narxlar Google Play'ning O'zbekiston uchun minimal narx chegaralariga moslashtiriladi (7-bosqichda tekshiriladi).

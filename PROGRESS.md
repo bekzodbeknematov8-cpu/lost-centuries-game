@@ -1,5 +1,11 @@
 # Jarayon
 
+### Foydalanuvchi talablari (navbatdagi ishlar uchun MUHIM)
+- Bosqichlar yulduz bilan ochiladi, lekin juda qiyin emas; qiziqarlilik saqlansin (PLAN.md §9).
+- Jang oxiri: tangani 2× qilish uchun rewarded reklama, kunlik chegara bilan.
+- Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
+
+
 ### 2026-11-13 (2) — foydalanuvchi fikri asosida
 **Foydalanuvchi aytdi:** boshqaruv tugmalari xunuk va o'ngdagi jangchilarni to'sadi; ikonka xunuk; qiziqarliroq qilish kerak.
 **Bajarildi**
