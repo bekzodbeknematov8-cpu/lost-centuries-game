@@ -230,4 +230,5 @@ Balans va bosqich ma'lumotlari kodda emas, **JSON fayllarda** saqlanadi, shunda 
   to'lagan o'yinchi ustun keladi, lekin o'yin "pulga yutiladigan" bo'lib qolmaydi.
 - Qahramonlarni tanga bilan ham, pul bilan ham ochish mumkin (tanga yo'li uzoqroq, lekin mumkin).
 - "Reklamasiz" xaridi. Kosmetika (kiyimlar) — ixtiyoriy.
-- Narxlar Google Play'ning O'zbekiston uchun minimal narx chegaralariga moslashtiriladi (7-bosqichda tekshiriladi).
+- Narxlar Google Play'ning narx pog'onalari va minimal chegaralariga moslashtiriladi. "4 000 so'm" faqat misol edi
+  (foydalanuvchi tasdiqladi): eng arzon paket Google Play ruxsat etgan eng past narxga yaqin bo'ladi.
