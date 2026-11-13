@@ -13,6 +13,8 @@
 - 5 yangi ovoz (o'q yomg'iri, sakrash, momaqaldiroq, karnay-nog'ora chorlovi, qahramon yiqilishi).
 - Dushman endi ertaroq kichik to'lqinlar bilan hujum qiladi (jang tezroq qizishadi).
 - Testlar: 23 (7 tasi qahramonlar uchun), smoke test 3 sahna.
+- Qahramonlar balansi (16 jang/juftlik): Temur biroz kuchli, Boyazid biroz zaif edi → sozlandi
+  (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
 ## Holat: 0–1-bosqich ✅ · 2-bosqich (qahramonlar) ✅ asosiy qismi tayyor
