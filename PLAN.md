@@ -232,3 +232,19 @@ Balans va bosqich ma'lumotlari kodda emas, **JSON fayllarda** saqlanadi, shunda 
 - "Reklamasiz" xaridi. Kosmetika (kiyimlar) — ixtiyoriy.
 - Narxlar Google Play'ning narx pog'onalari va minimal chegaralariga moslashtiriladi. "4 000 so'm" faqat misol edi
   (foydalanuvchi tasdiqladi): eng arzon paket Google Play ruxsat etgan eng past narxga yaqin bo'ladi.
+
+## 10. Foydalanuvchi talablari: bosqichlar soni va o'yinchini ushlab qolish (2026-11-13)
+
+**Hozir:** 4 kampaniya × 10 = 40 bosqich + cheksiz mudofaa. Kampaniya ichida keyingi bosqich g'alaba bilan
+(1 ★ yetarli) ochiladi — bosqichni o'tkazib yuborib bo'lmaydi; yulduz faqat keyingi kampaniyani ochish uchun kerak.
+
+**Reja (foydalanuvchi: "juda ko'p bosqich bo'lsin, o'yinchi chala tashlab ketmasin"):**
+1. Tarixiy kampaniyalar kengaytiriladi: har qahramon 25 bosqich → 100 ta qo'lda yozilgan bosqich
+   (yangi joylar, maxsus shartlar: faqat kamonchi, vaqt chegarasi, kuchli boss va h.k.).
+2. "Fathlar" rejimi — avtomatik yaratiladigan 1000+ bosqich (seed asosida): qiyinlik silliq oshadi,
+   har bosqich boshqacha (fon, dushman qo'shini tarkibi, shartlar, boss), har 10-bosqichda boss.
+   Hammasi bir xil zerikarli takror bo'lmasligi uchun modifikatorlar aralashtiriladi.
+3. Tashlab ketmaslik uchun: yulduz sandiqlari (har 10/25/50 ★ da sovg'a), kunlik mukofot (ketma-ket kunlar),
+   kunlik sinov bosqichi, yutqazganda maslahat va "kuchaytirib qayta urinish", yangi qahramon/birlik
+   har bir necha bosqichda ochiladi (doim yangi narsa kutilsin).
+4. Qiyinlik bot simulyatsiyasi bilan tekshiriladi: hech bir bosqichda keskin "devor" bo'lmasin.
