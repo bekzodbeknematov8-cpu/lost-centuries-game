@@ -32,6 +32,13 @@ var hp_mult: float = 1.0           ## Ustaxona: askarlar HP
 var hero_mult: float = 1.0         ## Ustaxona: qahramon HP va zarari
 var castle_dmg_mult: float = 1.0   ## Ustaxona: minora o'qlari
 var ability_cd_mult: float = 1.0   ## Ustaxona: maxsus kuch tiklanishi
+var tactics_used: int = 0          ## Shu jangda ishlatilgan hiylalar soni
+var mine_mult: float = 1.0
+var mine_time: float = 0.0
+var shield_reduce: float = 0.0
+var shield_time: float = 0.0
+var tower_rate: float = 1.0
+var tower_time: float = 0.0
 var stats: Dictionary = {"trained": 0, "killed": 0, "lost": 0, "gold_mined": 0}
 
 

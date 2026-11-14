@@ -8,6 +8,7 @@ var campaigns: Dictionary = {}
 var facts: Dictionary = {}
 var maps: Dictionary = {}
 var upgrades: Dictionary = {}
+var tactics: Dictionary = {}
 
 
 func _init() -> void:
@@ -18,6 +19,7 @@ func _init() -> void:
 	facts = load_json("res://data/facts.json")
 	maps = load_json("res://data/maps.json")
 	upgrades = load_json("res://data/upgrades.json")
+	tactics = load_json("res://data/tactics.json")
 
 
 static func load_json(path: String) -> Dictionary:

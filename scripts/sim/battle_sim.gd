@@ -16,6 +16,7 @@ const ATTACK_AGGRO := 650.0
 const CORPSE_TIME := 3.0
 const CONTROL_BONUS := 1.25
 const HERO_RESPAWN := 40.0
+const TACTICS_PER_BATTLE := 3
 
 var defs: Dictionary = {}
 var heroes: Dictionary = {}
@@ -266,6 +267,42 @@ func use_ability(team_idx: int) -> bool:
 	return true
 
 
+func can_use_tactic(team_idx: int) -> bool:
+	return winner < 0 and teams[team_idx].tactics_used < TACTICS_PER_BATTLE
+
+
+func use_tactic(team_idx: int, id: String, d: Dictionary) -> bool:
+	## Bir martalik jang hiylasi. Bir jangda TACTICS_PER_BATTLE tadan ko'p emas.
+	if not can_use_tactic(team_idx):
+		return false
+	var t := teams[team_idx]
+	match str(d.effect):
+		"gold":
+			t.gold += float(d.amount)
+		"mining":
+			t.mine_mult = float(d.mult)
+			t.mine_time = float(d.duration)
+		"heal":
+			for u in units:
+				if u.team == team_idx and u.is_alive():
+					u.hp = minf(u.max_hp, u.hp + u.max_hp * float(d.amount))
+		"shield":
+			t.shield_reduce = float(d.reduce)
+			t.shield_time = float(d.duration)
+		"drum":
+			t.buff_time = maxf(t.buff_time, float(d.duration))
+			t.buff_dmg = maxf(t.buff_dmg, float(d.dmg))
+			t.buff_speed = maxf(t.buff_speed, float(d.speed))
+		"tower":
+			t.tower_rate = float(d.rate)
+			t.tower_time = float(d.duration)
+		_:
+			return false
+	t.tactics_used += 1
+	events.append({"type": "tactic", "team": team_idx, "id": id, "effect": d.effect, "x": t.castle_x})
+	return true
+
+
 func _update_dash(u: UnitState, dt: float) -> void:
 	var a: Dictionary = heroes[u.type].ability
 	u.dash_time -= dt
@@ -456,6 +493,18 @@ func pop_events() -> Array[Dictionary]:
 func _update_team(t: TeamState, dt: float) -> void:
 	t.gold += t.passive_income * t.income_mult * dt
 	t.ability_cd = maxf(0.0, t.ability_cd - dt)
+	if t.mine_time > 0.0:
+		t.mine_time -= dt
+		if t.mine_time <= 0.0:
+			t.mine_mult = 1.0
+	if t.shield_time > 0.0:
+		t.shield_time -= dt
+		if t.shield_time <= 0.0:
+			t.shield_reduce = 0.0
+	if t.tower_time > 0.0:
+		t.tower_time -= dt
+		if t.tower_time <= 0.0:
+			t.tower_rate = 1.0
 	if t.buff_time > 0.0:
 		t.buff_time -= dt
 		if t.buff_time <= 0.0:
@@ -530,7 +579,7 @@ func _update_worker(u: UnitState, dt: float) -> void:
 				u.facing = t.dir
 		UnitState.State.MINING:
 			var before := u.mine_timer
-			u.mine_timer -= dt
+			u.mine_timer -= dt * t.mine_mult
 			if floorf(before / 0.8) != floorf(u.mine_timer / 0.8) and u.mine_timer > 0.0:
 				u.attack_anim = 0.35
 				events.append({"type": "pick", "team": u.team, "x": u.x})
@@ -754,6 +803,9 @@ func _apply_damage(target: UnitState, raw: float, weapon: String, attacker: Unit
 
 func _apply_damage_no_kill(target: UnitState, raw: float, weapon: String) -> void:
 	var dmg := maxf(1.0, raw - float(target.def.armor))
+	var tt := teams[target.team]
+	if tt.shield_time > 0.0:
+		dmg *= 1.0 - tt.shield_reduce
 	target.hp -= dmg
 	target.hurt_flash = 0.15
 	events.append({
@@ -811,7 +863,7 @@ func _hit_castle(t: TeamState, dmg: float, x: float, weapon := "melee") -> void:
 
 func _update_castle(t: TeamState, dt: float) -> void:
 	## Qal'a minorasidagi kamonchilar yaqinlashgan dushmanga o'q uzadi.
-	t.castle_shot_cd -= dt
+	t.castle_shot_cd -= dt * t.tower_rate
 	if t.castle_shot_cd > 0.0:
 		return
 	var best: UnitState = null

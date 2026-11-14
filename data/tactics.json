@@ -1,0 +1,13 @@
+{
+	"order": ["caravan", "fast_mining", "healing", "shield_wall", "war_drum", "tower_volley"],
+	"per_battle": 3,
+	"starter": {"caravan": 2, "healing": 2},
+	"tactics": {
+		"caravan":      {"name": "TAC_CARAVAN",   "desc": "TAC_CARAVAN_DESC",   "icon": "coin",   "price": 80,  "effect": "gold",        "amount": 300},
+		"fast_mining":  {"name": "TAC_MINING",    "desc": "TAC_MINING_DESC",    "icon": "pick",   "price": 60,  "effect": "mining",      "mult": 2.0, "duration": 30},
+		"healing":      {"name": "TAC_HEALING",   "desc": "TAC_HEALING_DESC",   "icon": "heart",  "price": 90,  "effect": "heal",        "amount": 0.5},
+		"shield_wall":  {"name": "TAC_SHIELD",    "desc": "TAC_SHIELD_DESC",    "icon": "shield", "price": 100, "effect": "shield",      "reduce": 0.4, "duration": 12},
+		"war_drum":     {"name": "TAC_DRUM",      "desc": "TAC_DRUM_DESC",      "icon": "drum",   "price": 110, "effect": "drum",        "dmg": 1.15, "speed": 1.3, "duration": 12},
+		"tower_volley": {"name": "TAC_TOWER",     "desc": "TAC_TOWER_DESC",     "icon": "tower",  "price": 90,  "effect": "tower",       "rate": 3.0, "duration": 20}
+	}
+}

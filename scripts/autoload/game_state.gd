@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": []}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -70,6 +70,7 @@ func set_locale(loc: String) -> void:
 
 func load_progress() -> void:
 	_store.load_file()
+	_store.give_starter_tactics(GameData.tactics)
 	progress = _store.data
 
 
@@ -123,3 +124,19 @@ func hero_owned(hero: String) -> bool:
 
 func upgrade_effects() -> Dictionary:
 	return Upgrades.effects(GameData.upgrades, progress.get("upgrades", {}))
+
+
+# --- Hiylalar ------------------------------------------------------------------
+
+func buy_tactic(id: String) -> bool:
+	_store.data = progress
+	return _store.buy_tactic(GameData.tactics, id)
+
+
+func consume_tactic(id: String) -> bool:
+	_store.data = progress
+	return _store.consume_tactic(id)
+
+
+func tactic_count(id: String) -> int:
+	return int(progress.get("tactics", {}).get(id, 0))

@@ -263,6 +263,34 @@ class StarRow:
 		draw_colored_polygon(pts, col)
 
 
+class TacticButton:
+	## Jangdagi hiyla tugmasi: ikonka va qolgan son.
+	extends Button
+	var id: String
+	var battle: Node
+
+	func _init(tid: String, b: Node) -> void:
+		id = tid
+		battle = b
+		custom_minimum_size = Vector2(60, 60)
+		focus_mode = Control.FOCUS_NONE
+		add_theme_stylebox_override("normal", UITheme.box(Color(0.15, 0.22, 0.38, 0.85), Color(0.6, 0.75, 1.0, 0.8), 30, 2))
+		add_theme_stylebox_override("hover", UITheme.box(Color(0.2, 0.3, 0.5, 0.9), Color(0.7, 0.85, 1.0), 30, 2))
+		add_theme_stylebox_override("pressed", UITheme.box(Color(0.3, 0.45, 0.7, 0.95), Color(0.8, 0.9, 1.0), 30, 2))
+		add_theme_stylebox_override("disabled", UITheme.box(Color(0.15, 0.15, 0.18, 0.6), Color(0.4, 0.4, 0.45, 0.6), 30, 2))
+
+	func _process(_d: float) -> void:
+		visible = GameState.tactic_count(id) > 0
+		disabled = not battle.sim.can_use_tactic(0)
+		queue_redraw()
+
+	func _draw() -> void:
+		TacticArt.draw(self, str(GameData.tactics.tactics[id].icon), size * 0.5, 1.15)
+		var n := GameState.tactic_count(id)
+		draw_circle(Vector2(size.x - 9, 9), 10.0, Color(0.8, 0.2, 0.15))
+		draw_string(get_theme_default_font(), Vector2(size.x - 21, 15), str(n), HORIZONTAL_ALIGNMENT_CENTER, 24, 14, Color.WHITE)
+
+
 class MiniMap:
 	extends Control
 	## Butun jang maydonining kichik xaritasi. Bosib/surib kamerani ko'chirish mumkin.
@@ -319,6 +347,7 @@ func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_top()
 	_build_bottom()
+	_build_tactics()
 	_build_end_panel()
 	_build_pause_panel()
 	_hint = _center_label(24, 96)
@@ -475,6 +504,31 @@ func _build_bottom() -> void:
 	ab.size_flags_vertical = Control.SIZE_SHRINK_END
 	ab.pressed.connect(_on_ability)
 	bar.add_child(ab)
+
+
+func _build_tactics() -> void:
+	var col := VBoxContainer.new()
+	col.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	col.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	col.offset_left = 14
+	col.offset_bottom = -BAR_H - 14
+	col.add_theme_constant_override("separation", 8)
+	col.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(col)
+	for id in GameData.tactics.order:
+		var b := TacticButton.new(id, battle)
+		b.pressed.connect(_on_tactic.bind(id))
+		col.add_child(b)
+
+
+func _on_tactic(id: String) -> void:
+	var sim: BattleSim = battle.sim
+	if not sim.can_use_tactic(0) or GameState.tactic_count(id) <= 0:
+		Sfx.play("deny", 0.6)
+		return
+	if sim.use_tactic(0, id, GameData.tactics.tactics[id]):
+		GameState.consume_tactic(id)
+		show_banner(tr(str(GameData.tactics.tactics[id].name)) + "!", 1.4)
 
 
 func _make_center_panel() -> Array:

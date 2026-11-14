@@ -588,3 +588,52 @@ func test_buy_upgrade_and_hero() -> void:
 	st2.load_file()
 	check(int(st2.data.upgrades.get("army_hp", 0)) == 1 and "temur" in st2.data.heroes, "xaridlar saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+# --- Hiylalar ---------------------------------------------------------------
+
+func tac() -> Dictionary:
+	return load_json("res://data/tactics.json")
+
+
+func test_tactics_effects() -> void:
+	var d := tac()
+	var s := new_sim({"start_gold": 100})
+	check(s.use_tactic(0, "caravan", d.tactics.caravan) and s.teams[0].gold == 400.0, "karvon oltin bermadi")
+	var a := s.spawn_unit(0, "swordsman")
+	a.hp = 20.0
+	s.use_tactic(0, "healing", d.tactics.healing)
+	check(a.hp > 20.0 + a.max_hp * 0.4, "shifo ishlamadi")
+	s.use_tactic(0, "shield_wall", d.tactics.shield_wall)
+	var hp0 := a.hp
+	s._apply_damage_no_kill(a, 52.0, "sword")
+	check(absf((hp0 - a.hp) - (52.0 - float(a.def.armor)) * 0.6) < 0.01, "qalqon devori zararni kamaytirmadi")
+	check(not s.use_tactic(0, "war_drum", d.tactics.war_drum), "bir jangda 3 tadan ko'p hiyla ishlatildi")
+	check(s.teams[1].tactics_used == 0, "hiyla boshqa tomonga ta'sir qildi")
+
+
+func test_tactics_timed_expire() -> void:
+	var d := tac()
+	var s := new_sim()
+	s.use_tactic(0, "fast_mining", d.tactics.fast_mining)
+	s.use_tactic(0, "tower_volley", d.tactics.tower_volley)
+	check(s.teams[0].mine_mult == 2.0 and s.teams[0].tower_rate == 3.0, "vaqtli hiyla ishlamadi")
+	run(s, 31.0)
+	check(s.teams[0].mine_mult == 1.0 and s.teams[0].tower_rate == 1.0, "vaqtli hiyla tugamadi")
+
+
+func test_tactics_store() -> void:
+	var d := tac()
+	var path := "user://test_tac.json"
+	var st := ProgressStore.new(path)
+	st.give_starter_tactics(d)
+	st.give_starter_tactics(d)
+	check(int(st.data.tactics.caravan) == 2, "boshlang'ich hiylalar ikki marta berildi")
+	check(not st.buy_tactic(d, "war_drum"), "tangasiz sotildi")
+	st.data.coins = 500
+	check(st.buy_tactic(d, "war_drum") and int(st.data.tactics.war_drum) == 1, "hiyla sotilmadi")
+	check(st.consume_tactic("war_drum") and not st.consume_tactic("war_drum"), "sarflash noto'g'ri")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.tactics.get("caravan", 0)) == 2 and bool(st2.data.starter_given), "hiylalar saqlanmadi")
+	DirAccess.remove_absolute(path)

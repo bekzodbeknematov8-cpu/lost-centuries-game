@@ -245,6 +245,24 @@ func _on_event(e: Dictionary) -> void:
 		"wave":
 			Sfx.play("horn_enemy", 0.9, 0.0)
 			hud.show_banner(tr("WAVE_N") % int(e.wave), 2.0)
+		"tactic":
+			var pos := Vector2(cam.position.x, _unit_y(0.5) - 40.0)
+			match str(e.effect):
+				"gold":
+					Sfx.play("coin", 1.0, 0.0)
+					_effects.append({"kind": "text", "pos": pos + Vector2(0, -60), "t": 0.0, "life": 1.4, "text": "+300", "color": Painter.GOLD})
+				"heal":
+					Sfx.play("ready", 1.0, 0.0)
+					_effects.append({"kind": "ring", "pos": pos, "t": 0.0, "life": 1.0, "color": Color(0.4, 1.0, 0.5)})
+				"shield":
+					Sfx.play("sword_shield", 1.0, 0.0)
+					_effects.append({"kind": "ring", "pos": pos, "t": 0.0, "life": 1.0, "color": Color(0.5, 0.7, 1.0)})
+				"drum":
+					Sfx.play("drum", 1.0, 0.0)
+				"tower":
+					Sfx.play("horn_attack", 0.7, 0.0)
+				"mining":
+					Sfx.play("pick", 1.0, 0.0)
 		"control_kill":
 			_shake = minf(1.0, _shake + 0.12)
 		"ability":

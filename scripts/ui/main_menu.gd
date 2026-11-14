@@ -147,10 +147,11 @@ func _build() -> void:
 		b.add_theme_stylebox_override("normal", UITheme.box(col, col.lightened(0.35), 12, 3))
 		b.add_theme_stylebox_override("hover", UITheme.box(col.lightened(0.12), col.lightened(0.45), 12, 3))
 		b.add_theme_stylebox_override("pressed", UITheme.box(col.darkened(0.2), col.lightened(0.35), 12, 3))
-		if d[0] == "WORKSHOP":
+		var target: String = {"WORKSHOP": "res://scenes/workshop.tscn", "MENU_TACTICS": "res://scenes/tactics_shop.tscn"}.get(d[0], "")
+		if target != "":
 			b.pressed.connect(func() -> void:
 				Sfx.play("click", 0.7)
-				get_tree().change_scene_to_file("res://scenes/workshop.tscn"))
+				get_tree().change_scene_to_file(target))
 		else:
 			b.pressed.connect(_coming_soon)
 		row.add_child(b)

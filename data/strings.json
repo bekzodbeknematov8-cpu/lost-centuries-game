@@ -730,5 +730,95 @@
 		"en": "Locked: unlock in the campaign or buy in the Workshop",
 		"ru": "Закрыт: откройте в кампании или купите в мастерской",
 		"tr": "Kilitli: seferde açın veya atölyeden satın alın"
+	},
+	"TACTICS_HINT": {
+		"uz": "Bir martalik kuchlar. Bir jangda ko'pi bilan %d ta ishlatiladi.",
+		"en": "One-time powers. Up to %d per battle.",
+		"ru": "Одноразовые силы. Не более %d за бой.",
+		"tr": "Tek kullanımlık güçler. Savaş başına en fazla %d."
+	},
+	"OWNED_N": {
+		"uz": "Sizda: %d",
+		"en": "Owned: %d",
+		"ru": "У вас: %d",
+		"tr": "Sende: %d"
+	},
+	"TACTIC_BOUGHT": {
+		"uz": "Hiyla qo'shildi!",
+		"en": "Tactic added!",
+		"ru": "Хитрость добавлена!",
+		"tr": "Taktik eklendi!"
+	},
+	"TAC_CARAVAN": {
+		"uz": "Karvon",
+		"en": "Caravan",
+		"ru": "Караван",
+		"tr": "Kervan"
+	},
+	"TAC_CARAVAN_DESC": {
+		"uz": "Darhol +300 oltin.",
+		"en": "Instantly +300 gold.",
+		"ru": "Сразу +300 золота.",
+		"tr": "Anında +300 altın."
+	},
+	"TAC_MINING": {
+		"uz": "Tez qazish",
+		"en": "Swift mining",
+		"ru": "Быстрая добыча",
+		"tr": "Hızlı kazı"
+	},
+	"TAC_MINING_DESC": {
+		"uz": "Ishchilar 30 soniya 2 barobar tez qazadi.",
+		"en": "Workers mine twice as fast for 30 s.",
+		"ru": "Рабочие добывают вдвое быстрее 30 с.",
+		"tr": "İşçiler 30 sn iki kat hızlı kazar."
+	},
+	"TAC_HEALING": {
+		"uz": "Tabib",
+		"en": "Healer",
+		"ru": "Лекарь",
+		"tr": "Hekim"
+	},
+	"TAC_HEALING_DESC": {
+		"uz": "Barcha askarlaringizni 50% davolaydi.",
+		"en": "Heals all your soldiers by 50%.",
+		"ru": "Лечит всех ваших воинов на 50%.",
+		"tr": "Tüm askerlerinizi %50 iyileştirir."
+	},
+	"TAC_SHIELD": {
+		"uz": "Qalqon devori",
+		"en": "Shield wall",
+		"ru": "Стена щитов",
+		"tr": "Kalkan duvarı"
+	},
+	"TAC_SHIELD_DESC": {
+		"uz": "12 soniya qo'shiningiz 40% kam zarar oladi.",
+		"en": "Your army takes 40% less damage for 12 s.",
+		"ru": "12 с ваше войско получает на 40% меньше урона.",
+		"tr": "Ordunuz 12 sn %40 daha az hasar alır."
+	},
+	"TAC_DRUM": {
+		"uz": "Jangovar nog'ora",
+		"en": "War drum",
+		"ru": "Боевой барабан",
+		"tr": "Savaş davulu"
+	},
+	"TAC_DRUM_DESC": {
+		"uz": "12 soniya +30% tezlik va +15% kuch.",
+		"en": "+30% speed and +15% damage for 12 s.",
+		"ru": "+30% скорости и +15% урона на 12 с.",
+		"tr": "12 sn +%30 hız ve +%15 hasar."
+	},
+	"TAC_TOWER": {
+		"uz": "Minora yomg'iri",
+		"en": "Tower volley",
+		"ru": "Залп башен",
+		"tr": "Kule yaylımı"
+	},
+	"TAC_TOWER_DESC": {
+		"uz": "20 soniya minoralar 3 barobar tez o'q uzadi.",
+		"en": "Towers fire three times faster for 20 s.",
+		"ru": "20 с башни стреляют втрое быстрее.",
+		"tr": "Kuleler 20 sn üç kat hızlı ok atar."
 	}
 }

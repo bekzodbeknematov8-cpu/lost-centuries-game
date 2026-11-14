@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": []}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": []}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -31,6 +31,10 @@ func load_file() -> void:
 	if p.get("upgrades") is Dictionary:
 		for k in p.upgrades:
 			data.upgrades[str(k)] = maxi(0, int(p.upgrades[k]))
+	if p.get("tactics") is Dictionary:
+		for k in p.tactics:
+			data.tactics[str(k)] = maxi(0, int(p.tactics[k]))
+	data.starter_given = bool(p.get("starter_given", false))
 	if p.get("heroes") is Array:
 		for h in p.heroes:
 			if not (str(h) in data.heroes):
@@ -116,5 +120,33 @@ func buy_hero(upg_data: Dictionary, hero: String) -> bool:
 	if not spend_coins(price):
 		return false
 	data.heroes.append(hero)
+	save_file()
+	return true
+
+
+func give_starter_tactics(tac_data: Dictionary) -> void:
+	## Yangi o'yinchiga bir martalik boshlang'ich hiylalar.
+	if bool(data.get("starter_given", false)):
+		return
+	for k in tac_data.get("starter", {}):
+		data.tactics[k] = int(data.tactics.get(k, 0)) + int(tac_data.starter[k])
+	data.starter_given = true
+	save_file()
+
+
+func buy_tactic(tac_data: Dictionary, id: String) -> bool:
+	if not tac_data.tactics.has(id):
+		return false
+	if not spend_coins(int(tac_data.tactics[id].price)):
+		return false
+	data.tactics[id] = int(data.tactics.get(id, 0)) + 1
+	save_file()
+	return true
+
+
+func consume_tactic(id: String) -> bool:
+	if int(data.tactics.get(id, 0)) <= 0:
+		return false
+	data.tactics[id] = int(data.tactics[id]) - 1
 	save_file()
 	return true

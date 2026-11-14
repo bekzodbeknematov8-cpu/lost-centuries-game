@@ -6,6 +6,17 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (8) — §12(d): Hiylalar (rejali ish)
+**Bajarildi**
+- 6 ta bir martalik jang hiylasi (`data/tactics.json`): Karvon (+300 oltin), Tez qazish (30 s 2×),
+  Tabib (hammani 50% davolash), Qalqon devori (12 s −40% zarar), Jangovar nog'ora (12 s +30% tezlik,
+  +15% kuch), Minora yomg'iri (20 s 3× tez o'q). Bir jangda ko'pi bilan 3 ta (adolat uchun).
+- Hiylalar do'koni (tangaga), yangi o'yinchiga 2 Karvon + 2 Tabib sovg'a; jangda chap pastda tugmalar,
+  har biri uchun ovoz/effekt. 3 yangi test (42), smoke 20.
+
+**Sinovda topilgan va tuzatilgan**
+- Bosh menyuda Variant tip xatosi (unit testlar ushlamadi, skrinshot/smoke ushladi) → tuzatildi.
+
 ### 2026-11-14 (7) — §12(c): Ustaxona va qahramonlarni ochish (rejali ish)
 **Bajarildi**
 - `data/upgrades.json` + `Upgrades` (sim): 6 ta doimiy yaxshilanish — sovut (HP +5%/daraja), tig'lar (zarar +4%),
@@ -89,7 +100,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · keyingi: §12(d) hiylalar
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · keyingi: §12(e) sandiqlar va kunlik mukofot
 
 ### 2026-11-13
 **Bajarildi**
