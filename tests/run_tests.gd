@@ -718,3 +718,32 @@ func test_outfits() -> void:
 	Painter.player_outfit = cols
 	check(Painter.team_colors(0)[3] == cols[3] and Painter.team_colors(1) == Painter.TEAM_COLORS[1], "libos ranglari noto'g'ri qo'llandi")
 	Painter.player_outfit = []
+
+
+# --- Bozor ------------------------------------------------------------------
+
+func test_market_products() -> void:
+	var m := load_json("res://data/market.json")
+	var path := "user://test_market.json"
+	var st := ProgressStore.new(path)
+	check(st.grant_product(m, "starter"), "boshlang'ich to'plam berilmadi")
+	check(int(st.data.gems) == 200 and int(st.data.chests.gold) == 1 and "temuriy" in st.data.outfits, "to'plam tarkibi noto'g'ri")
+	check(not st.grant_product(m, "starter"), "bir martalik to'plam ikki marta sotildi")
+	check(st.buy_with_gems(m, "res_archer") and int(st.data.reserves.archer) == 100 and int(st.data.gems) == 140, "zaxira paketi sotilmadi")
+	check(not st.buy_with_gems(m, "gems_s"), "IAP mahsulot la'lga sotildi")
+	check(st.grant_product(m, "no_ads") and bool(st.data.no_ads), "reklamasiz yoqilmadi")
+	for i in int(m.ad_gems.daily_limit):
+		check(st.claim_ad_gems(m, "2026-04-01"), "reklama la'li berilmadi")
+	check(not st.claim_ad_gems(m, "2026-04-01"), "reklama la'li chegarasi ishlamadi")
+	check(st.take_reserve("archer", 5) == 5 and int(st.data.reserves.archer) == 95, "zaxira olinmadi")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.reserves.archer) == 95 and bool(st2.data.no_ads) and "starter" in st2.data.bought_once, "bozor holati saqlanmadi")
+	DirAccess.remove_absolute(path)
+
+
+func test_reserve_respects_pop_cap() -> void:
+	var s := new_sim({"pop_cap": 8})
+	check(s.call_reserve(0, "archer", 5) == 5, "zaxira chaqirilmadi")
+	check(s.call_reserve(0, "archer", 5) == 3, "aholi chegarasi hisobga olinmadi")
+	check(s.call_reserve(0, "cavalry", 5) == 0, "to'la qo'shinga zaxira qo'shildi")

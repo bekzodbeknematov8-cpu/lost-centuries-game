@@ -8,3 +8,4 @@
 | ⏳ | AdMob akkaunti va reklama ID'lari | 7-bosqich |
 | ⏳ | Yopiq test uchun 12+ tester (Google talabi, 14 kun) | 8-bosqich |
 | ⏳ | Release AAB'ni Play Console'ga yuklash | 8-bosqich |
+| ⏳ | Google Play Console'da mahsulotlar: starter, gems_s, gems_m, gems_l, no_ads (ID'lar `data/market.json` da) | 7-bosqich |

@@ -18,7 +18,8 @@ var _ended := false
 var _cam_target_x := 0.0
 var _follow := true
 var auto_player: AIController = null   ## Avtomatik sinov/demo rejimi uchun
-var level: Dictionary = {}              ## Kampaniya bosqichi (bo'sh bo'lsa erkin jang)
+var level: Dictionary = {}
+var _dev_reserved := false              ## Kampaniya bosqichi (bo'sh bo'lsa erkin jang)
 
 
 func _ready() -> void:
@@ -110,6 +111,12 @@ func _process(delta: float) -> void:
 		var h := sim.hero_of(0)
 		if h:
 			focus_x(h.x + 200.0)
+	if OS.get_cmdline_user_args().has("--call_reserve") and sim.time > 8.0 and not _dev_reserved:
+		_dev_reserved = true
+		hud._on_reserve("archer")
+		hud._on_reserve("archer")
+		hud._on_reserve("archer")
+		print("DEV reserves_used=", sim.teams[0].reserves_used, " left=", GameState.progress.reserves.get("archer", 0))
 	if OS.get_cmdline_user_args().has("--force_win") and sim.time > 6.0 and sim.winner < 0:
 		sim.teams[1].castle_hp = 0.0
 	_update_effects(delta)

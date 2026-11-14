@@ -1,0 +1,19 @@
+{
+	"note": "Narxlar USD da Google Play pog'onalariga mos (haqiqiy mahalliy narx Play Billing'dan olinadi).",
+	"reserve_per_battle": 10,
+	"reserve_call": 5,
+	"ad_gems": {"amount": 5, "daily_limit": 3},
+	"order": ["starter", "gems_s", "gems_m", "gems_l", "no_ads", "res_archer", "res_sword", "res_cavalry", "ad_gems"],
+	"products": {
+		"starter":     {"name": "MK_STARTER", "desc": "MK_STARTER_DESC", "kind": "iap", "usd": 1.99, "once": true,
+			"contents": [{"type": "gems", "amount": 200}, {"type": "chest", "id": "gold", "count": 1}, {"type": "outfit", "id": "temuriy"}, {"type": "tactic", "id": "war_drum", "count": 3}]},
+		"gems_s":      {"name": "MK_GEMS_S", "desc": "MK_GEMS_DESC", "kind": "iap", "usd": 0.99, "contents": [{"type": "gems", "amount": 60}]},
+		"gems_m":      {"name": "MK_GEMS_M", "desc": "MK_GEMS_DESC", "kind": "iap", "usd": 4.99, "contents": [{"type": "gems", "amount": 330}]},
+		"gems_l":      {"name": "MK_GEMS_L", "desc": "MK_GEMS_DESC", "kind": "iap", "usd": 9.99, "contents": [{"type": "gems", "amount": 700}]},
+		"no_ads":      {"name": "MK_NO_ADS", "desc": "MK_NO_ADS_DESC", "kind": "iap", "usd": 2.99, "once": true, "contents": [{"type": "no_ads"}]},
+		"res_archer":  {"name": "MK_RES_ARCHER", "desc": "MK_RES_DESC", "kind": "gems", "gems": 60, "contents": [{"type": "reserve", "id": "archer", "count": 100}]},
+		"res_sword":   {"name": "MK_RES_SWORD", "desc": "MK_RES_DESC", "kind": "gems", "gems": 50, "contents": [{"type": "reserve", "id": "swordsman", "count": 100}]},
+		"res_cavalry": {"name": "MK_RES_CAVALRY", "desc": "MK_RES_DESC", "kind": "gems", "gems": 80, "contents": [{"type": "reserve", "id": "cavalry", "count": 50}]},
+		"ad_gems":     {"name": "MK_AD_GEMS", "desc": "MK_AD_GEMS_DESC", "kind": "ad", "contents": [{"type": "gems", "amount": 5}]}
+	}
+}

@@ -994,5 +994,149 @@
 		"en": "Outfit equipped!",
 		"ru": "Облачение надето!",
 		"tr": "Kıyafet giyildi!"
+	},
+	"BILLING_NOTE": {
+		"uz": "Sinov rejimi: haqiqiy to'lov olinmaydi. Haqiqiy narxlar Google Play orqali so'mda ko'rsatiladi.",
+		"en": "Test mode: no real payment. Real prices will be shown via Google Play.",
+		"ru": "Тестовый режим: оплата не списывается. Реальные цены покажет Google Play.",
+		"tr": "Test modu: gerçek ödeme alınmaz. Gerçek fiyatlar Google Play'de gösterilecek."
+	},
+	"BILLING_TEST": {
+		"uz": "Sinov xaridi\n%s — %s\n(haqiqiy pul olinmaydi)",
+		"en": "Test purchase\n%s — %s\n(no real money)",
+		"ru": "Тестовая покупка\n%s — %s\n(без реальной оплаты)",
+		"tr": "Test satın alma\n%s — %s\n(gerçek para alınmaz)"
+	},
+	"BUY": {
+		"uz": "Sotib olish",
+		"en": "Buy",
+		"ru": "Купить",
+		"tr": "Satın al"
+	},
+	"CANCEL": {
+		"uz": "Bekor qilish",
+		"en": "Cancel",
+		"ru": "Отмена",
+		"tr": "İptal"
+	},
+	"BOUGHT": {
+		"uz": "Olingan",
+		"en": "Owned",
+		"ru": "Куплено",
+		"tr": "Alındı"
+	},
+	"FREE": {
+		"uz": "Bepul",
+		"en": "Free",
+		"ru": "Бесплатно",
+		"tr": "Ücretsiz"
+	},
+	"GEMS": {
+		"uz": "la'l",
+		"en": "rubies",
+		"ru": "рубинов",
+		"tr": "yakut"
+	},
+	"PURCHASE_OK": {
+		"uz": "Rahmat! Xarid qo'shildi.",
+		"en": "Thank you! Purchase added.",
+		"ru": "Спасибо! Покупка добавлена.",
+		"tr": "Teşekkürler! Satın alma eklendi."
+	},
+	"MK_STARTER": {
+		"uz": "Boshlang'ich to'plam",
+		"en": "Starter pack",
+		"ru": "Стартовый набор",
+		"tr": "Başlangıç paketi"
+	},
+	"MK_STARTER_DESC": {
+		"uz": "Bir martalik, eng foydali taklif:",
+		"en": "One-time best value:",
+		"ru": "Разовое выгодное предложение:",
+		"tr": "Tek seferlik en iyi teklif:"
+	},
+	"MK_GEMS_S": {
+		"uz": "Bir hovuch la'l",
+		"en": "Handful of rubies",
+		"ru": "Горсть рубинов",
+		"tr": "Bir avuç yakut"
+	},
+	"MK_GEMS_M": {
+		"uz": "La'l xaltasi",
+		"en": "Pouch of rubies",
+		"ru": "Мешочек рубинов",
+		"tr": "Yakut kesesi"
+	},
+	"MK_GEMS_L": {
+		"uz": "La'l sandig'i",
+		"en": "Coffer of rubies",
+		"ru": "Ларец рубинов",
+		"tr": "Yakut sandığı"
+	},
+	"MK_GEMS_DESC": {
+		"uz": "Premium valyuta:",
+		"en": "Premium currency:",
+		"ru": "Премиум-валюта:",
+		"tr": "Premium para:"
+	},
+	"MK_NO_ADS": {
+		"uz": "Reklamasiz",
+		"en": "No ads",
+		"ru": "Без рекламы",
+		"tr": "Reklamsız"
+	},
+	"MK_NO_ADS_DESC": {
+		"uz": "Jangdan keyingi 2× mukofot reklamasiz beriladi.",
+		"en": "Battle 2× rewards without ads.",
+		"ru": "Награда 2× после боя без рекламы.",
+		"tr": "Savaş sonrası 2× ödül reklamsız."
+	},
+	"MK_RES_ARCHER": {
+		"uz": "Kamonchilar zaxirasi",
+		"en": "Archer reserve",
+		"ru": "Резерв лучников",
+		"tr": "Okçu yedeği"
+	},
+	"MK_RES_SWORD": {
+		"uz": "Qilichbozlar zaxirasi",
+		"en": "Swordsman reserve",
+		"ru": "Резерв мечников",
+		"tr": "Kılıççı yedeği"
+	},
+	"MK_RES_CAVALRY": {
+		"uz": "Otliqlar zaxirasi",
+		"en": "Cavalry reserve",
+		"ru": "Резерв всадников",
+		"tr": "Süvari yedeği"
+	},
+	"MK_RES_DESC": {
+		"uz": "Jangda chaqiriladi (bir jangda 10 tagacha):",
+		"en": "Call in battle (up to 10 per battle):",
+		"ru": "Вызов в бою (до 10 за бой):",
+		"tr": "Savaşta çağrılır (savaş başına 10'a kadar):"
+	},
+	"MK_AD_GEMS": {
+		"uz": "Bepul la'l",
+		"en": "Free rubies",
+		"ru": "Бесплатные рубины",
+		"tr": "Ücretsiz yakut"
+	},
+	"MK_AD_GEMS_DESC": {
+		"uz": "Qisqa reklama ko'ring (kuniga 3 marta):",
+		"en": "Watch a short ad (3 times a day):",
+		"ru": "Посмотрите короткую рекламу (3 раза в день):",
+		"tr": "Kısa reklam izleyin (günde 3 kez):"
+	},
+	"RESERVE_CALLED": {
+		"uz": "Zaxira keldi: %d × %s",
+		"en": "Reserve arrived: %d × %s",
+		"ru": "Резерв прибыл: %d × %s",
+		"tr": "Yedek geldi: %d × %s"
+	},
+	"AD_DOUBLE_NOADS": {
+		"uz": "2× olish (+%d)",
+		"en": "Take 2× (+%d)",
+		"ru": "Взять 2× (+%d)",
+		"tr": "2× al (+%d)"
 	}
 }

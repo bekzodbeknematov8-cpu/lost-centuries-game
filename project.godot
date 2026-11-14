@@ -17,6 +17,7 @@ GameData="*res://scripts/autoload/game_data.gd"
 GameState="*res://scripts/autoload/game_state.gd"
 Sfx="*res://scripts/autoload/sfx.gd"
 Ads="*res://scripts/autoload/ads.gd"
+Billing="*res://scripts/autoload/billing.gd"
 DevTools="*res://scripts/autoload/dev_tools.gd"
 
 [display]

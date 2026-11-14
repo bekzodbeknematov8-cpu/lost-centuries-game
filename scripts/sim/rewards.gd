@@ -46,6 +46,17 @@ static func apply(data: Dictionary, reward: Dictionary) -> void:
 			if not data.has("tactics"):
 				data.tactics = {}
 			data.tactics[reward.id] = int(data.tactics.get(reward.id, 0)) + int(reward.count)
+		"reserve":
+			if not data.has("reserves"):
+				data.reserves = {}
+			data.reserves[reward.id] = int(data.reserves.get(reward.id, 0)) + int(reward.count)
+		"outfit":
+			if not data.has("outfits"):
+				data.outfits = ["classic"]
+			if not (str(reward.id) in data.outfits):
+				data.outfits.append(str(reward.id))
+		"no_ads":
+			data.no_ads = true
 		"chest":
 			if not data.has("chests"):
 				data.chests = {}

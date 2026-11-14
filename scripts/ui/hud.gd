@@ -291,6 +291,39 @@ class TacticButton:
 		draw_string(get_theme_default_font(), Vector2(size.x - 21, 15), str(n), HORIZONTAL_ALIGNMENT_CENTER, 24, 14, Color.WHITE)
 
 
+class ReserveButton:
+	## Zaxira qo'shin: bosilganda 5 ta askar keladi (bir jangda 10 tagacha).
+	extends Button
+	var type: String
+	var battle: Node
+	var _u := UnitState.new()
+
+	func _init(t: String, b: Node) -> void:
+		type = t
+		battle = b
+		custom_minimum_size = Vector2(60, 60)
+		focus_mode = Control.FOCUS_NONE
+		_u.type = t
+		_u.def = GameData.units[t]
+		_u.facing = 1
+		_u.hp = 1.0
+		_u.max_hp = 1.0
+		add_theme_stylebox_override("normal", UITheme.box(Color(0.45, 0.12, 0.1, 0.85), Painter.GOLD, 30, 2))
+		add_theme_stylebox_override("hover", UITheme.box(Color(0.55, 0.16, 0.12, 0.9), Painter.GOLD, 30, 2))
+		add_theme_stylebox_override("disabled", UITheme.box(Color(0.15, 0.15, 0.18, 0.6), Color(0.4, 0.4, 0.45, 0.6), 30, 2))
+
+	func _process(_d: float) -> void:
+		visible = int(GameState.progress.get("reserves", {}).get(type, 0)) > 0
+		disabled = battle.sim.teams[0].reserves_used >= int(GameData.market.reserve_per_battle) or battle.sim.winner >= 0
+		queue_redraw()
+
+	func _draw() -> void:
+		Painter.draw_unit(self, _u, Vector2(size.x * 0.5, size.y - 8), 0.45 if type != "cavalry" else 0.36, 0.0)
+		var n := int(GameState.progress.get("reserves", {}).get(type, 0))
+		draw_circle(Vector2(size.x - 9, 9), 11.0, Color(0.2, 0.45, 0.2))
+		draw_string(get_theme_default_font(), Vector2(size.x - 23, 14), str(n), HORIZONTAL_ALIGNMENT_CENTER, 28, 12, Color.WHITE)
+
+
 class MiniMap:
 	extends Control
 	## Butun jang maydonining kichik xaritasi. Bosib/surib kamerani ko'chirish mumkin.
@@ -519,6 +552,32 @@ func _build_tactics() -> void:
 		var b := TacticButton.new(id, battle)
 		b.pressed.connect(_on_tactic.bind(id))
 		col.add_child(b)
+	var rcol := VBoxContainer.new()
+	rcol.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	rcol.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	rcol.offset_left = 84
+	rcol.offset_bottom = -BAR_H - 14
+	rcol.add_theme_constant_override("separation", 8)
+	rcol.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_root.add_child(rcol)
+	for t in ["archer", "swordsman", "cavalry"]:
+		var rb := ReserveButton.new(t, battle)
+		rb.pressed.connect(_on_reserve.bind(t))
+		rcol.add_child(rb)
+
+
+func _on_reserve(type: String) -> void:
+	var sim: BattleSim = battle.sim
+	var left := int(GameData.market.reserve_per_battle) - sim.teams[0].reserves_used
+	var want := mini(int(GameData.market.reserve_call), left)
+	want = mini(want, sim.reserve_room(0, type))
+	var got := GameState.take_reserve(type, want)
+	if got <= 0:
+		Sfx.play("deny", 0.6)
+		return
+	var spawned := sim.call_reserve(0, type, got)
+	Sfx.play("horn_attack", 0.8, 0.0)
+	show_banner(tr("RESERVE_CALLED") % [spawned, tr(str(GameData.units[type].name))], 1.6)
 
 
 func _on_tactic(id: String) -> void:
@@ -721,6 +780,8 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
 	if int(result.get("coins", 0)) > 0 and GameState.ads_left() > 0:
 		_ad_btn.text = "▶  " + tr("AD_DOUBLE") % [int(result.coins), GameState.ads_left()]
+		if bool(GameState.progress.get("no_ads", false)):
+			_ad_btn.text = "✦  " + tr("AD_DOUBLE_NOADS") % int(result.coins)
 		_ad_btn.disabled = false
 		_ad_btn.visible = true
 	if not lv.is_empty():
@@ -745,6 +806,11 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 func _on_ad() -> void:
 	_ad_btn.disabled = true
 	var bonus := int(_end_result.get("coins", 0))
+	if bool(GameState.progress.get("no_ads", false)):
+		if GameState.reward_ad(bonus):
+			Sfx.play("coin", 1.0, 0.0)
+			_ad_btn.text = tr("AD_DONE") % (bonus * 2)
+		return
 	Ads.show_rewarded(func(ok: bool) -> void:
 		if ok and GameState.reward_ad(bonus):
 			Sfx.play("coin", 1.0, 0.0)

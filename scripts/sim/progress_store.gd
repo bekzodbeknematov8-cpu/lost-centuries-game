@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -42,6 +42,15 @@ func load_file() -> void:
 	data.daily_streak = maxi(0, int(p.get("daily_streak", 0)))
 	data.star_milestones = maxi(0, int(p.get("star_milestones", 0)))
 	data.outfit = str(p.get("outfit", "classic"))
+	if p.get("reserves") is Dictionary:
+		for k in p.reserves:
+			data.reserves[str(k)] = maxi(0, int(p.reserves[k]))
+	data.no_ads = bool(p.get("no_ads", false))
+	if p.get("bought_once") is Array:
+		for x in p.bought_once:
+			data.bought_once.append(str(x))
+	data.adgem_day = str(p.get("adgem_day", ""))
+	data.adgem_count = maxi(0, int(p.get("adgem_count", 0)))
 	if p.get("outfits") is Array:
 		for o in p.outfits:
 			if not (str(o) in data.outfits):
@@ -237,3 +246,60 @@ func equip_outfit(id: String) -> bool:
 	data.outfit = id
 	save_file()
 	return true
+
+
+# --- Bozor ---------------------------------------------------------------------
+
+func product_available(market: Dictionary, id: String) -> bool:
+	var p: Dictionary = market.products[id]
+	return not (bool(p.get("once", false)) and id in data.bought_once)
+
+
+func grant_product(market: Dictionary, id: String) -> bool:
+	## To'lov tasdiqlangandan keyin chaqiriladi (IAP yoki reklama).
+	if not product_available(market, id):
+		return false
+	var p: Dictionary = market.products[id]
+	for c in p.contents:
+		Rewards.apply(data, c)
+	if bool(p.get("once", false)):
+		data.bought_once.append(id)
+	save_file()
+	return true
+
+
+func buy_with_gems(market: Dictionary, id: String) -> bool:
+	var p: Dictionary = market.products[id]
+	if str(p.kind) != "gems" or int(data.gems) < int(p.gems):
+		return false
+	data.gems = int(data.gems) - int(p.gems)
+	for c in p.contents:
+		Rewards.apply(data, c)
+	save_file()
+	return true
+
+
+func adgems_left(market: Dictionary, today: String) -> int:
+	if str(data.adgem_day) != today:
+		return int(market.ad_gems.daily_limit)
+	return maxi(0, int(market.ad_gems.daily_limit) - int(data.adgem_count))
+
+
+func claim_ad_gems(market: Dictionary, today: String) -> bool:
+	if adgems_left(market, today) <= 0:
+		return false
+	if str(data.adgem_day) != today:
+		data.adgem_day = today
+		data.adgem_count = 0
+	data.adgem_count = int(data.adgem_count) + 1
+	data.gems = int(data.gems) + int(market.ad_gems.amount)
+	save_file()
+	return true
+
+
+func take_reserve(type: String, n: int) -> int:
+	var have := int(data.reserves.get(type, 0))
+	var k := mini(have, n)
+	data.reserves[type] = have - k
+	save_file()
+	return k

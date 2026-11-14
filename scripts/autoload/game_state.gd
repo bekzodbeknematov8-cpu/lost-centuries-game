@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -197,3 +197,37 @@ func equip_outfit(id: String) -> bool:
 	var ok := _store.equip_outfit(id)
 	apply_outfit()
 	return ok
+
+
+# --- Bozor ---------------------------------------------------------------------
+
+func product_available(id: String) -> bool:
+	_store.data = progress
+	return _store.product_available(GameData.market, id)
+
+
+func grant_product(id: String) -> bool:
+	_store.data = progress
+	var ok := _store.grant_product(GameData.market, id)
+	apply_outfit()
+	return ok
+
+
+func buy_with_gems(id: String) -> bool:
+	_store.data = progress
+	return _store.buy_with_gems(GameData.market, id)
+
+
+func adgems_left() -> int:
+	_store.data = progress
+	return _store.adgems_left(GameData.market, today())
+
+
+func claim_ad_gems() -> bool:
+	_store.data = progress
+	return _store.claim_ad_gems(GameData.market, today())
+
+
+func take_reserve(type: String, n: int) -> int:
+	_store.data = progress
+	return _store.take_reserve(type, n)

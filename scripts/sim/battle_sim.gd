@@ -267,6 +267,28 @@ func use_ability(team_idx: int) -> bool:
 	return true
 
 
+func reserve_room(team_idx: int, type: String) -> int:
+	## Aholi chegarasi doirasida nechta zaxira askar chaqirish mumkin.
+	var t := teams[team_idx]
+	var per := maxi(1, int(defs[type].pop))
+	return maxi(0, (t.pop_cap - t.pop - queued_pop(team_idx)) / per)
+
+
+func call_reserve(team_idx: int, type: String, n: int) -> int:
+	## Zaxira askarlar darhol qal'a oldida paydo bo'ladi (aholi chegarasiga kiradi — adolat uchun).
+	if winner >= 0:
+		return 0
+	var k := mini(n, reserve_room(team_idx, type))
+	var t := teams[team_idx]
+	for i in k:
+		var u := spawn_unit(team_idx, type)
+		u.x += t.dir * (10.0 + i * 14.0)
+	if k > 0:
+		t.reserves_used += k
+		events.append({"type": "reserve", "team": team_idx, "unit": type, "count": k, "x": t.castle_x})
+	return k
+
+
 func can_use_tactic(team_idx: int) -> bool:
 	return winner < 0 and teams[team_idx].tactics_used < TACTICS_PER_BATTLE
 

@@ -6,6 +6,16 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (11) — §12(g): Bozor (rejali ish)
+**Bajarildi**
+- `data/market.json`: Boshlang'ich to'plam ($1.99, bir martalik: 200 la'l + oltin sandiq + Temuriy libosi +
+  3 nog'ora), la'l paketlari ($0.99 / $4.99 / $9.99 → 60 / 330 / 700), Reklamasiz ($2.99, 2× mukofot reklamasiz),
+  zaxira qo'shin paketlari la'lga (100 kamonchi 60♦, 100 qilichboz 50♦, 50 otliq 80♦), bepul la'l reklama orqali
+  (kuniga 3 × 5♦). Narxlar Google Play USD pog'onalari; haqiqiy mahalliy narx Play Billing'dan keladi.
+- `Billing` autoload — SINOV rejimi (tasdiq oynasi, pul olinmaydi); haqiqiy Play Billing 7-bosqichda.
+- Jangda zaxira tugmalari: bir bosishda 5 askar, bir jangda ko'pi bilan 10, aholi chegarasiga kiradi (adolat).
+- 2 yangi test (48), smoke 27 (zaxira chaqirish ham sinovda).
+
 ### 2026-11-14 (10) — §12(f): Libos (rejali ish)
 **Bajarildi**
 - 6 kiyim to'plami (`data/outfits.json`): Klassik (bepul), Temuriy, Dasht (800 tanga), Xorazm, Usmonli
@@ -120,7 +130,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · keyingi: §12(g) bozor
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ (sinov to'lov) · keyingi: §12(h) tutorial
 
 ### 2026-11-13
 **Bajarildi**
