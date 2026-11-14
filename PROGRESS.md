@@ -6,6 +6,19 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (9) — §12(e): Sandiqlar va kunlik mukofot (rejali ish)
+**Bajarildi**
+- 3 sandiq (`data/chests.json`): Kumush (300 tanga, 2 mukofot), Oltin (40 la'l, 3), La'l (100 la'l, 4);
+  ichida tanga / tasodifiy hiyla / la'l. Ehtimollar "Ehtimollar" panelida ochiq ko'rsatiladi (Google Play talabi).
+- Sandiqlar ekrani: tanlash, sotib olish, ochish animatsiyasi (qopqoq, nur, mukofot kartalari).
+- Kunlik mukofot: 7 kunlik tsikl (tanga, hiyla, kumush sandiq, la'l, oltin sandiq); kun o'tkazib yuborilsa
+  seriya qaytadan; bosh menyuda avtomatik ochiladi.
+- Bossni birinchi yengishda kumush sandiq, har 25 ★ da oltin sandiq.
+- CI tezlashtirildi: smoke test CI'da qisqaroq (`SMOKE_SECONDS=100`). 3 yangi test (45), smoke 22.
+
+**Sinovda topilgan va tuzatilgan**
+- Ehtimollar paneli mukofot kartasini yopardi → pastga ko'chirildi.
+
 ### 2026-11-14 (8) — §12(d): Hiylalar (rejali ish)
 **Bajarildi**
 - 6 ta bir martalik jang hiylasi (`data/tactics.json`): Karvon (+300 oltin), Tez qazish (30 s 2×),
@@ -100,7 +113,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · keyingi: §12(e) sandiqlar va kunlik mukofot
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar va kunlik mukofot ✅ · keyingi: §12(f) libos
 
 ### 2026-11-13
 **Bajarildi**

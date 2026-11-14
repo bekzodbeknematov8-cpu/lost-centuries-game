@@ -1,0 +1,37 @@
+{
+	"order": ["silver", "gold", "lal"],
+	"chests": {
+		"silver": {"name": "CHEST_SILVER", "rolls": 2, "price_coins": 300, "price_gems": 0,
+			"color": [0.7, 0.74, 0.8],
+			"drops": [
+				{"type": "coins", "min": 60, "max": 140, "weight": 55},
+				{"type": "tactic", "count": 1, "weight": 35},
+				{"type": "gems", "min": 2, "max": 4, "weight": 10}
+			]},
+		"gold": {"name": "CHEST_GOLD", "rolls": 3, "price_coins": 0, "price_gems": 40,
+			"color": [0.95, 0.75, 0.2],
+			"drops": [
+				{"type": "coins", "min": 150, "max": 320, "weight": 45},
+				{"type": "tactic", "count": 2, "weight": 35},
+				{"type": "gems", "min": 5, "max": 10, "weight": 20}
+			]},
+		"lal": {"name": "CHEST_LAL", "rolls": 4, "price_coins": 0, "price_gems": 100,
+			"color": [0.85, 0.15, 0.3],
+			"drops": [
+				{"type": "coins", "min": 300, "max": 600, "weight": 35},
+				{"type": "tactic", "count": 3, "weight": 35},
+				{"type": "gems", "min": 12, "max": 25, "weight": 30}
+			]}
+	},
+	"daily": [
+		{"type": "coins", "amount": 100},
+		{"type": "tactic", "id": "caravan", "count": 2},
+		{"type": "coins", "amount": 150},
+		{"type": "chest", "id": "silver", "count": 1},
+		{"type": "gems", "amount": 5},
+		{"type": "coins", "amount": 250},
+		{"type": "chest", "id": "gold", "count": 1}
+	],
+	"star_milestone": 25,
+	"boss_chest": "silver"
+}

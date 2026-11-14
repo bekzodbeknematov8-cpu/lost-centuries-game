@@ -637,3 +637,61 @@ func test_tactics_store() -> void:
 	st2.load_file()
 	check(int(st2.data.tactics.get("caravan", 0)) == 2 and bool(st2.data.starter_given), "hiylalar saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+# --- Sandiqlar va kunlik mukofot --------------------------------------------
+
+func chests() -> Dictionary:
+	return load_json("res://data/chests.json")
+
+
+func test_chest_odds_and_rolls() -> void:
+	var c := chests()
+	var rng := RandomNumberGenerator.new()
+	rng.seed = 3
+	for kind in c.order:
+		var sum := 0.0
+		for o in Rewards.odds(c.chests[kind]):
+			sum += float(o.percent)
+		check(absf(sum - 100.0) < 0.01, "%s: ehtimollar yig'indisi 100%% emas" % kind)
+		var counts := {}
+		for i in 400:
+			for r in Rewards.roll_chest(c.chests[kind], ["caravan", "healing"], rng):
+				counts[r.type] = int(counts.get(r.type, 0)) + 1
+		for d in c.chests[kind].drops:
+			check(int(counts.get(d.type, 0)) > 0, "%s: %s hech tushmadi" % [kind, d.type])
+	var rolls := Rewards.roll_chest(c.chests.gold, ["caravan"], rng)
+	check(rolls.size() == int(c.chests.gold.rolls), "sandiqdan noto'g'ri sonda mukofot")
+
+
+func test_daily_streak() -> void:
+	var st := Rewards.daily_status("", 0, "2026-03-01", 7)
+	check(st.can_claim and st.day == 0 and st.streak == 1, "birinchi kun noto'g'ri")
+	st = Rewards.daily_status("2026-03-01", 1, "2026-03-01", 7)
+	check(not st.can_claim, "bir kunda ikki marta olish mumkin bo'lmasligi kerak")
+	st = Rewards.daily_status("2026-03-01", 1, "2026-03-02", 7)
+	check(st.can_claim and st.day == 1 and st.streak == 2, "ketma-ket kun seriyani oshirishi kerak")
+	st = Rewards.daily_status("2026-03-01", 5, "2026-03-04", 7)
+	check(st.day == 0 and st.streak == 1, "kun o'tkazib yuborilsa seriya qaytadan boshlanishi kerak")
+	st = Rewards.daily_status("2026-02-28", 7, "2026-03-01", 7)
+	check(st.day == 0 and st.streak == 8, "7 kundan keyin tsikl qaytadan boshlanishi kerak")
+
+
+func test_chest_store_flow() -> void:
+	var c := chests()
+	var path := "user://test_chest.json"
+	var st := ProgressStore.new(path)
+	var rng := RandomNumberGenerator.new()
+	check(st.open_chest(c, "silver", ["caravan"], rng).is_empty(), "sandiqsiz ochildi")
+	st.data.coins = 300
+	check(st.buy_chest(c, "silver") and int(st.data.coins) == 0, "kumush sandiq sotilmadi")
+	check(not st.buy_chest(c, "gold"), "la'lsiz oltin sandiq sotildi")
+	var got := st.open_chest(c, "silver", ["caravan"], rng)
+	check(got.size() == 2 and int(st.data.chests.silver) == 0, "sandiq ochilmadi yoki sarflanmadi")
+	check(st.grant_star_milestones(c, 60) == 2 and st.grant_star_milestones(c, 70) == 0, "yulduz sovg'alari noto'g'ri")
+	var r := st.claim_daily(c, "2026-03-01")
+	check(not r.is_empty() and st.claim_daily(c, "2026-03-01").is_empty(), "kunlik mukofot noto'g'ri")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.chests.gold) == 2 and st2.data.daily_last == "2026-03-01", "sandiq/kunlik holat saqlanmadi")
+	DirAccess.remove_absolute(path)

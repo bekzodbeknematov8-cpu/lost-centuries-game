@@ -8,6 +8,9 @@ var _toast: Label
 var _toast_t := 0.0
 var _coins: Label
 var _gems: Label
+var _daily: PanelContainer
+var _daily_btn: Button
+var _daily_grid: Control
 
 
 class CurrencyIcon:
@@ -147,7 +150,7 @@ func _build() -> void:
 		b.add_theme_stylebox_override("normal", UITheme.box(col, col.lightened(0.35), 12, 3))
 		b.add_theme_stylebox_override("hover", UITheme.box(col.lightened(0.12), col.lightened(0.45), 12, 3))
 		b.add_theme_stylebox_override("pressed", UITheme.box(col.darkened(0.2), col.lightened(0.35), 12, 3))
-		var target: String = {"WORKSHOP": "res://scenes/workshop.tscn", "MENU_TACTICS": "res://scenes/tactics_shop.tscn"}.get(d[0], "")
+		var target: String = {"WORKSHOP": "res://scenes/workshop.tscn", "MENU_TACTICS": "res://scenes/tactics_shop.tscn", "MENU_CHESTS": "res://scenes/chests_screen.tscn"}.get(d[0], "")
 		if target != "":
 			b.pressed.connect(func() -> void:
 				Sfx.play("click", 0.7)
@@ -173,10 +176,16 @@ func _build() -> void:
 	add_child(icons)
 	for k in ["daily", "crown", "trophy", "gear"]:
 		var ic := RoundIcon.new(k)
-		ic.pressed.connect(_open_settings if k == "gear" else _coming_soon)
+		var cb: Callable = _coming_soon
+		if k == "gear":
+			cb = _open_settings
+		elif k == "daily":
+			cb = _open_daily
+		ic.pressed.connect(cb)
 		icons.add_child(ic)
 
 	_build_settings()
+	_build_daily()
 	_toast = Label.new()
 	_toast.anchor_left = 0.5
 	_toast.anchor_right = 0.5
@@ -240,6 +249,104 @@ func _build_settings() -> void:
 		b.custom_minimum_size = Vector2(420, 58)
 		b.pressed.connect(item[1])
 		v.add_child(b)
+
+
+func _build_daily() -> void:
+	_daily = PanelContainer.new()
+	_daily.set_anchors_preset(Control.PRESET_CENTER)
+	_daily.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	_daily.grow_vertical = Control.GROW_DIRECTION_BOTH
+	_daily.visible = false
+	add_child(_daily)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 12)
+	_daily.add_child(v)
+	var t := Label.new()
+	t.text = tr("DAILY_TITLE")
+	t.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	t.add_theme_font_size_override("font_size", 34)
+	t.add_theme_color_override("font_color", Painter.GOLD)
+	v.add_child(t)
+	_daily_grid = Control.new()
+	_daily_grid.custom_minimum_size = Vector2(840, 150)
+	_daily_grid.draw.connect(_draw_daily)
+	v.add_child(_daily_grid)
+	var row := HBoxContainer.new()
+	row.alignment = BoxContainer.ALIGNMENT_CENTER
+	row.add_theme_constant_override("separation", 12)
+	v.add_child(row)
+	_daily_btn = Button.new()
+	_daily_btn.custom_minimum_size = Vector2(260, 60)
+	_daily_btn.add_theme_stylebox_override("normal", UITheme.box(Color(0.2, 0.45, 0.2), Painter.GOLD))
+	_daily_btn.pressed.connect(_claim_daily)
+	row.add_child(_daily_btn)
+	var close := Button.new()
+	close.text = tr("CLOSE")
+	close.custom_minimum_size = Vector2(180, 60)
+	close.pressed.connect(func() -> void: _daily.visible = false)
+	row.add_child(close)
+	if GameState.daily_status().can_claim:
+		_open_daily.call_deferred()
+
+
+func _open_daily() -> void:
+	Sfx.play("click", 0.7)
+	var st: Dictionary = GameState.daily_status()
+	_daily_btn.disabled = not st.can_claim
+	_daily_btn.text = tr("DAILY_CLAIM") if st.can_claim else tr("DAILY_TOMORROW")
+	_daily.visible = true
+	_daily_grid.queue_redraw()
+
+
+func _claim_daily() -> void:
+	var r: Dictionary = GameState.claim_daily()
+	if r.is_empty():
+		return
+	Sfx.play("victory", 0.6, 0.0)
+	_toast.text = tr("DAILY_GOT") + " " + preload("res://scripts/ui/chests_screen.gd").reward_text(r)
+	_toast_t = 2.5
+	_toast.visible = true
+	_daily_btn.disabled = true
+	_daily_btn.text = tr("DAILY_TOMORROW")
+	_daily_grid.queue_redraw()
+
+
+func _draw_daily() -> void:
+	var g := _daily_grid
+	var days: Array = GameData.chests.daily
+	var st: Dictionary = GameState.daily_status()
+	var today_idx: int = st.day
+	var claimed_today: bool = not st.can_claim
+	var w := g.size.x / days.size()
+	var font := get_theme_default_font()
+	for i in days.size():
+		var r := Rect2(i * w + 4, 4, w - 8, g.size.y - 8)
+		var done := i < today_idx or (i == today_idx and claimed_today)
+		var cur := i == today_idx and not claimed_today
+		var bg := Color(0.95, 0.88, 0.7) if not done else Color(0.6, 0.75, 0.55)
+		g.draw_style_box(UITheme.box(bg, Painter.GOLD if cur else Color(0.55, 0.4, 0.2), 10, 4 if cur else 2), r)
+		g.draw_string(font, Vector2(r.position.x, r.position.y + 24), tr("DAY_N") % (i + 1), HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 16, Color(0.35, 0.2, 0.08))
+		var d: Dictionary = days[i]
+		var c := r.get_center() + Vector2(0, 6)
+		match str(d.type):
+			"coins":
+				g.draw_circle(c, 18.0, Color(0.75, 0.55, 0.1))
+				g.draw_circle(c, 14.0, Painter.GOLD)
+			"gems":
+				g.draw_colored_polygon(PackedVector2Array([c + Vector2(-14, -5), c + Vector2(-8, -13), c + Vector2(8, -13), c + Vector2(14, -5), c + Vector2(0, 15)]), Color(0.85, 0.12, 0.28))
+			"tactic":
+				TacticArt.draw(g, str(GameData.tactics.tactics[d.id].icon), c, 1.3)
+			"chest":
+				var cc: Array = GameData.chests.chests[d.id].color
+				ChestArt.draw(g, c + Vector2(0, 4), 0.42, Color(cc[0], cc[1], cc[2]))
+		var label := ""
+		match str(d.type):
+			"coins", "gems": label = "+%d" % int(d.amount)
+			_: label = "×%d" % int(d.count)
+		g.draw_string(font, Vector2(r.position.x, r.end.y - 12), label, HORIZONTAL_ALIGNMENT_CENTER, r.size.x, 18, Color(0.3, 0.15, 0.05))
+		if done:
+			g.draw_line(c + Vector2(-12, 0), c + Vector2(-3, 10), Color(0.1, 0.5, 0.1), 5.0)
+			g.draw_line(c + Vector2(-3, 10), c + Vector2(14, -10), Color(0.1, 0.5, 0.1), 5.0)
 
 
 func _open_settings() -> void:

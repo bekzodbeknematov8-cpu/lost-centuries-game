@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -140,3 +140,37 @@ func consume_tactic(id: String) -> bool:
 
 func tactic_count(id: String) -> int:
 	return int(progress.get("tactics", {}).get(id, 0))
+
+
+# --- Sandiqlar va kunlik mukofot ----------------------------------------------
+
+func open_chest(kind: String) -> Array:
+	_store.data = progress
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	return _store.open_chest(GameData.chests, kind, GameData.tactics.order, rng)
+
+
+func buy_chest(kind: String) -> bool:
+	_store.data = progress
+	return _store.buy_chest(GameData.chests, kind)
+
+
+func daily_status() -> Dictionary:
+	return Rewards.daily_status(str(progress.daily_last), int(progress.daily_streak), today(), GameData.chests.daily.size())
+
+
+func claim_daily() -> Dictionary:
+	_store.data = progress
+	return _store.claim_daily(GameData.chests, today())
+
+
+func grant_star_milestones() -> int:
+	_store.data = progress
+	return _store.grant_star_milestones(GameData.chests, Campaign.total_stars(progress.stars))
+
+
+func give_boss_chest() -> void:
+	_store.data = progress
+	Rewards.apply(progress, {"type": "chest", "id": str(GameData.chests.boss_chest), "count": 1})
+	_store.save_file()

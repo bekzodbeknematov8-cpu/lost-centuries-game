@@ -129,7 +129,14 @@ func _process(delta: float) -> void:
 			var castle := sim.teams[0].castle_hp / sim.teams[0].castle_max_hp
 			result.stars = Campaign.compute_stars(level, won, castle, sim.time)
 			result.coins = Campaign.coins_for(level, result.stars)
+			var first_win := won and int(GameState.progress.stars.get(str(level.id), 0)) == 0
 			result.new_stars = GameState.record_result(str(level.id), result.stars, result.coins)
+			result.chests = []
+			if first_win and Campaign.is_boss(str(level.id)):
+				GameState.give_boss_chest()
+				result.chests.append(str(GameData.chests.boss_chest))
+			for i in GameState.grant_star_milestones():
+				result.chests.append("gold")
 		hud.show_end(won, result)
 		if OS.get_cmdline_user_args().has("--press_ad"):
 			get_tree().create_timer(1.0).timeout.connect(func() -> void: hud._on_ad())

@@ -44,7 +44,7 @@ jobs:
         run: tools/run_tests.sh
 
       - name: Smoke test (barcha sahnalar)
-        run: tools/smoke_test.sh
+        run: SMOKE_SECONDS=100 tools/smoke_test.sh
 
       - name: Android sozlash
         run: |

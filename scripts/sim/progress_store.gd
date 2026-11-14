@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -35,6 +35,12 @@ func load_file() -> void:
 		for k in p.tactics:
 			data.tactics[str(k)] = maxi(0, int(p.tactics[k]))
 	data.starter_given = bool(p.get("starter_given", false))
+	if p.get("chests") is Dictionary:
+		for k in p.chests:
+			data.chests[str(k)] = maxi(0, int(p.chests[k]))
+	data.daily_last = str(p.get("daily_last", ""))
+	data.daily_streak = maxi(0, int(p.get("daily_streak", 0)))
+	data.star_milestones = maxi(0, int(p.get("star_milestones", 0)))
 	if p.get("heroes") is Array:
 		for h in p.heroes:
 			if not (str(h) in data.heroes):
@@ -150,3 +156,54 @@ func consume_tactic(id: String) -> bool:
 	data.tactics[id] = int(data.tactics[id]) - 1
 	save_file()
 	return true
+
+
+# --- Sandiqlar va mukofotlar ------------------------------------------------
+
+func open_chest(chest_data: Dictionary, kind: String, tactic_ids: Array, rng: RandomNumberGenerator) -> Array:
+	if int(data.chests.get(kind, 0)) <= 0:
+		return []
+	data.chests[kind] = int(data.chests[kind]) - 1
+	var rewards := Rewards.roll_chest(chest_data.chests[kind], tactic_ids, rng)
+	for r in rewards:
+		Rewards.apply(data, r)
+	save_file()
+	return rewards
+
+
+func buy_chest(chest_data: Dictionary, kind: String) -> bool:
+	var c: Dictionary = chest_data.chests[kind]
+	if int(c.price_coins) > 0:
+		if not spend_coins(int(c.price_coins)):
+			return false
+	elif int(c.price_gems) > 0:
+		if int(data.gems) < int(c.price_gems):
+			return false
+		data.gems = int(data.gems) - int(c.price_gems)
+	Rewards.apply(data, {"type": "chest", "id": kind, "count": 1})
+	save_file()
+	return true
+
+
+func claim_daily(chest_data: Dictionary, today: String) -> Dictionary:
+	var st := Rewards.daily_status(str(data.daily_last), int(data.daily_streak), today, chest_data.daily.size())
+	if not st.can_claim:
+		return {}
+	var reward: Dictionary = chest_data.daily[st.day]
+	Rewards.apply(data, reward)
+	data.daily_last = today
+	data.daily_streak = st.streak
+	save_file()
+	return reward
+
+
+func grant_star_milestones(chest_data: Dictionary, total_stars: int) -> int:
+	## Har star_milestone yulduzda bitta oltin sandiq. Yangi berilganlar sonini qaytaradi.
+	var reached := total_stars / int(chest_data.star_milestone)
+	var new_count := reached - int(data.star_milestones)
+	if new_count <= 0:
+		return 0
+	data.star_milestones = reached
+	Rewards.apply(data, {"type": "chest", "id": "gold", "count": new_count})
+	save_file()
+	return new_count

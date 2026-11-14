@@ -820,5 +820,113 @@
 		"en": "Towers fire three times faster for 20 s.",
 		"ru": "20 с башни стреляют втрое быстрее.",
 		"tr": "Kuleler 20 sn üç kat hızlı ok atar."
+	},
+	"CHEST_SILVER": {
+		"uz": "Kumush sandiq",
+		"en": "Silver chest",
+		"ru": "Серебряный сундук",
+		"tr": "Gümüş sandık"
+	},
+	"CHEST_GOLD": {
+		"uz": "Oltin sandiq",
+		"en": "Golden chest",
+		"ru": "Золотой сундук",
+		"tr": "Altın sandık"
+	},
+	"CHEST_LAL": {
+		"uz": "La'l sandiq",
+		"en": "Ruby chest",
+		"ru": "Рубиновый сундук",
+		"tr": "Yakut sandık"
+	},
+	"SELECT": {
+		"uz": "Tanlash",
+		"en": "Select",
+		"ru": "Выбрать",
+		"tr": "Seç"
+	},
+	"NOT_ENOUGH": {
+		"uz": "Yetarli emas",
+		"en": "Not enough",
+		"ru": "Недостаточно",
+		"tr": "Yetersiz"
+	},
+	"ODDS": {
+		"uz": "Ehtimollar",
+		"en": "Odds",
+		"ru": "Вероятности",
+		"tr": "Olasılıklar"
+	},
+	"ODDS_ROLLS": {
+		"uz": "%d ta mukofot",
+		"en": "%d rewards",
+		"ru": "%d награды",
+		"tr": "%d ödül"
+	},
+	"RW_COINS_RANGE": {
+		"uz": "%d–%d tanga",
+		"en": "%d–%d coins",
+		"ru": "%d–%d монет",
+		"tr": "%d–%d altın"
+	},
+	"RW_GEMS_RANGE": {
+		"uz": "%d–%d la'l",
+		"en": "%d–%d rubies",
+		"ru": "%d–%d рубинов",
+		"tr": "%d–%d yakut"
+	},
+	"RW_TACTIC_N": {
+		"uz": "tasodifiy hiyla ×%d",
+		"en": "random tactic ×%d",
+		"ru": "случайная хитрость ×%d",
+		"tr": "rastgele taktik ×%d"
+	},
+	"NO_CHEST": {
+		"uz": "Bu sandiqdan sizda yo'q",
+		"en": "You have none of these chests",
+		"ru": "У вас нет таких сундуков",
+		"tr": "Bu sandıktan yok"
+	},
+	"OPEN_CHEST": {
+		"uz": "Ochish (%d)",
+		"en": "Open (%d)",
+		"ru": "Открыть (%d)",
+		"tr": "Aç (%d)"
+	},
+	"DAILY_TITLE": {
+		"uz": "Kunlik mukofot",
+		"en": "Daily reward",
+		"ru": "Ежедневная награда",
+		"tr": "Günlük ödül"
+	},
+	"DAILY_CLAIM": {
+		"uz": "Olish",
+		"en": "Claim",
+		"ru": "Забрать",
+		"tr": "Al"
+	},
+	"DAILY_TOMORROW": {
+		"uz": "Ertaga qaytib keling",
+		"en": "Come back tomorrow",
+		"ru": "Возвращайтесь завтра",
+		"tr": "Yarın gel"
+	},
+	"DAILY_GOT": {
+		"uz": "Olindi:",
+		"en": "Received:",
+		"ru": "Получено:",
+		"tr": "Alındı:"
+	},
+	"DAY_N": {
+		"uz": "%d-kun",
+		"en": "Day %d",
+		"ru": "День %d",
+		"tr": "%d. gün"
+	},
+	"CHEST_REWARD": {
+		"uz": "Sovg'a: %s",
+		"en": "Reward: %s",
+		"ru": "Награда: %s",
+		"tr": "Ödül: %s"
 	}
 }
