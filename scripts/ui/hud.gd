@@ -24,6 +24,8 @@ var _objective: Label
 var _end_result: Dictionary = {}
 var _next_btn: Button
 var _ad_btn: Button
+var targets: Dictionary = {}   ## O'rgatish uchun: nom -> Control
+var _tut: Control
 
 
 # --- Kichik chizilgan elementlar -----------------------------------------------
@@ -324,6 +326,86 @@ class ReserveButton:
 		draw_string(get_theme_default_font(), Vector2(size.x - 23, 14), str(n), HORIZONTAL_ALIGNMENT_CENTER, 28, 12, Color.WHITE)
 
 
+class TutorialOverlay:
+	## Qadamma-qadam ko'rsatma: matn paneli, yoritilgan tugma va o'q.
+	extends Control
+	var hud: Node
+	var step := 0
+	var step_time := 0.0
+	var _t := 0.0
+	var _panel: PanelContainer
+	var _label: Label
+	var ctx := {}
+
+	func _init(h: Node) -> void:
+		hud = h
+		set_anchors_preset(Control.PRESET_FULL_RECT)
+		mouse_filter = Control.MOUSE_FILTER_IGNORE
+		_panel = PanelContainer.new()
+		_panel.anchor_left = 0.5
+		_panel.anchor_right = 0.5
+		_panel.offset_left = -330
+		_panel.offset_right = 330
+		_panel.offset_top = 196
+		_panel.add_theme_stylebox_override("panel", UITheme.box(Color(0.12, 0.08, 0.05, 0.92), Painter.GOLD, 14, 3))
+		add_child(_panel)
+		var h2 := HBoxContainer.new()
+		h2.add_theme_constant_override("separation", 12)
+		_panel.add_child(h2)
+		_label = Label.new()
+		_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		_label.custom_minimum_size = Vector2(500, 0)
+		_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		_label.add_theme_font_size_override("font_size", 20)
+		h2.add_child(_label)
+		var skip := Button.new()
+		skip.text = tr("TUT_SKIP")
+		skip.custom_minimum_size = Vector2(110, 44)
+		skip.add_theme_font_size_override("font_size", 16)
+		skip.pressed.connect(finish)
+		h2.add_child(skip)
+		_show()
+
+	func _show() -> void:
+		_label.text = "%d/%d  %s" % [step + 1, TutorialLogic.STEPS.size(), tr(str(TutorialLogic.STEPS[step].text))]
+		step_time = 0.0
+		Sfx.play("click", 0.6)
+
+	func _process(delta: float) -> void:
+		_t += delta
+		step_time += delta
+		ctx.step_time = step_time
+		var sim: BattleSim = hud.battle.sim
+		if TutorialLogic.step_done(step, sim, ctx):
+			step += 1
+			if step >= TutorialLogic.STEPS.size():
+				finish()
+				return
+			Sfx.play("ready", 0.7, 0.0)
+			_show()
+		queue_redraw()
+
+	func finish() -> void:
+		GameState.set_tutorial_done(true)
+		hud.battle.tutorial_step = 99
+		queue_free()
+
+	func _draw() -> void:
+		var key: String = TutorialLogic.STEPS[step].target
+		if key == "" or not hud.targets.has(key):
+			return
+		var c: Control = hud.targets[key]
+		if not c.is_visible_in_tree():
+			return
+		var r := Rect2(c.global_position - global_position, c.size).grow(6.0 + sin(_t * 6.0) * 3.0)
+		draw_rect(r, Color(1, 0.85, 0.3, 0.9), false, 5.0)
+		var tip := Vector2(r.get_center().x, r.position.y - 8.0)
+		var bob := sin(_t * 5.0) * 8.0
+		var base := tip + Vector2(0, -60 + bob)
+		draw_line(base, tip + Vector2(0, -14 + bob), Painter.GOLD, 8.0)
+		draw_colored_polygon(PackedVector2Array([tip + Vector2(-16, -20 + bob), tip + Vector2(16, -20 + bob), tip + Vector2(0, bob)]), Painter.GOLD)
+
+
 class MiniMap:
 	extends Control
 	## Butun jang maydonining kichik xaritasi. Bosib/surib kamerani ko'chirish mumkin.
@@ -494,7 +576,9 @@ func _build_bottom() -> void:
 		b.pressed.connect(_on_stance.bind(d[2]))
 		_command_box.add_child(b)
 		_stance_buttons.append([b, d[2]])
+		targets["stance:" + str(d[0])] = b
 	var ctrl := IconButton.new("control", tr("CONTROL"))
+	targets["control"] = ctrl
 	ctrl.pressed.connect(_on_control)
 	_command_box.add_child(ctrl)
 
@@ -522,6 +606,7 @@ func _build_bottom() -> void:
 	bar.add_child(units)
 	for type in ["worker", "swordsman", "spearman", "archer", "cavalry"]:
 		var b := UnitButton.new(type, battle)
+		targets["unit:" + type] = b
 		b.pressed.connect(_on_train.bind(type))
 		units.add_child(b)
 	bar.add_child(_spacer())
@@ -534,6 +619,7 @@ func _build_bottom() -> void:
 	_attack_btn.visible = false
 	bar.add_child(_attack_btn)
 	var ab := AbilityButton.new(battle)
+	targets["ability"] = ab
 	ab.size_flags_vertical = Control.SIZE_SHRINK_END
 	ab.pressed.connect(_on_ability)
 	bar.add_child(ab)
@@ -588,6 +674,13 @@ func _on_tactic(id: String) -> void:
 	if sim.use_tactic(0, id, GameData.tactics.tactics[id]):
 		GameState.consume_tactic(id)
 		show_banner(tr(str(GameData.tactics.tactics[id].name)) + "!", 1.4)
+
+
+func start_tutorial() -> void:
+	_hint_time = 0.0
+	_hint.visible = false
+	_tut = TutorialOverlay.new(self)
+	_root.add_child(_tut)
 
 
 func _make_center_panel() -> Array:

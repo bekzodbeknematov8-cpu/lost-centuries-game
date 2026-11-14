@@ -135,7 +135,13 @@ func _build() -> void:
 	play.add_theme_stylebox_override("pressed", UITheme.box(Color(0.55, 0.1, 0.06), Painter.GOLD, 18, 5))
 	play.pressed.connect(func() -> void:
 		Sfx.play("horn_attack", 0.7, 0.0)
-		get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
+		if not bool(GameState.progress.get("tutorial_done", false)) and Campaign.total_stars(GameState.progress.stars) == 0:
+			GameState.mode = "campaign"
+			GameState.hero = "chingiz"
+			GameState.level_id = GameState.TUTORIAL_LEVEL
+			get_tree().change_scene_to_file("res://scenes/battle.tscn")
+		else:
+			get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
 	right.add_child(play)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -240,6 +246,13 @@ func _build_settings() -> void:
 		[tr("MENU_LANGUAGE"), _on_lang],
 		["%s: %s" % [tr("MENU_SOUND"), tr("ON") if float(s.sfx_volume) > 0.0 else tr("OFF")], _on_sound],
 		["%s: %s" % [tr("MENU_MUSIC"), tr("ON") if float(s.music_volume) > 0.0 else tr("OFF")], _on_music],
+		[tr("TUT_REPLAY"), func() -> void:
+			Sfx.play("click", 0.7)
+			GameState.set_tutorial_done(false)
+			GameState.mode = "campaign"
+			GameState.hero = "chingiz"
+			GameState.level_id = GameState.TUTORIAL_LEVEL
+			get_tree().change_scene_to_file("res://scenes/battle.tscn")],
 		[tr("CLOSE"), func() -> void:
 			Sfx.play("click", 0.7)
 			_settings.visible = false],

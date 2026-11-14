@@ -1138,5 +1138,59 @@
 		"en": "Take 2× (+%d)",
 		"ru": "Взять 2× (+%d)",
 		"tr": "2× al (+%d)"
+	},
+	"TUT_WORKER": {
+		"uz": "Ishchilar oltin qazadi. Yana bitta Ishchi yollang!",
+		"en": "Workers mine gold. Train one more Worker!",
+		"ru": "Рабочие добывают золото. Наймите ещё одного рабочего!",
+		"tr": "İşçiler altın kazar. Bir işçi daha eğitin!"
+	},
+	"TUT_SWORD": {
+		"uz": "Endi Qilichboz yollang — u piyoda jangchi.",
+		"en": "Now train a Swordsman — a foot soldier.",
+		"ru": "Теперь наймите мечника — пешего воина.",
+		"tr": "Şimdi bir Kılıççı eğitin — piyade asker."
+	},
+	"TUT_ARMY": {
+		"uz": "Oltin yig'ilishi bilan yana askar yollang: kamida 3 ta jangchi to'plang.",
+		"en": "Keep training as gold comes in: gather at least 3 soldiers.",
+		"ru": "Нанимайте воинов по мере поступления золота: соберите хотя бы 3.",
+		"tr": "Altın geldikçe asker eğitin: en az 3 savaşçı toplayın."
+	},
+	"TUT_ATTACK": {
+		"uz": "Qo'shin tayyor! «Hujum» tugmasini bosing.",
+		"en": "Army ready! Press «Attack».",
+		"ru": "Войско готово! Нажмите «Атака».",
+		"tr": "Ordu hazır! «Saldırı»ya basın."
+	},
+	"TUT_ABILITY": {
+		"uz": "Sarkardangizning maxsus kuchini ishlating (o'ngdagi tugma tayyor bo'lganda).",
+		"en": "Use your commander's special power (right button, when ready).",
+		"ru": "Используйте особую силу полководца (кнопка справа, когда готова).",
+		"tr": "Komutanınızın özel gücünü kullanın (sağdaki düğme hazır olunca)."
+	},
+	"TUT_CONTROL": {
+		"uz": "«Boshqarish» bilan qahramonni o'zingiz yurgizing — u 25% kuchliroq uradi!",
+		"en": "Use «Take control» to steer your hero — it hits 25% harder!",
+		"ru": "«Управлять» — ведите героя сами, он бьёт на 25% сильнее!",
+		"tr": "«Kontrol et» ile kahramanı siz yönetin — %25 daha güçlü vurur!"
+	},
+	"TUT_FINISH": {
+		"uz": "Ajoyib! Endi dushman qal'asini yiqiting. Omad, sarkarda!",
+		"en": "Great! Now destroy the enemy fortress. Good luck, commander!",
+		"ru": "Отлично! Теперь разрушьте вражескую крепость. Удачи, полководец!",
+		"tr": "Harika! Şimdi düşman kalesini yıkın. Bol şans, komutan!"
+	},
+	"TUT_SKIP": {
+		"uz": "O'tkazish",
+		"en": "Skip",
+		"ru": "Пропустить",
+		"tr": "Geç"
+	},
+	"TUT_REPLAY": {
+		"uz": "O'rgatishni qayta ko'rish",
+		"en": "Replay tutorial",
+		"ru": "Пройти обучение снова",
+		"tr": "Eğitimi tekrar oyna"
 	}
 }

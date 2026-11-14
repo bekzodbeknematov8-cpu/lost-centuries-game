@@ -19,7 +19,8 @@ var _cam_target_x := 0.0
 var _follow := true
 var auto_player: AIController = null   ## Avtomatik sinov/demo rejimi uchun
 var level: Dictionary = {}
-var _dev_reserved := false              ## Kampaniya bosqichi (bo'sh bo'lsa erkin jang)
+var _dev_reserved := false
+var tutorial_step := 99   ## <99: o'rgatish davom etmoqda              ## Kampaniya bosqichi (bo'sh bo'lsa erkin jang)
 
 
 func _ready() -> void:
@@ -69,6 +70,9 @@ func _ready() -> void:
 	Sfx.play_music("battle")
 	if OS.get_cmdline_user_args().has("--autoplay"):
 		auto_player = AIController.new(0, GameData.ai.normal, 3)
+	if GameState.tutorial_active():
+		tutorial_step = 0
+		hud.start_tutorial()
 	if not level.is_empty():
 		var loc := TranslationServer.get_locale().substr(0, 2)
 		var title: String = level.name.get(loc, level.name.en)
@@ -95,7 +99,7 @@ func _process(delta: float) -> void:
 	_acc += minf(delta, 0.1)
 	while _acc >= BattleSim.STEP:
 		_acc -= BattleSim.STEP
-		if not sim.endless:
+		if not sim.endless and not (tutorial_step < 99 and TutorialLogic.enemy_paused(hud._tut.step if hud._tut else 99)):
 			enemy_ai.update(sim, BattleSim.STEP)
 		if auto_player:
 			auto_player.update(sim, BattleSim.STEP)

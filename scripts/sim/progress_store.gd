@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -49,6 +49,7 @@ func load_file() -> void:
 	if p.get("bought_once") is Array:
 		for x in p.bought_once:
 			data.bought_once.append(str(x))
+	data.tutorial_done = bool(p.get("tutorial_done", false))
 	data.adgem_day = str(p.get("adgem_day", ""))
 	data.adgem_count = maxi(0, int(p.get("adgem_count", 0)))
 	if p.get("outfits") is Array:

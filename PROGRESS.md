@@ -6,6 +6,17 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (12) — §12(h): O'rgatuvchi bosqich (rejali ish)
+**Bajarildi**
+- 7 qadamli o'rgatish (`TutorialLogic`): ishchi → qilichboz → 3 askar to'plash → Hujum → qahramon kuchi →
+  Boshqarish → yakun. Kerakli tugma sariq ramka va o'q bilan yoritiladi; "O'tkazish" tugmasi bor.
+- 3-qadamgacha dushman kutib turadi (yangi o'yinchi bosim ostida qolmasin).
+- Yangi o'yinchi "O'YNASH" ni bosganda to'g'ridan-to'g'ri o'rgatuvchi levelga tushadi;
+  Sozlamalarda "O'rgatishni qayta ko'rish". 1 yangi test (49), smoke 28.
+
+**Sinovda topilgan va tuzatilgan**
+- Boshlang'ich maslahat yozuvi va level banneri o'rgatish paneli bilan ustma-ust tushardi → tuzatildi.
+
 ### 2026-11-14 (11) — §12(g): Bozor (rejali ish)
 **Bajarildi**
 - `data/market.json`: Boshlang'ich to'plam ($1.99, bir martalik: 200 la'l + oltin sandiq + Temuriy libosi +
@@ -130,7 +141,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ (sinov to'lov) · keyingi: §12(h) tutorial
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · keyingi: 5-bosqich sayqal (grafika/ovoz), 3 saqlash sloti, yutuqlar
 
 ### 2026-11-13
 **Bajarildi**

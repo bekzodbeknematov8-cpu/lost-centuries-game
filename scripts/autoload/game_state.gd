@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -231,3 +231,17 @@ func claim_ad_gems() -> bool:
 func take_reserve(type: String, n: int) -> int:
 	_store.data = progress
 	return _store.take_reserve(type, n)
+
+
+# --- O'rgatish ------------------------------------------------------------------
+
+const TUTORIAL_LEVEL := "chingiz_01#1"
+
+
+func tutorial_active() -> bool:
+	return level_id == TUTORIAL_LEVEL and not bool(progress.get("tutorial_done", false))
+
+
+func set_tutorial_done(done: bool) -> void:
+	progress.tutorial_done = done
+	save_progress()

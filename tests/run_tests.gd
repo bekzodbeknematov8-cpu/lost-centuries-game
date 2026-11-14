@@ -747,3 +747,26 @@ func test_reserve_respects_pop_cap() -> void:
 	check(s.call_reserve(0, "archer", 5) == 5, "zaxira chaqirilmadi")
 	check(s.call_reserve(0, "archer", 5) == 3, "aholi chegarasi hisobga olinmadi")
 	check(s.call_reserve(0, "cavalry", 5) == 0, "to'la qo'shinga zaxira qo'shildi")
+
+
+# --- O'rgatish --------------------------------------------------------------
+
+func test_tutorial_steps_progress() -> void:
+	var c := camp()
+	var hd := load_json("res://data/heroes.json")
+	var bc := Campaign.battle_config(c, "chingiz_01#1", ai_params, 1)
+	var s := BattleSim.new()
+	s.setup(defs, bc.cfg, hd)
+	var ctx := {"start_workers": 2, "step_time": 0.0}
+	check(not TutorialLogic.step_done(0, s, ctx), "0-qadam darhol bajarilmasligi kerak")
+	s.train(0, "worker")
+	check(TutorialLogic.step_done(0, s, ctx), "ishchi yollash qadamni tugatmadi")
+	s.teams[0].gold = 1000
+	s.train(0, "swordsman")
+	check(TutorialLogic.step_done(1, s, ctx), "qilichboz qadami tugamadi")
+	ctx.step_time = 50.0
+	check(TutorialLogic.step_done(2, s, ctx), "kutish qadami vaqt bo'yicha tugamadi")
+	check(not TutorialLogic.step_done(3, s, ctx), "hujum bosilmasdan qadam o'tdi")
+	s.set_stance(0, TeamState.Stance.ATTACK)
+	check(TutorialLogic.step_done(3, s, ctx), "hujum qadami tugamadi")
+	check(TutorialLogic.enemy_paused(1) and not TutorialLogic.enemy_paused(3), "dushman pauza qoidasi noto'g'ri")
