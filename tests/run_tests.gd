@@ -695,3 +695,26 @@ func test_chest_store_flow() -> void:
 	st2.load_file()
 	check(int(st2.data.chests.gold) == 2 and st2.data.daily_last == "2026-03-01", "sandiq/kunlik holat saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+# --- Libos ------------------------------------------------------------------
+
+func test_outfits() -> void:
+	var d := load_json("res://data/outfits.json")
+	var path := "user://test_outfit.json"
+	var st := ProgressStore.new(path)
+	check(not st.equip_outfit("temuriy"), "sotib olinmagan libos kiyildi")
+	check(not st.buy_outfit(d, "temuriy"), "tangasiz sotildi")
+	st.data.coins = 1000
+	check(st.buy_outfit(d, "temuriy") and int(st.data.coins) == 200, "libos sotilmadi")
+	check(not st.buy_outfit(d, "temuriy"), "libos ikki marta sotildi")
+	check(not st.buy_outfit(d, "oltin"), "la'lsiz oltin libos sotildi")
+	check(st.equip_outfit("temuriy"), "libos kiyilmadi")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(st2.data.outfit == "temuriy" and "temuriy" in st2.data.outfits, "libos saqlanmadi")
+	DirAccess.remove_absolute(path)
+	var cols := Painter.outfit_colors(d.outfits.oltin)
+	Painter.player_outfit = cols
+	check(Painter.team_colors(0)[3] == cols[3] and Painter.team_colors(1) == Painter.TEAM_COLORS[1], "libos ranglari noto'g'ri qo'llandi")
+	Painter.player_outfit = []

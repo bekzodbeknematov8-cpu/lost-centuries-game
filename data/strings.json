@@ -928,5 +928,71 @@
 		"en": "Reward: %s",
 		"ru": "Награда: %s",
 		"tr": "Ödül: %s"
+	},
+	"OUTFIT_NOTE": {
+		"uz": "Libos faqat ko'rinishni o'zgartiradi, kuch bermaydi.",
+		"en": "Outfits only change appearance, they give no power.",
+		"ru": "Облачения меняют только внешний вид, не дают силы.",
+		"tr": "Kıyafetler sadece görünümü değiştirir, güç vermez."
+	},
+	"OUT_CLASSIC": {
+		"uz": "Klassik",
+		"en": "Classic",
+		"ru": "Классика",
+		"tr": "Klasik"
+	},
+	"OUT_TEMURIY": {
+		"uz": "Temuriy",
+		"en": "Timurid",
+		"ru": "Тимуридский",
+		"tr": "Timurlu"
+	},
+	"OUT_MOGUL": {
+		"uz": "Dasht",
+		"en": "Steppe",
+		"ru": "Степной",
+		"tr": "Bozkır"
+	},
+	"OUT_XORAZM": {
+		"uz": "Xorazm",
+		"en": "Khwarazm",
+		"ru": "Хорезм",
+		"tr": "Harezm"
+	},
+	"OUT_USMONLI": {
+		"uz": "Usmonli",
+		"en": "Ottoman",
+		"ru": "Османский",
+		"tr": "Osmanlı"
+	},
+	"OUT_OLTIN": {
+		"uz": "Oltin",
+		"en": "Golden",
+		"ru": "Золотой",
+		"tr": "Altın"
+	},
+	"PREVIEW": {
+		"uz": "Ko'rish",
+		"en": "Preview",
+		"ru": "Просмотр",
+		"tr": "Önizle"
+	},
+	"EQUIP": {
+		"uz": "Kiyish",
+		"en": "Equip",
+		"ru": "Надеть",
+		"tr": "Giy"
+	},
+	"EQUIPPED": {
+		"uz": "Kiyilgan",
+		"en": "Equipped",
+		"ru": "Надето",
+		"tr": "Giyildi"
+	},
+	"OUTFIT_EQUIPPED": {
+		"uz": "Libos kiyildi!",
+		"en": "Outfit equipped!",
+		"ru": "Облачение надето!",
+		"tr": "Kıyafet giyildi!"
 	}
 }

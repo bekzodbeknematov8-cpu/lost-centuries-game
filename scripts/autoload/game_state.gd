@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -72,6 +72,7 @@ func load_progress() -> void:
 	_store.load_file()
 	_store.give_starter_tactics(GameData.tactics)
 	progress = _store.data
+	apply_outfit()
 
 
 func save_progress() -> void:
@@ -174,3 +175,25 @@ func give_boss_chest() -> void:
 	_store.data = progress
 	Rewards.apply(progress, {"type": "chest", "id": str(GameData.chests.boss_chest), "count": 1})
 	_store.save_file()
+
+
+# --- Libos ---------------------------------------------------------------------
+
+func apply_outfit() -> void:
+	var id := str(progress.get("outfit", "classic"))
+	if GameData.outfits.outfits.has(id) and id != "classic":
+		Painter.player_outfit = Painter.outfit_colors(GameData.outfits.outfits[id])
+	else:
+		Painter.player_outfit = []
+
+
+func buy_outfit(id: String) -> bool:
+	_store.data = progress
+	return _store.buy_outfit(GameData.outfits, id)
+
+
+func equip_outfit(id: String) -> bool:
+	_store.data = progress
+	var ok := _store.equip_outfit(id)
+	apply_outfit()
+	return ok

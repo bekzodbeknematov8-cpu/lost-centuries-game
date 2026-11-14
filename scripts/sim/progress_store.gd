@@ -7,7 +7,7 @@ const VERSION := 1
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
 
 
 func _init(file_path: String) -> void:
@@ -15,7 +15,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"]}
 	if not FileAccess.file_exists(path):
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
@@ -41,6 +41,11 @@ func load_file() -> void:
 	data.daily_last = str(p.get("daily_last", ""))
 	data.daily_streak = maxi(0, int(p.get("daily_streak", 0)))
 	data.star_milestones = maxi(0, int(p.get("star_milestones", 0)))
+	data.outfit = str(p.get("outfit", "classic"))
+	if p.get("outfits") is Array:
+		for o in p.outfits:
+			if not (str(o) in data.outfits):
+				data.outfits.append(str(o))
 	if p.get("heroes") is Array:
 		for h in p.heroes:
 			if not (str(h) in data.heroes):
@@ -207,3 +212,28 @@ func grant_star_milestones(chest_data: Dictionary, total_stars: int) -> int:
 	Rewards.apply(data, {"type": "chest", "id": "gold", "count": new_count})
 	save_file()
 	return new_count
+
+
+# --- Libos ---------------------------------------------------------------------
+
+func buy_outfit(out_data: Dictionary, id: String) -> bool:
+	if id in data.outfits or not out_data.outfits.has(id):
+		return false
+	var o: Dictionary = out_data.outfits[id]
+	if int(o.price_gems) > 0:
+		if int(data.gems) < int(o.price_gems):
+			return false
+		data.gems = int(data.gems) - int(o.price_gems)
+	elif not spend_coins(int(o.price_coins)):
+		return false
+	data.outfits.append(id)
+	save_file()
+	return true
+
+
+func equip_outfit(id: String) -> bool:
+	if not (id in data.outfits):
+		return false
+	data.outfit = id
+	save_file()
+	return true

@@ -8,11 +8,25 @@ const STEEL := Color(0.78, 0.8, 0.84)
 const WOOD := Color(0.48, 0.31, 0.16)
 const GOLD := Color(1.0, 0.8, 0.25)
 
-## Tomon ranglari: [ko'ylak, plash/bezak, shim]
+## O'yinchi libosi (Libos bo'limi): bo'sh bo'lsa standart ranglar ishlatiladi.
+static var player_outfit: Array = []
+
+## Tomon ranglari: [ko'ylak, plash/bezak, shim, dubulg'a]
 const TEAM_COLORS := [
 	[Color(0.16, 0.42, 0.72), Color(0.95, 0.78, 0.25), Color(0.22, 0.2, 0.26)],
 	[Color(0.72, 0.18, 0.16), Color(0.2, 0.17, 0.14), Color(0.3, 0.22, 0.18)],
 ]
+
+
+static func team_colors(team: int) -> Array:
+	if team == 0 and player_outfit.size() >= 4:
+		return player_outfit
+	return TEAM_COLORS[team]
+
+
+static func outfit_colors(o: Dictionary) -> Array:
+	var c := func(k: String) -> Color: return Color(o[k][0], o[k][1], o[k][2])
+	return [c.call("tunic"), c.call("trim"), c.call("pants"), c.call("helm")]
 
 
 static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float, t: float) -> void:
@@ -22,7 +36,7 @@ static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float
 		var k := clampf(u.dead_time / 0.45, 0.0, 1.0)
 		rot = -k * PI * 0.5
 		alpha = clampf(1.0 - (u.dead_time - 1.6) / 1.2, 0.0, 1.0)
-	var cols: Array = TEAM_COLORS[u.team]
+	var cols: Array = team_colors(u.team)
 	var flash := u.hurt_flash > 0.0
 	ci.draw_set_transform(pos, rot * u.facing, Vector2(u.facing * scale_f, scale_f))
 	var walk := sin(u.walk_phase) if u.moving else 0.0
@@ -187,7 +201,7 @@ static func _draw_hero_head(ci: CanvasItem, u: UnitState, head: Vector2, a: floa
 			ci.draw_line(head + Vector2(3, -14), head + Vector2(6, -27), _c(plume, a), 2.5)
 			ci.draw_circle(head + Vector2(3, -13), 2.0, _c(Color(0.2, 0.6, 0.9), a))
 		_:
-			_draw_headgear(ci, "cavalry", head, TEAM_COLORS[u.team], a)
+			_draw_headgear(ci, "cavalry", head, team_colors(u.team), a)
 
 
 static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Array, a: float) -> void:
@@ -201,7 +215,7 @@ static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Ar
 			ci.draw_line(head + Vector2(-10, -2), head + Vector2(10, -2), _c(Color(0.75, 0.68, 0.55), a), 4.0)
 		_:
 			# Uchli dubulg'a va pat
-			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(9.5, -1), head + Vector2(5, -10), head + Vector2(0, -19), head + Vector2(-5, -10)]), _c(STEEL.darkened(0.15), a))
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(9.5, -1), head + Vector2(5, -10), head + Vector2(0, -19), head + Vector2(-5, -10)]), _c(cols[3] if cols.size() > 3 else STEEL.darkened(0.15), a))
 			ci.draw_line(head + Vector2(0, -19), head + Vector2(-4, -26), _c(trim, a), 3.0)
 			ci.draw_line(head + Vector2(-9, 0), head + Vector2(-10, 7), _c(STEEL.darkened(0.3), a), 3.0)
 
@@ -239,7 +253,7 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 	# Dum
 	ci.draw_line(Vector2(-29, -40 + bob), Vector2(-40, -22 + bob + sin(t * 8.0) * 3.0), _c(DARK, a), 5.0, true)
 	# Egar yopqichi
-	var cols: Array = TEAM_COLORS[u.team]
+	var cols: Array = team_colors(u.team)
 	ci.draw_rect(Rect2(-12, -48 + bob, 24, 12), _c(cols[1], a))
 	if u.hero:
 		# Bezakli yopqich (bayroq rangi va oltin hoshiya)
@@ -292,7 +306,7 @@ static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float,
 
 static func draw_castle(ci: CanvasItem, team: TeamState, ground_y: float, t: float) -> void:
 	var x := team.castle_x
-	var cols: Array = TEAM_COLORS[team.index]
+	var cols: Array = team_colors(team.index)
 	var k := clampf(team.castle_hp / team.castle_max_hp, 0.0, 1.0)
 	var stone := Color(0.72, 0.62, 0.48) if team.index == 0 else Color(0.6, 0.52, 0.45)
 	var w := 140.0

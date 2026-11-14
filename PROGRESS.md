@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (10) — §12(f): Libos (rejali ish)
+**Bajarildi**
+- 6 kiyim to'plami (`data/outfits.json`): Klassik (bepul), Temuriy, Dasht (800 tanga), Xorazm, Usmonli
+  (1200 tanga), Oltin (80 la'l). Butun qo'shin, qal'a bayrog'i va mini-xaritaga qo'llanadi; faqat ko'rinish.
+- Libos ekrani: dasht va o'tovlar fonida 5 askar namunasi, "Ko'rish" (oldindan ko'rish), sotib olish, kiyish.
+- `Painter.team_colors()` — o'yinchi libosi faqat team 0 ga. 1 yangi test (46), smoke 24.
+
 ### 2026-11-14 (9) — §12(e): Sandiqlar va kunlik mukofot (rejali ish)
 **Bajarildi**
 - 3 sandiq (`data/chests.json`): Kumush (300 tanga, 2 mukofot), Oltin (40 la'l, 3), La'l (100 la'l, 4);
@@ -113,7 +120,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar va kunlik mukofot ✅ · keyingi: §12(f) libos
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · keyingi: §12(g) bozor
 
 ### 2026-11-13
 **Bajarildi**

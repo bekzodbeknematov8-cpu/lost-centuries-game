@@ -318,13 +318,13 @@ class MiniMap:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0, 0, 0, 0.35))
 		draw_rect(Rect2(Vector2(0, size.y - 5), Vector2(size.x, 5)), Color(0.55, 0.47, 0.3, 0.7))
 		for t in sim.teams:
-			var col: Color = Painter.TEAM_COLORS[t.index][0]
+			var col: Color = Painter.team_colors(t.index)[0]
 			draw_rect(Rect2(t.castle_x * k - 5, 3, 10, size.y - 6), col.lightened(0.3))
 			draw_circle(Vector2(t.mine_x * k, size.y - 5), 3.0, Painter.GOLD)
 		for u in sim.units:
 			if not u.is_alive():
 				continue
-			var c: Color = Painter.TEAM_COLORS[u.team][0].lightened(0.35)
+			var c: Color = Painter.team_colors(u.team)[0].lightened(0.35)
 			var y := 6.0 + u.lane * (size.y - 16.0)
 			if u.hero:
 				draw_circle(Vector2(u.x * k, size.y * 0.5), 5.0, Painter.GOLD)
@@ -413,7 +413,7 @@ func _build_top() -> void:
 		pb.custom_minimum_size = Vector2(205, 20)
 		pb.show_percentage = false
 		pb.size_flags_vertical = Control.SIZE_SHRINK_CENTER
-		pb.add_theme_stylebox_override("fill", UITheme.fill(Painter.TEAM_COLORS[i][0].lightened(0.15)))
+		pb.add_theme_stylebox_override("fill", UITheme.fill(Painter.team_colors(i)[0].lightened(0.15)))
 		if i == 1:
 			pb.fill_mode = ProgressBar.FILL_END_TO_BEGIN
 		hp_row.add_child(pb)

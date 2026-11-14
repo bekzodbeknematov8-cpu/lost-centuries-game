@@ -1,0 +1,11 @@
+{
+	"order": ["classic", "temuriy", "mogul", "xorazm", "usmonli", "oltin"],
+	"outfits": {
+		"classic": {"name": "OUT_CLASSIC", "price_coins": 0,    "price_gems": 0,  "tunic": [0.16, 0.42, 0.72], "trim": [0.95, 0.78, 0.25], "pants": [0.22, 0.2, 0.26], "helm": [0.66, 0.68, 0.71]},
+		"temuriy": {"name": "OUT_TEMURIY", "price_coins": 800,  "price_gems": 0,  "tunic": [0.08, 0.5, 0.62],  "trim": [0.95, 0.82, 0.35], "pants": [0.12, 0.18, 0.32], "helm": [0.85, 0.7, 0.3]},
+		"mogul":   {"name": "OUT_MOGUL",   "price_coins": 800,  "price_gems": 0,  "tunic": [0.62, 0.18, 0.14], "trim": [0.5, 0.36, 0.22],  "pants": [0.3, 0.22, 0.16],  "helm": [0.45, 0.33, 0.22]},
+		"xorazm":  {"name": "OUT_XORAZM",  "price_coins": 1200, "price_gems": 0,  "tunic": [0.15, 0.48, 0.3],  "trim": [0.96, 0.94, 0.88], "pants": [0.2, 0.26, 0.2],   "helm": [0.75, 0.78, 0.82]},
+		"usmonli": {"name": "OUT_USMONLI", "price_coins": 1200, "price_gems": 0,  "tunic": [0.6, 0.08, 0.12],  "trim": [0.98, 0.96, 0.92], "pants": [0.18, 0.2, 0.35],  "helm": [0.9, 0.88, 0.84]},
+		"oltin":   {"name": "OUT_OLTIN",   "price_coins": 0,    "price_gems": 80, "tunic": [0.15, 0.12, 0.1],  "trim": [1.0, 0.82, 0.25],  "pants": [0.1, 0.08, 0.07],  "helm": [1.0, 0.8, 0.3]}
+	}
+}
