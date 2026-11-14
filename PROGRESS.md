@@ -6,6 +6,18 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-14 (7) — §12(c): Ustaxona va qahramonlarni ochish (rejali ish)
+**Bajarildi**
+- `data/upgrades.json` + `Upgrades` (sim): 6 ta doimiy yaxshilanish — sovut (HP +5%/daraja), tig'lar (zarar +4%),
+  konchilar (oltin +8%), qal'a devorlari (HP va minora +8%), xazina (+50 boshlang'ich oltin), sarkarda qudrati
+  (+6% qahramon, kuch 3% tezroq). Narx har darajada ~1,4–1,6× oshadi. Faqat o'yinchi tomoniga ta'sir qiladi.
+- Qahramonlar: Chingizxon bepul; qolganlari o'z kampaniyasi ochilganda bepul yoki Ustaxonada tangaga
+  (1500 / 2500 / 3500). Qahramon tanlashda yopiqlari qulf bilan.
+- Ustaxona ekrani (chodir uslubida), bosh menyuda "Ustaxona" tugmasi. 3 yangi test (39), smoke 18.
+
+**Sinovda topilgan va tuzatilgan**
+- `game_state.gd` da tip xatosi: testlar o'tgan bo'lsa ham qat'iy runner SCRIPT ERROR ni ushladi → tuzatildi.
+
 ### 2026-11-13 (6) — §12(b): yangi bosh menyu va rejim tanlash (rejali ish)
 **Bajarildi**
 - Bosh menyu: Registon uslubidagi siluetli kechki fon, katta qahramonlar, "O'YNASH",
@@ -77,7 +89,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) bosh menyu va rejim tanlash ✅ · keyingi: §12(c) ustaxona va qahramon ochish
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · keyingi: §12(d) hiylalar
 
 ### 2026-11-13
 **Bajarildi**

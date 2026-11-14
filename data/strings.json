@@ -598,5 +598,137 @@
 		"en": "Choose difficulty",
 		"ru": "Выберите сложность",
 		"tr": "Zorluk seçin"
+	},
+	"WORKSHOP": {
+		"uz": "Ustaxona",
+		"en": "Workshop",
+		"ru": "Мастерская",
+		"tr": "Atölye"
+	},
+	"HEROES": {
+		"uz": "Sarkardalar",
+		"en": "Commanders",
+		"ru": "Полководцы",
+		"tr": "Komutanlar"
+	},
+	"UPG_ARMY_HP": {
+		"uz": "Mustahkam sovut",
+		"en": "Sturdy armor",
+		"ru": "Крепкие доспехи",
+		"tr": "Sağlam zırh"
+	},
+	"UPG_ARMY_HP_DESC": {
+		"uz": "Barcha askarlar sog'ligi oshadi.",
+		"en": "All soldiers gain health.",
+		"ru": "Все воины получают больше здоровья.",
+		"tr": "Tüm askerlerin canı artar."
+	},
+	"UPG_ARMY_DMG": {
+		"uz": "O'tkir tig'lar",
+		"en": "Sharp blades",
+		"ru": "Острые клинки",
+		"tr": "Keskin kılıçlar"
+	},
+	"UPG_ARMY_DMG_DESC": {
+		"uz": "Barcha askarlar zarari oshadi.",
+		"en": "All soldiers deal more damage.",
+		"ru": "Все воины наносят больше урона.",
+		"tr": "Tüm askerler daha fazla hasar verir."
+	},
+	"UPG_MINERS": {
+		"uz": "Usta konchilar",
+		"en": "Master miners",
+		"ru": "Мастера-рудокопы",
+		"tr": "Usta madenciler"
+	},
+	"UPG_MINERS_DESC": {
+		"uz": "Ishchilar ko'proq oltin olib keladi.",
+		"en": "Workers bring back more gold.",
+		"ru": "Рабочие приносят больше золота.",
+		"tr": "İşçiler daha fazla altın getirir."
+	},
+	"UPG_CASTLE": {
+		"uz": "Qal'a devorlari",
+		"en": "Fortress walls",
+		"ru": "Стены крепости",
+		"tr": "Kale surları"
+	},
+	"UPG_CASTLE_DESC": {
+		"uz": "Qal'a mustahkamligi va minora o'qlari kuchayadi.",
+		"en": "Stronger fortress and tower arrows.",
+		"ru": "Крепость прочнее, стрелы башен сильнее.",
+		"tr": "Kale ve kule okları güçlenir."
+	},
+	"UPG_START_GOLD": {
+		"uz": "Xazina",
+		"en": "Treasury",
+		"ru": "Казна",
+		"tr": "Hazine"
+	},
+	"UPG_START_GOLD_DESC": {
+		"uz": "Jangni ko'proq oltin bilan boshlaysiz.",
+		"en": "Start each battle with more gold.",
+		"ru": "Начинайте бой с бо́льшим запасом золота.",
+		"tr": "Savaşa daha fazla altınla başlarsınız."
+	},
+	"UPG_HERO": {
+		"uz": "Sarkarda qudrati",
+		"en": "Commander's might",
+		"ru": "Мощь полководца",
+		"tr": "Komutan gücü"
+	},
+	"UPG_HERO_DESC": {
+		"uz": "Qahramon kuchliroq, maxsus kuch tezroq tiklanadi.",
+		"en": "Hero gets stronger; power recharges faster.",
+		"ru": "Герой сильнее, сила восстанавливается быстрее.",
+		"tr": "Kahraman güçlenir, özel güç daha hızlı dolar."
+	},
+	"UPG_NOW": {
+		"uz": "Hozir: %s",
+		"en": "Now: %s",
+		"ru": "Сейчас: %s",
+		"tr": "Şu an: %s"
+	},
+	"UPG_MAX": {
+		"uz": "Maksimal",
+		"en": "Maxed",
+		"ru": "Максимум",
+		"tr": "Maksimum"
+	},
+	"UPG_BOUGHT": {
+		"uz": "Yaxshilandi!",
+		"en": "Upgraded!",
+		"ru": "Улучшено!",
+		"tr": "Geliştirildi!"
+	},
+	"NOT_ENOUGH_COINS": {
+		"uz": "Tanga yetarli emas",
+		"en": "Not enough coins",
+		"ru": "Недостаточно монет",
+		"tr": "Yeterli altın yok"
+	},
+	"HERO_OWNED": {
+		"uz": "Ochiq",
+		"en": "Unlocked",
+		"ru": "Открыт",
+		"tr": "Açık"
+	},
+	"HERO_BUY": {
+		"uz": "Ochish: ◉ %d",
+		"en": "Unlock: ◉ %d",
+		"ru": "Открыть: ◉ %d",
+		"tr": "Aç: ◉ %d"
+	},
+	"HERO_UNLOCKED": {
+		"uz": "%s ochildi!",
+		"en": "%s unlocked!",
+		"ru": "%s открыт!",
+		"tr": "%s açıldı!"
+	},
+	"HERO_LOCKED_HINT": {
+		"uz": "Yopiq: kampaniyada oching yoki Ustaxonada sotib oling",
+		"en": "Locked: unlock in the campaign or buy in the Workshop",
+		"ru": "Закрыт: откройте в кампании или купите в мастерской",
+		"tr": "Kilitli: seferde açın veya atölyeden satın alın"
 	}
 }

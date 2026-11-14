@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": []}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -101,3 +101,25 @@ func ads_left() -> int:
 func reward_ad(bonus_coins: int) -> bool:
 	_store.data = progress
 	return _store.note_ad_reward(today(), bonus_coins)
+
+
+# --- Ustaxona ------------------------------------------------------------------
+
+func buy_upgrade(id: String) -> bool:
+	_store.data = progress
+	return _store.buy_upgrade(GameData.upgrades, id)
+
+
+func buy_hero(hero: String) -> bool:
+	_store.data = progress
+	return _store.buy_hero(GameData.upgrades, hero)
+
+
+func hero_owned(hero: String) -> bool:
+	var cid := hero   # kampaniya ID = qahramon ID
+	var open: bool = GameData.campaigns.campaigns.has(cid) and Campaign.campaign_unlocked(GameData.campaigns, progress.stars, cid)
+	return Upgrades.hero_owned(GameData.upgrades, progress.get("heroes", []), hero, open)
+
+
+func upgrade_effects() -> Dictionary:
+	return Upgrades.effects(GameData.upgrades, progress.get("upgrades", {}))

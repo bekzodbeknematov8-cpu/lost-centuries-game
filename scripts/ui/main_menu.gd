@@ -138,16 +138,21 @@ func _build() -> void:
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
 	row.add_theme_constant_override("separation", 10)
 	right.add_child(row)
-	for d in [["MENU_TACTICS", Color(0.8, 0.38, 0.1)], ["MENU_OUTFITS", Color(0.75, 0.62, 0.1)], ["MENU_CHESTS", Color(0.2, 0.55, 0.22)], ["MENU_MARKET", Color(0.5, 0.2, 0.6)]]:
+	for d in [["WORKSHOP", Color(0.15, 0.4, 0.65)], ["MENU_TACTICS", Color(0.8, 0.38, 0.1)], ["MENU_OUTFITS", Color(0.75, 0.62, 0.1)], ["MENU_CHESTS", Color(0.2, 0.55, 0.22)], ["MENU_MARKET", Color(0.5, 0.2, 0.6)]]:
 		var b := Button.new()
 		b.text = tr(d[0])
-		b.custom_minimum_size = Vector2(158, 62)
-		b.add_theme_font_size_override("font_size", 21)
+		b.custom_minimum_size = Vector2(136, 60)
+		b.add_theme_font_size_override("font_size", 18)
 		var col: Color = d[1]
 		b.add_theme_stylebox_override("normal", UITheme.box(col, col.lightened(0.35), 12, 3))
 		b.add_theme_stylebox_override("hover", UITheme.box(col.lightened(0.12), col.lightened(0.45), 12, 3))
 		b.add_theme_stylebox_override("pressed", UITheme.box(col.darkened(0.2), col.lightened(0.35), 12, 3))
-		b.pressed.connect(_coming_soon)
+		if d[0] == "WORKSHOP":
+			b.pressed.connect(func() -> void:
+				Sfx.play("click", 0.7)
+				get_tree().change_scene_to_file("res://scenes/workshop.tscn"))
+		else:
+			b.pressed.connect(_coming_soon)
 		row.add_child(b)
 	var note := Label.new()
 	note.text = "%s  v%s" % [tr("PROTOTYPE_NOTE"), ProjectSettings.get_setting("application/config/version")]

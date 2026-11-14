@@ -28,6 +28,10 @@ var ability_cd: float = 8.0
 var buff_time: float = 0.0
 var buff_dmg: float = 1.0
 var buff_speed: float = 1.0
+var hp_mult: float = 1.0           ## Ustaxona: askarlar HP
+var hero_mult: float = 1.0         ## Ustaxona: qahramon HP va zarari
+var castle_dmg_mult: float = 1.0   ## Ustaxona: minora o'qlari
+var ability_cd_mult: float = 1.0   ## Ustaxona: maxsus kuch tiklanishi
 var stats: Dictionary = {"trained": 0, "killed": 0, "lost": 0, "gold_mined": 0}
 
 

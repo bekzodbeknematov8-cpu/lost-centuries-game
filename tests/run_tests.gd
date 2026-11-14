@@ -536,3 +536,55 @@ func test_gems_persist() -> void:
 	st2.load_file()
 	check(int(st2.data.gems) == 25, "la'l saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+# --- Ustaxona ---------------------------------------------------------------
+
+func upg() -> Dictionary:
+	return load_json("res://data/upgrades.json")
+
+
+func test_upgrade_costs_grow_and_cap() -> void:
+	var d := upg()
+	for id in d.order:
+		var prev := 0
+		for lvl in int(d.upgrades[id].max):
+			var c := Upgrades.cost(d, id, lvl)
+			check(c > prev, "%s: narx o'smayapti (%d)" % [id, lvl])
+			prev = c
+		check(Upgrades.cost(d, id, int(d.upgrades[id].max)) == -1, "%s: maksimumdan keyin sotilmasligi kerak" % id)
+
+
+func test_upgrades_affect_battle() -> void:
+	var d := upg()
+	var eff := Upgrades.effects(d, {"army_hp": 10, "army_dmg": 5, "castle": 4, "start_gold": 2, "hero_power": 5})
+	var s := BattleSim.new()
+	s.setup(defs, {"start_units": [[], []], "start_gold": 300, "heroes": ["temur", "temur"], "upgrades": [eff, {}]}, load_json("res://data/heroes.json"))
+	var a := s.spawn_unit(0, "swordsman")
+	var b := s.spawn_unit(1, "swordsman")
+	check(a.max_hp > b.max_hp * 1.4, "HP yaxshilanishi ishlamadi")
+	check(s._damage_against(a, ["infantry"]) > s._damage_against(b, ["infantry"]) * 1.15, "zarar yaxshilanishi ishlamadi")
+	check(s.teams[0].castle_max_hp > s.teams[1].castle_max_hp, "qal'a yaxshilanishi ishlamadi")
+	check(s.teams[0].gold == 400.0, "boshlang'ich oltin yaxshilanishi ishlamadi: %s" % s.teams[0].gold)
+	check(s.hero_of(0).max_hp > s.hero_of(1).max_hp, "qahramon yaxshilanishi ishlamadi")
+
+
+func test_buy_upgrade_and_hero() -> void:
+	var d := upg()
+	var path := "user://test_shop.json"
+	var st := ProgressStore.new(path)
+	st.data.coins = 200
+	check(st.buy_upgrade(d, "army_hp"), "yetarli tangada sotib olinmadi")
+	check(int(st.data.upgrades.army_hp) == 1 and int(st.data.coins) == 200 - Upgrades.cost(d, "army_hp", 0), "daraja yoki tanga noto'g'ri")
+	check(not st.buy_upgrade(d, "hero_power"), "tanga yetmasa sotilmasligi kerak")
+	check(not st.buy_hero(d, "temur"), "tanga yetmasa qahramon sotilmasligi kerak")
+	st.data.coins = 5000
+	check(st.buy_hero(d, "temur") and not st.buy_hero(d, "temur"), "qahramon ikki marta sotildi")
+	check(Upgrades.hero_owned(d, st.data.heroes, "temur", false), "sotib olingan qahramon ochiq emas")
+	check(Upgrades.hero_owned(d, [], "chingiz", false), "bepul qahramon ochiq bo'lishi kerak")
+	check(Upgrades.hero_owned(d, [], "boyazid", true), "kampaniyasi ochiq qahramon ochiq bo'lishi kerak")
+	check(not Upgrades.hero_owned(d, [], "boyazid", false), "yopiq qahramon ochiq bo'lib qoldi")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.upgrades.get("army_hp", 0)) == 1 and "temur" in st2.data.heroes, "xaridlar saqlanmadi")
+	DirAccess.remove_absolute(path)

@@ -30,6 +30,7 @@ func _ready() -> void:
 	var enemy_hero := ""
 	if GameState.level_id != "":
 		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi())
+		bc.cfg.upgrades = [GameState.upgrade_effects(), {}]
 		level = bc.level
 		ai_p = bc.ai
 		my_hero = str(bc.cfg.heroes[0])
@@ -42,6 +43,7 @@ func _ready() -> void:
 			"start_units": [["worker", "worker"], []],
 			"heroes": [my_hero, ""],
 			"endless": true,
+			"upgrades": [GameState.upgrade_effects(), {}],
 		}, GameData.heroes)
 	else:
 		var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero and bool(GameData.heroes[h].get("selectable", true)))
@@ -52,6 +54,7 @@ func _ready() -> void:
 			"income_mult": [1.0, float(ai_p.get("income_mult", 1.0))],
 			"start_units": [["worker", "worker"], ["worker", "worker"]],
 			"heroes": [my_hero, enemy_hero],
+			"upgrades": [GameState.upgrade_effects(), {}],
 		}, GameData.heroes)
 	enemy_ai = AIController.new(1, ai_p, randi())
 	cam = Camera2D.new()

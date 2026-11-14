@@ -1,0 +1,12 @@
+{
+	"order": ["army_hp", "army_dmg", "miners", "castle", "start_gold", "hero_power"],
+	"upgrades": {
+		"army_hp":    {"name": "UPG_ARMY_HP",    "desc": "UPG_ARMY_HP_DESC",    "icon": "shield", "max": 10, "base_cost": 120, "growth": 1.42, "per_level": 0.05},
+		"army_dmg":   {"name": "UPG_ARMY_DMG",   "desc": "UPG_ARMY_DMG_DESC",   "icon": "sword",  "max": 10, "base_cost": 140, "growth": 1.42, "per_level": 0.04},
+		"miners":     {"name": "UPG_MINERS",     "desc": "UPG_MINERS_DESC",     "icon": "pick",   "max": 5,  "base_cost": 150, "growth": 1.6,  "per_level": 0.08},
+		"castle":     {"name": "UPG_CASTLE",     "desc": "UPG_CASTLE_DESC",     "icon": "castle", "max": 8,  "base_cost": 110, "growth": 1.45, "per_level": 0.08},
+		"start_gold": {"name": "UPG_START_GOLD", "desc": "UPG_START_GOLD_DESC", "icon": "coin",   "max": 5,  "base_cost": 100, "growth": 1.55, "per_level": 50},
+		"hero_power": {"name": "UPG_HERO",       "desc": "UPG_HERO_DESC",       "icon": "crown",  "max": 10, "base_cost": 160, "growth": 1.42, "per_level": 0.06}
+	},
+	"hero_prices": {"chingiz": 0, "jaloliddin": 1500, "temur": 2500, "boyazid": 3500}
+}

@@ -48,6 +48,11 @@ class HeroCard:
 			fs -= 1
 		draw_string_outline(font, Vector2(0, 214), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, 5, Color(0, 0, 0, 0.85))
 		draw_string(font, Vector2(0, 214), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, Painter.GOLD)
+		if not GameState.hero_owned(hero_id):
+			draw_rect(Rect2(Vector2(4, 4), size - Vector2(8, 8)), Color(0, 0, 0, 0.55))
+			var lc := Vector2(size.x * 0.5, 110)
+			draw_arc(lc + Vector2(0, -12), 14.0, PI, TAU, 12, Color(0.9, 0.85, 0.75), 5.0)
+			draw_rect(Rect2(lc + Vector2(-19, -12), Vector2(38, 30)), Color(0.9, 0.85, 0.75))
 		var ab := tr(str(_u.def.ability.name))
 		draw_string_outline(font, Vector2(0, 238), ab, HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, 3, Color(0, 0, 0, 0.85))
 		draw_string(font, Vector2(0, 238), ab, HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, UITheme.PARCHMENT)
@@ -103,10 +108,15 @@ func _ready() -> void:
 	go.add_theme_stylebox_override("hover", UITheme.box(Color(0.65, 0.2, 0.1), Painter.GOLD))
 	go.pressed.connect(_start)
 	btns.add_child(go)
-	_select(GameState.hero if GameState.hero in ORDER else "temur", false)
+	var first := GameState.hero if GameState.hero in ORDER and GameState.hero_owned(GameState.hero) else "chingiz"
+	_select(first, false)
 
 
 func _select(id: String, sound := true) -> void:
+	if not GameState.hero_owned(id):
+		Sfx.play("deny", 0.6)
+		_desc.text = tr(str(GameData.heroes[id].name)) + "\n" + tr("HERO_LOCKED_HINT")
+		return
 	if sound:
 		Sfx.play("click", 0.7)
 	_selected = id
