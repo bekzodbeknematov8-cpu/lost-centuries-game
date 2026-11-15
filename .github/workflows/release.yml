@@ -20,6 +20,9 @@ on:
         default: "1.0.0"
   push:
     tags: ["v*"]
+    # Eksport sozlamalari o'zgarganda AAB yig'ilishini tekshirish (sinov kaliti bilan)
+    branches: ["ccr-bda5a1f1-quipbg"]
+    paths: [".github/workflows/release.yml", "export_presets.cfg"]
 
 permissions:
   contents: read
