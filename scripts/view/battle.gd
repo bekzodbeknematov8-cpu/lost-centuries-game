@@ -30,7 +30,9 @@ func _ready() -> void:
 	var ai_p: Dictionary = GameData.ai.get(diff, GameData.ai.easy)
 	var my_hero := GameState.hero
 	var enemy_hero := ""
+	terrain = ["steppe", "desert", "mountain", "green"][randi() % 4]
 	if GameState.level_id != "":
+		terrain = terrain_for(GameData.maps, GameState.level_id)
 		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi(), GameState.slot_difficulty())
 		bc.cfg.upgrades = [GameState.upgrade_effects(), {}]
 		level = bc.level
@@ -403,39 +405,94 @@ func _draw() -> void:
 	_draw_effects()
 
 
+## Viloyat relyefiga mos ranglar (data/maps.json -> regions[].terrain).
+const TERRAINS := {
+	"steppe": {"sky": [Color(0.98, 0.72, 0.42), Color(1.0, 0.9, 0.68)], "sun": Color(1, 0.96, 0.82),
+		"hills": [Color(0.84, 0.6, 0.5), Color(0.72, 0.5, 0.38), Color(0.6, 0.48, 0.3)], "amp": [140.0, 90.0, 50.0],
+		"ground": [Color(0.63, 0.55, 0.33), Color(0.56, 0.48, 0.28)], "grass": Color(0.5, 0.5, 0.24), "stone": Color(0.5, 0.45, 0.38)},
+	"desert": {"sky": [Color(0.95, 0.62, 0.3), Color(1.0, 0.88, 0.6)], "sun": Color(1, 0.93, 0.7),
+		"hills": [Color(0.9, 0.7, 0.48), Color(0.86, 0.62, 0.38), Color(0.8, 0.58, 0.32)], "amp": [70.0, 55.0, 35.0],
+		"ground": [Color(0.86, 0.7, 0.44), Color(0.8, 0.63, 0.38)], "grass": Color(0.55, 0.5, 0.28), "stone": Color(0.7, 0.56, 0.4)},
+	"mountain": {"sky": [Color(0.55, 0.68, 0.86), Color(0.88, 0.88, 0.86)], "sun": Color(1, 0.98, 0.9),
+		"hills": [Color(0.6, 0.62, 0.72), Color(0.5, 0.5, 0.56), Color(0.46, 0.44, 0.4)], "amp": [260.0, 150.0, 60.0],
+		"ground": [Color(0.5, 0.48, 0.38), Color(0.44, 0.42, 0.34)], "grass": Color(0.36, 0.45, 0.26), "stone": Color(0.6, 0.6, 0.6), "snow": true},
+	"green": {"sky": [Color(0.5, 0.75, 0.95), Color(0.92, 0.95, 0.85)], "sun": Color(1, 0.98, 0.85),
+		"hills": [Color(0.55, 0.7, 0.6), Color(0.4, 0.6, 0.38), Color(0.34, 0.52, 0.28)], "amp": [120.0, 80.0, 45.0],
+		"ground": [Color(0.42, 0.56, 0.28), Color(0.36, 0.48, 0.24)], "grass": Color(0.28, 0.46, 0.18), "stone": Color(0.5, 0.5, 0.45), "trees": true},
+}
+var terrain := "steppe"
+
+
+static func terrain_for(maps: Dictionary, lid: String) -> String:
+	var base := lid.split("#")[0]
+	for cid in maps:
+		for r in maps[cid].get("regions", []):
+			if str(r.id) == base:
+				return str(r.get("terrain", "steppe"))
+	return "steppe"
+
+
 func _draw_background(left: float, right: float) -> void:
 	var cx := cam.position.x
-	# Osmon
-	var sky_top := Color(0.98, 0.72, 0.42)
-	var sky_bot := Color(1.0, 0.9, 0.68)
+	var P: Dictionary = TERRAINS.get(terrain, TERRAINS.steppe)
+	var sky: Array = P.sky
+	var hills: Array = P.hills
+	var amp: Array = P.amp
+	var gr: Array = P.ground
 	draw_polygon(PackedVector2Array([Vector2(left, -50), Vector2(right, -50), Vector2(right, GROUND_Y), Vector2(left, GROUND_Y)]),
-		PackedColorArray([sky_top, sky_top, sky_bot, sky_bot]))
-	# Quyosh
+		PackedColorArray([sky[0], sky[0], sky[1], sky[1]]))
 	var sun := Vector2(cx + 260.0 - cx * 0.08, 170.0)
-	draw_circle(sun, 70.0, Color(1, 0.95, 0.75, 0.5))
-	draw_circle(sun, 52.0, Color(1, 0.96, 0.82))
-	# Uzoq tog'lar (sekin harakatlanadi - parallaks)
-	_draw_hills(left, right, 0.85, GROUND_Y - 170.0, 140.0, Color(0.84, 0.6, 0.5), 0.0)
-	_draw_hills(left, right, 0.65, GROUND_Y - 80.0, 90.0, Color(0.72, 0.5, 0.38), 500.0)
-	_draw_hills(left, right, 0.4, GROUND_Y - 20.0, 50.0, Color(0.6, 0.48, 0.3), 1300.0)
+	var sc: Color = P.sun
+	draw_circle(sun, 70.0, Color(sc, 0.5))
+	draw_circle(sun, 52.0, sc)
+	# Uzoq tog'lar (parallaks)
+	_draw_hills(left, right, 0.85, GROUND_Y - 170.0, amp[0], hills[0], 0.0, bool(P.get("snow", false)))
+	_draw_hills(left, right, 0.65, GROUND_Y - 80.0, amp[1], hills[1], 500.0)
+	if P.get("trees", false):
+		_draw_trees(left, right, 0.65, hills[2].darkened(0.15))
+	_draw_hills(left, right, 0.4, GROUND_Y - 20.0, amp[2], hills[2], 1300.0)
 	# Yer
-	draw_rect(Rect2(left, GROUND_Y - 5.0, right - left, VIEW_H - GROUND_Y + 60.0), Color(0.63, 0.55, 0.33))
-	draw_rect(Rect2(left, GROUND_Y + 95.0, right - left, VIEW_H), Color(0.56, 0.48, 0.28))
-	# O't va toshlar
+	draw_rect(Rect2(left, GROUND_Y - 5.0, right - left, VIEW_H - GROUND_Y + 60.0), gr[0])
+	draw_rect(Rect2(left, GROUND_Y + 95.0, right - left, VIEW_H), gr[1])
+	var gc: Color = P.grass
+	var stc: Color = P.stone
 	var start := int(floor(left / 37.0))
 	var end := int(ceil(right / 37.0))
 	for i in range(start, end):
 		var h := absi(i * 7919) % 100
 		var gx := i * 37.0 + (h % 17)
 		var gy := GROUND_Y + 5.0 + float(h) * 1.4
-		if h % 3 == 0:
-			draw_line(Vector2(gx, gy), Vector2(gx - 4, gy - 10), Color(0.45, 0.48, 0.22), 2.0)
-			draw_line(Vector2(gx, gy), Vector2(gx + 3, gy - 12), Color(0.5, 0.52, 0.25), 2.0)
+		if terrain == "desert":
+			if h % 5 == 0:
+				draw_arc(Vector2(gx, gy + 6), 14.0, PI * 1.15, PI * 1.85, 6, gr[1].darkened(0.08), 2.0)
+			elif h % 11 == 0:
+				draw_line(Vector2(gx, gy), Vector2(gx - 5, gy - 7), gc, 1.5)
+				draw_line(Vector2(gx, gy), Vector2(gx + 5, gy - 6), gc, 1.5)
+		elif h % 3 == 0:
+			draw_line(Vector2(gx, gy), Vector2(gx - 4, gy - 10), gc.darkened(0.08), 2.0)
+			draw_line(Vector2(gx, gy), Vector2(gx + 3, gy - 12), gc, 2.0)
+			if terrain == "green" and h % 9 == 0:
+				draw_circle(Vector2(gx + 3, gy - 13), 2.5, Color(0.95, 0.85, 0.3))
 		elif h % 7 == 0:
-			draw_circle(Vector2(gx, gy), 4.0, Color(0.5, 0.45, 0.38))
+			draw_circle(Vector2(gx, gy), 4.0 if terrain != "mountain" else 6.0, stc)
 
 
-func _draw_hills(left: float, right: float, factor: float, base_y: float, amp: float, col: Color, seed_off: float) -> void:
+func _draw_trees(left: float, right: float, factor: float, col: Color) -> void:
+	var cx := cam.position.x
+	var off := cx * factor
+	var start := int(floor((left - off) / 90.0))
+	var end := int(ceil((right - off) / 90.0))
+	for i in range(start, end):
+		var h := absi(i * 4999) % 100
+		if h % 3 != 0:
+			continue
+		var x := i * 90.0 + off + float(h % 40)
+		var y := GROUND_Y - 60.0 + float(h % 20)
+		draw_line(Vector2(x, y), Vector2(x, y + 30), col.darkened(0.3), 4.0)
+		draw_circle(Vector2(x, y - 6), 16.0 + float(h % 8), col)
+
+
+func _draw_hills(left: float, right: float, factor: float, base_y: float, amp: float, col: Color, seed_off: float, snow := false) -> void:
 	var cx := cam.position.x
 	var pts := PackedVector2Array()
 	pts.append(Vector2(left, GROUND_Y + 5.0))
@@ -447,6 +504,12 @@ func _draw_hills(left: float, right: float, factor: float, base_y: float, amp: f
 		x += 30.0
 	pts.append(Vector2(right + 40.0, GROUND_Y + 5.0))
 	draw_colored_polygon(pts, col)
+	if snow:
+		# Cho'qqilardagi qor
+		for j in range(1, pts.size() - 2):
+			var p := pts[j]
+			if p.y < base_y - amp * 0.5 and p.y <= pts[j - 1].y and p.y <= pts[j + 1].y:
+				draw_colored_polygon(PackedVector2Array([p, p + Vector2(-26, 22), p + Vector2(26, 22)]), Color(0.96, 0.97, 1.0))
 
 
 func _draw_effects() -> void:

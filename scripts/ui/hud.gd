@@ -936,6 +936,6 @@ func _on_restart() -> void:
 func _on_menu() -> void:
 	get_tree().paused = false
 	if GameState.level_id != "":
-		get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
+		Transition.go("res://scenes/campaign_map.tscn")
 	else:
-		get_tree().change_scene_to_file("res://scenes/mode_select.tscn")
+		Transition.go("res://scenes/mode_select.tscn")

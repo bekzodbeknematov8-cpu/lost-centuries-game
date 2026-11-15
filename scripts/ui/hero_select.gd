@@ -98,7 +98,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(180, 62)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
+		Transition.go("res://scenes/mode_select.tscn"))
 	btns.add_child(back)
 	var go := Button.new()
 	go.text = tr("TO_BATTLE")
@@ -129,7 +129,7 @@ func _select(id: String, sound := true) -> void:
 func _start() -> void:
 	Sfx.play("horn_attack", 0.8, 0.0)
 	GameState.hero = _selected
-	get_tree().change_scene_to_file("res://scenes/battle.tscn")
+	Transition.go("res://scenes/battle.tscn")
 
 
 func _process(delta: float) -> void:

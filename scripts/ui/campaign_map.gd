@@ -168,7 +168,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(120, 50)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/slots_screen.tscn"))
+		Transition.go("res://scenes/slots_screen.tscn"))
 	top.add_child(back)
 	for cid in GameData.campaigns.order:
 		var tb := Tab.new(cid)
@@ -362,7 +362,7 @@ func _play() -> void:
 	Sfx.play("horn_attack", 0.8, 0.0)
 	GameState.level_id = _sel
 	GameState.hero = str(GameData.campaigns.campaigns[_cid].hero)
-	get_tree().change_scene_to_file("res://scenes/battle.tscn")
+	Transition.go("res://scenes/battle.tscn")
 
 
 # --- Xarita koordinatalari va bosish ------------------------------------------

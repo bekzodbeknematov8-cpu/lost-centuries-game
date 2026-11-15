@@ -125,7 +125,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(130, 52)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		Transition.go("res://scenes/main_menu.tscn"))
 	top.add_child(back)
 	var title := Label.new()
 	title.text = tr("WORKSHOP")

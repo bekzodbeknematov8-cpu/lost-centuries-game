@@ -8,6 +8,14 @@ const MUSIC_DIR := "res://assets/audio/music/"
 const POOL_SIZE := 14
 const MAX_SAME_PER_FRAME := 2
 
+## Ovozlar balandligini tenglash (RMS o'lchovi asosida, maqsad ~0.15).
+const GAIN := {
+	"deny": 0.45, "click": 0.75, "coin": 0.8, "arrow_flesh": 0.8, "hit_flesh": 0.8,
+	"castle_hit": 0.85, "horn_attack": 0.85, "horn_enemy": 0.85, "drum": 0.85,
+	"arrow_metal": 1.2, "horse": 1.25, "pick": 1.25, "sword_clash": 1.2, "thunder": 1.25,
+	"defeat": 1.15, "spear_hit": 1.1,
+}
+
 var _streams: Dictionary = {}       ## nom -> [AudioStream]
 var _pool: Array[AudioStreamPlayer] = []
 var _music: AudioStreamPlayer
@@ -51,7 +59,7 @@ func _variants(name: String) -> Array:
 
 
 func play(name: String, volume := 1.0, pitch_jitter := 0.08) -> void:
-	var vol := volume * float(GameState.settings.get("sfx_volume", 1.0))
+	var vol := volume * float(GAIN.get(name, 1.0)) * float(GameState.settings.get("sfx_volume", 1.0))
 	if vol <= 0.01:
 		return
 	var n := int(_played_this_frame.get(name, 0))

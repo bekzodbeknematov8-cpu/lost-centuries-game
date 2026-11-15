@@ -17,7 +17,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(130, 52)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
+		Transition.go("res://scenes/mode_select.tscn"))
 	add_child(back)
 	var title := Label.new()
 	title.text = tr("CAMPAIGN")
@@ -156,7 +156,7 @@ func _build_difficulty() -> void:
 		b.pressed.connect(func() -> void:
 			Sfx.play("horn_attack", 0.7, 0.0)
 			GameState.create_slot(_pending, d)
-			get_tree().change_scene_to_file("res://scenes/campaign_map.tscn"))
+			Transition.go("res://scenes/campaign_map.tscn"))
 		v.add_child(b)
 	var close := Button.new()
 	close.text = tr("BACK")
@@ -205,7 +205,7 @@ func _build_confirm() -> void:
 func _continue(i: int) -> void:
 	Sfx.play("click", 0.7)
 	GameState.select_slot(i)
-	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
+	Transition.go("res://scenes/campaign_map.tscn")
 
 
 func _process(delta: float) -> void:

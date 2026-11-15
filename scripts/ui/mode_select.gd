@@ -98,7 +98,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(130, 52)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		Transition.go("res://scenes/main_menu.tscn"))
 	add_child(back)
 	var row := HBoxContainer.new()
 	row.set_anchors_preset(Control.PRESET_CENTER)
@@ -147,7 +147,7 @@ func _build_difficulty() -> void:
 			GameState.difficulty = d[1]
 			GameState.mode = "skirmish"
 			GameState.level_id = ""
-			get_tree().change_scene_to_file("res://scenes/hero_select.tscn"))
+			Transition.go("res://scenes/hero_select.tscn"))
 		v.add_child(b)
 	var close := Button.new()
 	close.text = tr("BACK")
@@ -158,7 +158,7 @@ func _build_difficulty() -> void:
 
 func _campaign() -> void:
 	Sfx.play("click", 0.7)
-	get_tree().change_scene_to_file("res://scenes/slots_screen.tscn")
+	Transition.go("res://scenes/slots_screen.tscn")
 
 
 func _skirmish() -> void:
@@ -170,7 +170,7 @@ func _endless() -> void:
 	Sfx.play("click", 0.7)
 	GameState.mode = "endless"
 	GameState.level_id = ""
-	get_tree().change_scene_to_file("res://scenes/hero_select.tscn")
+	Transition.go("res://scenes/hero_select.tscn")
 
 
 func _locked() -> void:

@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-15 (15) — 5-bosqich sayqal: fonlar, ovoz, o'tishlar (rejali ish)
+- Jang foni viloyat relyefiga mos: cho'l (qum barxanlari), tog' (qorli cho'qqilar, toshlar),
+  yashil (daraxtlar, gullar), dasht. Relyef `data/maps.json` dagi `terrain` dan olinadi;
+  erkin jangda tasodifiy.
+- Ovoz balandligi tenglandi: har bir ovoz RMS o'lchovi asosida `Sfx.GAIN` koeffitsienti oladi
+  (masalan, "deny" 0.45, "horse"/"pick" 1.25).
+- Menyu o'tish animatsiyasi: `Transition` autoload, barcha ekranlar orasida yumshoq fade.
+
 ### 2026-11-15 (14) — Yutuqlar (rejali ish)
 **Bajarildi**
 - 20 yutuq (`data/achievements.json`): g'alabalar, yulduzlar, viloyat bosslari, cheksiz mudofaa to'lqini,
@@ -159,7 +167,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · keyingi: 5-bosqich sayqal (grafika/ovoz)
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · keyingi: 6-bosqich (balans, performance, yakuniy test)
 
 ### 2026-11-13
 **Bajarildi**

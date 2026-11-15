@@ -146,9 +146,9 @@ func _build() -> void:
 			GameState.mode = "campaign"
 			GameState.hero = "chingiz"
 			GameState.level_id = GameState.TUTORIAL_LEVEL
-			get_tree().change_scene_to_file("res://scenes/battle.tscn")
+			Transition.go("res://scenes/battle.tscn")
 		else:
-			get_tree().change_scene_to_file("res://scenes/mode_select.tscn"))
+			Transition.go("res://scenes/mode_select.tscn"))
 	right.add_child(play)
 	var row := HBoxContainer.new()
 	row.alignment = BoxContainer.ALIGNMENT_CENTER
@@ -167,7 +167,7 @@ func _build() -> void:
 		if target != "":
 			b.pressed.connect(func() -> void:
 				Sfx.play("click", 0.7)
-				get_tree().change_scene_to_file(target))
+				Transition.go(target))
 		else:
 			b.pressed.connect(_coming_soon)
 		row.add_child(b)
@@ -197,7 +197,7 @@ func _build() -> void:
 		elif k == "crown":
 			cb = func() -> void:
 				Sfx.play("click", 0.7)
-				get_tree().change_scene_to_file("res://scenes/achievements_screen.tscn")
+				Transition.go("res://scenes/achievements_screen.tscn")
 		ic.pressed.connect(cb)
 		icons.add_child(ic)
 
@@ -263,7 +263,7 @@ func _build_settings() -> void:
 			GameState.mode = "campaign"
 			GameState.hero = "chingiz"
 			GameState.level_id = GameState.TUTORIAL_LEVEL
-			get_tree().change_scene_to_file("res://scenes/battle.tscn")],
+			Transition.go("res://scenes/battle.tscn")],
 		[tr("CLOSE"), func() -> void:
 			Sfx.play("click", 0.7)
 			_settings.visible = false],
