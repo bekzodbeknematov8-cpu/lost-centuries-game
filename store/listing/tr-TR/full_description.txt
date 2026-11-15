@@ -1,0 +1,27 @@
+Cihangirler, tarihin büyük komutanlarıyla oynanan 2D strateji savaş oyunudur.
+
+Cengiz Han, Celaleddin Harezmşah, Timur ve Yıldırım Bayezid'e liderlik et: ordunu topla, işçilerinle altın çıkar ve düşman kalesini yık.
+
+⚔️ 4 KOMUTAN — 4 SEFER
+• Her komutanın bölgeler, nehirler ve dağlarla dolu tarihi haritası
+• 400 bölüm, her bölgenin sonunda güçlü bir patron
+• Özel kahraman güçleri: Bozkır Fırtınası, İndus Sıçrayışı, Güç Adalettedir, Yıldırım Hücumu
+
+🏰 STRATEJİ
+• İşçi, kılıççı, mızrakçı, okçu ve süvari — her biri diğerine karşı güçlü
+• Saldır, savun, geri çekil emirleri ver ya da bir askeri kendin yönet
+• Taktikler: kervan, kalkan duvarı, savaş davulu ve dahası
+
+⭐ GELİŞİM
+• Yıldız topla, yeni seferlerin kilidini aç
+• Atölyede ordunu güçlendir
+• Sandıklar, günlük ödüller ve 20 başarım
+• Kıyafetler: ordunun renklerini seç
+
+📜 TARİH
+• Her zaferden sonra kısa bir tarihi bilgi
+• Kan ve vahşet yok — tüm aile için
+
+🌍 Diller: Özbekçe, İngilizce, Rusça, Türkçe
+📶 İnternetsiz oynanabilir
+3 kayıt yuvası ve 3 zorluk seviyesi: Orta, Zor, Efsane.

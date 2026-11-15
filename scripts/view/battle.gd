@@ -69,6 +69,12 @@ func _ready() -> void:
 	hud = preload("res://scripts/ui/hud.gd").new()
 	hud.battle = self
 	add_child(hud)
+	if OS.get_cmdline_user_args().has("--no_hud"):
+		hud.visible = false   # faqat reklama rasmlari uchun
+	for a in OS.get_cmdline_user_args():
+		if a.begins_with("--cam_zoom="):   # faqat reklama rasmlari uchun
+			cam.zoom = Vector2.ONE * float(a.split("=")[1])
+			cam.position.y = 395.0
 	Sfx.play_music("battle")
 	if OS.get_cmdline_user_args().has("--autoplay"):
 		auto_player = AIController.new(0, GameData.ai.normal, 3)
@@ -169,6 +175,14 @@ func _update_camera(delta: float) -> void:
 	var cu := sim.controlled_unit()
 	if cu:
 		_cam_target_x = cu.x + cu.facing * 120.0
+	elif OS.get_cmdline_user_args().has("--cam_fight"):
+		# Faqat reklama skrinshotlari uchun: kamera ikki qo'shin to'qnashgan joyga qaraydi
+		var front := [-INF, INF]
+		for u in sim.units:
+			if u.is_alive() and not u.is_worker():
+				front[u.team] = maxf(front[0], u.x) if u.team == 0 else minf(front[1], u.x)
+		if front[0] > -INF and front[1] < INF:
+			_cam_target_x = (front[0] + front[1]) * 0.5
 	var half := view_width() * 0.5
 	_cam_target_x = clampf(_cam_target_x, half, BattleSim.WORLD_LEN - half)
 	cam.position.x = lerpf(cam.position.x, _cam_target_x, minf(1.0, delta * 8.0))
@@ -396,12 +410,17 @@ func _draw_scene() -> void:
 			draw_arc(Vector2.ZERO, 26.0, 0, TAU, 24, Color(1, 0.85, 0.3, 0.5 + 0.3 * sin(t * 8.0)), 4.0)
 			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		Painter.draw_unit(self, u, pos, sc, t)
-		if u.hero and u.is_alive():
+		if u.hero and u.is_alive() and hud.visible:
 			var font := ThemeDB.fallback_font
 			var name := tr(str(u.def.name))
 			var col := Color(0.75, 0.88, 1.0) if u.team == 0 else Color(1.0, 0.7, 0.65)
-			draw_string_outline(font, pos + Vector2(-110, -150), name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, 4, Color(0, 0, 0, 0.7))
-			draw_string(font, pos + Vector2(-110, -150), name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, col)
+			var lp := pos + Vector2(-110, -150)
+			# Ikki sarkarda yonma-yon bo'lsa, dushman nomi biroz yuqoriga suriladi (ustma-ust tushmasin)
+			var other := sim.hero_of(1 - u.team)
+			if u.team == 1 and other and other.is_alive() and absf(other.x - u.x) < 200.0:
+				lp.y -= 22.0
+			draw_string_outline(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, 4, Color(0, 0, 0, 0.7))
+			draw_string(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, col)
 		if u.is_alive() and (u.hp < u.max_hp or u.hero):
 			var top := (-140.0 if u.hero else (-112.0 if Painter.is_mounted(u) else -98.0))
 			var w := 54.0 if u.hero else 34.0

@@ -13,3 +13,4 @@ build/
 # Vaqtinchalik
 *.tmp.wav
 __pycache__/
+android/

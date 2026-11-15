@@ -1,0 +1,27 @@
+Jahongirlar — tarixning buyuk sarkardalari bilan 2D strategik jang o'yini.
+
+Chingizxon, Jaloliddin Manguberdi, Amir Temur va Boyazid Yildirim boshchiligida qo'shin to'plang, ishchilar bilan oltin qazing va dushman qal'asini yiqiting.
+
+⚔️ 4 SARKARDA — 4 KAMPANIYA
+• Har bir sarkardaning o'z tarixiy xaritasi: viloyatlar, daryolar, tog'lar
+• 400 ta bosqich, har viloyat oxirida kuchli boss
+• Har sarkardaning maxsus kuchi: Dasht bo'roni, Sind sakrashi, Kuch adolatda, Yashin hujumi
+
+🏰 STRATEGIYA
+• Ishchi, qilichboz, nayzachi, kamonchi, otliq — har biri boshqasiga qarshi kuchli
+• Hujum, himoya, chekinish buyruqlari yoki jangchini o'zingiz boshqaring
+• Hiylalar: karvon, qalqon devori, jang nog'orasi va boshqalar
+
+⭐ RIVOJLANISH
+• Yulduzlar to'plang va yangi kampaniyalarni oching
+• Ustaxonada qo'shiningizni kuchaytiring
+• Sandiqlar, kunlik mukofotlar, 20 ta yutuq
+• Libos: qo'shiningiz ranglarini tanlang
+
+📜 TARIX
+• Har g'alabadan keyin qisqa tarixiy fakt
+• Qon va shafqatsiz tasvirlar yo'q — butun oila uchun
+
+🌍 Tillar: o'zbek, ingliz, rus, turk
+📶 Internetsiz o'ynash mumkin
+3 ta saqlash sloti va 3 qiyinlik darajasi: O'rta, Qiyin, Afsona.

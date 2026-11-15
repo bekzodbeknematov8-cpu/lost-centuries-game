@@ -6,6 +6,16 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-15 (17) — 8-bosqich tayyorgarligi: Play Market materiallari (rejali ish)
+- `store/listing/` — nom, qisqa va to'liq tavsif 4 tilda (en-US, ru-RU, tr-TR, uz), limitlar tekshirilgan.
+- `store/screenshots/<til>/` — 6 tadan 1920×1080 skrinshot (`tools/store_shots.sh`, demo progress bilan).
+- `store/graphics/feature_<til>.png` — 1024×500 feature graphic (`tools/make_feature.py`).
+- `docs/privacy-policy.md` (inglizcha) va `store/data-safety.md` (Data Safety, reklama, reyting javoblari).
+- Release AAB CI: `.github/workflows/release.yml` (qo'lda yoki v* tegida), "Android AAB" preset
+  (Gradle, target SDK 36). Kalit faqat GitHub Secrets orqali; sirlar bo'lmasa vaqtinchalik kalit bilan sinov.
+- Tuzatildi: ikki sarkarda yonma-yon kelganda nomlari ustma-ust tushardi.
+- Dev bayroqlar: `--no_hud`, `--cam_fight`, `--cam_zoom=` (faqat reklama rasmlari uchun).
+
 ### 2026-11-15 (16) — 6-bosqich: performance, 4 til, yakuniy hisobot (rejali ish)
 - 150 birlik stress-test (`tools/stress_test.gd`): nishon qidiruvi O(n²) edi → saralangan indeks.
   150 birlik: o'rtacha qadam 6.1 → 1.3 ms, eng yomon 65 → 8 ms. Natija eski kod bilan aynan bir xil.
@@ -174,7 +184,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · keyingi: 8-bosqich tayyorgarligi (store matnlari, privacy, AAB CI)
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · keyingi: 7-bosqich (AdMob/Billing — foydalanuvchi akkauntlari kerak)
 
 ### 2026-11-13
 **Bajarildi**
