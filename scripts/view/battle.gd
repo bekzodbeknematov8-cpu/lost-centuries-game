@@ -123,6 +123,7 @@ func _process(delta: float) -> void:
 		hud._on_reserve("archer")
 		hud._on_reserve("archer")
 		print("DEV reserves_used=", sim.teams[0].reserves_used, " left=", GameState.progress.reserves.get("archer", 0))
+	_dev_stress(delta)
 	if OS.get_cmdline_user_args().has("--force_win") and sim.time > 6.0 and sim.winner < 0:
 		sim.teams[1].castle_hp = 0.0
 	_update_effects(delta)
@@ -360,6 +361,13 @@ func _update_effects(delta: float) -> void:
 # --- Chizish ------------------------------------------------------------------
 
 func _draw() -> void:
+	var t0 := Time.get_ticks_usec()
+	_draw_scene()
+	if _stress_n > 0:
+		_stress_draw_us += Time.get_ticks_usec() - t0
+
+
+func _draw_scene() -> void:
 	var vw := view_width()
 	var left := cam.position.x - vw * 0.5 - 20.0
 	var right := cam.position.x + vw * 0.5 + 20.0
@@ -430,6 +438,40 @@ static func terrain_for(maps: Dictionary, lid: String) -> String:
 			if str(r.id) == base:
 				return str(r.get("terrain", "steppe"))
 	return "steppe"
+
+
+## --stress=N: sinov uchun N ta jangchini birdan maydonga chiqaradi va kadr vaqtini o'lchaydi.
+var _stress_n := -1
+var _stress_frames: Array[float] = []
+var _stress_draw_us := 0
+
+
+func _dev_stress(delta: float) -> void:
+	if _stress_n < 0:
+		_stress_n = 0
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--stress="):
+				_stress_n = int(a.split("=")[1])
+	if _stress_n <= 0:
+		return
+	if sim.time > 3.0 and _stress_frames.is_empty():
+		var kinds := ["swordsman", "spearman", "archer", "cavalry"]
+		for i in _stress_n:
+			var u := sim.spawn_unit(i % 2, kinds[(i / 2) % kinds.size()])
+			u.x += (sim.teams[i % 2].dir) * float(i / 2) * 6.0
+		sim.set_stance(0, TeamState.Stance.ATTACK)
+		sim.set_stance(1, TeamState.Stance.ATTACK)
+		_stress_frames.append(0.0)
+		_stress_draw_us = 0
+	elif not _stress_frames.is_empty():
+		_stress_frames.append(delta / maxf(Engine.time_scale, 0.001))
+		if _stress_frames.size() == 300:
+			var sum := 0.0
+			var worst := 0.0
+			for f in _stress_frames:
+				sum += f
+				worst = maxf(worst, f)
+			print("STRESS units=%d avg_frame_ms=%.2f worst_ms=%.2f draw_cpu_ms=%.2f" % [sim.units.size(), sum / 299.0 * 1000.0, worst * 1000.0, _stress_draw_us / 299000.0])
 
 
 func _draw_background(left: float, right: float) -> void:

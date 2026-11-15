@@ -4,6 +4,7 @@ extends RefCounted
 
 enum State { IDLE, MOVE, ATTACK, MINE_GO, MINING, RETURN, DEAD }
 
+var ord: int = 0   ## units ro'yxatidagi tartib (qidiruv indeksi uchun)
 var id: int = 0
 var type: String = ""
 var def: Dictionary = {}

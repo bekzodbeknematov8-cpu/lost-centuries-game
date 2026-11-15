@@ -829,3 +829,48 @@ func test_achievements() -> void:
 	st2.load_file()
 	check("first_win" in st2.data.ach_claimed and int(st2.data.stats.wins) == 1, "yutuqlar saqlanmadi")
 	DirAccess.remove_absolute(path)
+
+
+# --- Performance ---------------------------------------------------------------
+
+func test_fast_nearest_matches_bruteforce() -> void:
+	## Saralangan qidiruv indeksi oddiy to'liq aylanib chiqish bilan bir xil natija berishi kerak.
+	var s := new_sim({"start_gold": 0})
+	var kinds := ["swordsman", "spearman", "archer", "cavalry"]
+	for i in 120:
+		var u := s.spawn_unit(i % 2, kinds[i % 4])
+		u.x = 600.0 + float((i * 7919) % 1600)
+	s.set_stance(0, TeamState.Stance.ATTACK)
+	s.set_stance(1, TeamState.Stance.ATTACK)
+	var bad := 0
+	for k in 90:
+		s.step()
+		s._build_index()
+		for u in s.units:
+			if not u.is_alive():
+				continue
+			var best: UnitState = null
+			var best_d := INF
+			for e in s.units:
+				if e.team == u.team or not e.is_alive() or absf(e.x - u.x) > 650.0:
+					continue
+				if absf(e.x - u.x) < best_d:
+					best_d = absf(e.x - u.x)
+					best = e
+			if s._nearest_enemy(u, u.x, 650.0) != best:
+				bad += 1
+	check(bad == 0, "tez qidiruv %d marta boshqa nishon tanladi" % bad)
+
+
+func test_stress_150_units_step_fast() -> void:
+	var s := new_sim({"start_gold": 0})
+	var kinds := ["swordsman", "spearman", "archer", "cavalry"]
+	for i in 150:
+		var u := s.spawn_unit(i % 2, kinds[(i / 2) % 4])
+		u.x += s.teams[i % 2].dir * float(i / 2) * 6.0
+	s.set_stance(0, TeamState.Stance.ATTACK)
+	s.set_stance(1, TeamState.Stance.ATTACK)
+	var t0 := Time.get_ticks_msec()
+	run(s, 60.0)
+	var ms := Time.get_ticks_msec() - t0
+	check(ms < 20000, "150 birlik 60 s sinov juda sekin: %d ms" % ms)

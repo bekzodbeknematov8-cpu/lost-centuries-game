@@ -39,6 +39,13 @@ var control_attack: bool = false
 
 var _next_id: int = 1
 var _by_id: Dictionary = {}
+## Tezkor qidiruv indeksi: har qadam boshida jamoalar bo'yicha x ga ko'ra saralangan ro'yxat.
+## Qidiruvda zaxira (IDX_MARGIN) olinadi va haqiqiy shart jonli qiymatlar bilan tekshiriladi,
+## shuning uchun natija oddiy to'liq aylanib chiqish bilan bir xil.
+const IDX_MARGIN := 24.0   ## > bir qadamdagi eng katta oddiy yurish (165*1.3*1.1/30 ≈ 8)
+var _idx_units: Array = [[], []]
+var _idx_xs: Array = [PackedFloat64Array(), PackedFloat64Array()]
+var _idx_new: Array[UnitState] = []   ## Qadam ichida chiqqan yoki sakragan (indeksga ishonib bo'lmaydi)
 var _pending_hits: Array = []   ## Jang zarbalari qadam oxirida bir vaqtda qo'llanadi (adolat uchun)
 
 
@@ -150,6 +157,8 @@ func spawn_unit(team_idx: int, type: String, def_override: Dictionary = {}) -> U
 	u.id = _next_id
 	_next_id += 1
 	u.type = type
+	u.ord = (1 << 30) + u.id
+	_idx_new.append(u)
 	u.def = def_override if not def_override.is_empty() else defs[type]
 	u.team = team_idx
 	u.x = t.castle_x + t.dir * 40.0
@@ -331,6 +340,7 @@ func _update_dash(u: UnitState, dt: float) -> void:
 	var k := clampf(1.0 - u.dash_time / u.dash_total, 0.0, 1.0)
 	u.x = lerpf(u.dash_from, u.dash_to, k)
 	u.moving = true
+	_idx_new.append(u)
 	if u.dash_kind == "lightning":
 		for e in units:
 			if e.team != u.team and e.is_alive() and not u.dash_hit.has(e.id) and absf(e.x - u.x) < 34.0:
@@ -346,6 +356,7 @@ func _update_dash(u: UnitState, dt: float) -> void:
 					e.stun = maxf(e.stun, float(a.stun))
 					if not e.hero:
 						e.x += signf(e.x - u.x if e.x != u.x else float(u.facing)) * float(a.knock)
+						_idx_new.append(e)
 			events.append({"type": "leap_land", "team": u.team, "x": u.x})
 		u.dash_kind = ""
 
@@ -442,6 +453,7 @@ func step(dt: float = STEP) -> void:
 	if winner >= 0:
 		return
 	time += dt
+	_build_index()
 	for t in teams:
 		_update_team(t, dt)
 	# Har qadamda tartib aralashtiriladi: hech bir askar ro'yxatdagi o'rni tufayli
@@ -645,19 +657,93 @@ func _update_fighter(u: UnitState, dt: float) -> void:
 				_engage_castle(u, teams[1 - u.team], dt)
 
 
+func _build_index() -> void:
+	var lists: Array = [[], []]
+	for i in units.size():
+		var u := units[i]
+		u.ord = i
+		if u.is_alive():
+			lists[u.team].append(u)
+	for k in 2:
+		var l: Array = lists[k]
+		l.sort_custom(func(a: UnitState, b: UnitState) -> bool: return a.x < b.x)
+		var xs := PackedFloat64Array()
+		xs.resize(l.size())
+		for i in l.size():
+			xs[i] = (l[i] as UnitState).x
+		_idx_units[k] = l
+		_idx_xs[k] = xs
+	_idx_new.clear()
+
+
+func _ord(u: UnitState) -> int:
+	return u.ord
+
+
+func _candidates(team: int, lo: float, hi: float) -> Array[UnitState]:
+	## team jamoasining [lo, hi] oralig'iga tushishi mumkin bo'lgan tirik a'zolari (tartibsiz).
+	var out: Array[UnitState] = []
+	var xs: PackedFloat64Array = _idx_xs[team]
+	var l: Array = _idx_units[team]
+	var i := xs.bsearch(lo - IDX_MARGIN)
+	var lim := hi + IDX_MARGIN
+	while i < xs.size() and xs[i] <= lim:
+		var e: UnitState = l[i]
+		if e.is_alive():
+			out.append(e)
+		i += 1
+	for e in _idx_new:
+		if e.team == team and e.is_alive() and not out.has(e):
+			out.append(e)
+	return out
+
+
 func _nearest_enemy(u: UnitState, around: float, radius: float) -> UnitState:
+	## Eng yaqin dushman; teng masofada units ro'yxatida oldin turgani (eski xulq bilan bir xil).
+	## Saralangan indeksda u.x dan ikki tomonga yuradi va yaqinroq topilmaydigan joyda to'xtaydi.
 	var best: UnitState = null
 	var best_d := INF
-	for e in units:
-		if e.team == u.team or not e.is_alive():
-			continue
-		var d := absf(e.x - around)
-		if d > radius:
+	var best_o := 1 << 30
+	var team := 1 - u.team
+	var xs: PackedFloat64Array = _idx_xs[team]
+	var l: Array = _idx_units[team]
+	var n := xs.size()
+	var r := xs.bsearch(u.x)
+	var li := r - 1
+	while li >= 0 or r < n:
+		var dl := INF if li < 0 else u.x - xs[li]
+		var dr := INF if r >= n else xs[r] - u.x
+		var e: UnitState
+		if dl <= dr:
+			if dl - IDX_MARGIN > best_d:
+				li = -1
+				if r >= n or dr - IDX_MARGIN > best_d:
+					break
+				continue
+			e = l[li]
+			li -= 1
+		else:
+			if dr - IDX_MARGIN > best_d:
+				r = n
+				if li < 0 or dl - IDX_MARGIN > best_d:
+					break
+				continue
+			e = l[r]
+			r += 1
+		if not e.is_alive() or absf(e.x - around) > radius:
 			continue
 		var du := absf(e.x - u.x)
-		if du < best_d:
+		if du < best_d or (du == best_d and _ord(e) < best_o):
 			best_d = du
 			best = e
+			best_o = _ord(e)
+	for e in _idx_new:
+		if e.team == team and e.is_alive() and absf(e.x - around) <= radius:
+			var du := absf(e.x - u.x)
+			if du < best_d or (du == best_d and _ord(e) < best_o):
+				best_d = du
+				best = e
+				best_o = _ord(e)
 	return best
 
 
@@ -669,12 +755,18 @@ func _spread_target(u: UnitState, nearest: UnitState) -> UnitState:
 		return nearest
 	var window := 90.0 if u.is_ranged() else 30.0
 	var cands: Array[UnitState] = []
-	for e in units:
-		if e.team != u.team and e.is_alive() and absf(e.x - nearest.x) < window and absf(e.x - u.x) <= reach:
+	for e in _candidates(1 - u.team, nearest.x - window, nearest.x + window):
+		if absf(e.x - nearest.x) < window and absf(e.x - u.x) <= reach:
 			cands.append(e)
 	if cands.size() <= 1:
 		return nearest
-	return cands[u.id % cands.size()]
+	# units tartibidagi (u.id % n)-o'rindagi nomzod; tez (native) saralash bilan.
+	var keys := PackedInt64Array()
+	keys.resize(cands.size())
+	for i in cands.size():
+		keys[i] = int(cands[i].ord) * 4096 + i
+	keys.sort()
+	return cands[keys[u.id % cands.size()] % 4096]
 
 
 func _engage(u: UnitState, target: UnitState, dt: float) -> void:
