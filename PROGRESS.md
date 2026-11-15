@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-15 (16) — 6-bosqich: performance, 4 til, yakuniy hisobot (rejali ish)
+- 150 birlik stress-test (`tools/stress_test.gd`): nishon qidiruvi O(n²) edi → saralangan indeks.
+  150 birlik: o'rtacha qadam 6.1 → 1.3 ms, eng yomon 65 → 8 ms. Natija eski kod bilan aynan bir xil.
+- `tools/lang_shots.sh`: 12 ekran × 4 til skrinshot; "Win 1 battles" kabi xatolar tuzatildi.
+- 20:9 va 4:3 ekranlar tekshirildi. Kampaniya balansi qayta o'lchandi (devor yo'q).
+- `docs/final-test-report.md` yozildi.
+
 ### 2026-11-15 (15) — 5-bosqich sayqal: fonlar, ovoz, o'tishlar (rejali ish)
 - Jang foni viloyat relyefiga mos: cho'l (qum barxanlari), tog' (qorli cho'qqilar, toshlar),
   yashil (daraxtlar, gullar), dasht. Relyef `data/maps.json` dagi `terrain` dan olinadi;
@@ -167,7 +174,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · keyingi: 6-bosqich (balans, performance, yakuniy test)
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · keyingi: 8-bosqich tayyorgarligi (store matnlari, privacy, AAB CI)
 
 ### 2026-11-13
 **Bajarildi**

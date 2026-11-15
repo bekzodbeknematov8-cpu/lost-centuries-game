@@ -76,7 +76,11 @@ func _row(id: String) -> PanelContainer:
 	nm.add_theme_color_override("font_color", Painter.GOLD)
 	v.add_child(nm)
 	var desc := Label.new()
-	desc.text = tr("MET_" + str(a.metric).to_upper()) % int(a.target)
+	var mkey := "MET_" + str(a.metric).to_upper()
+	if int(a.target) == 1 and tr(mkey + "_1") != mkey + "_1":
+		desc.text = tr(mkey + "_1")
+	else:
+		desc.text = tr(mkey) % int(a.target)
 	desc.add_theme_font_size_override("font_size", 15)
 	v.add_child(desc)
 	var pb := ProgressBar.new()

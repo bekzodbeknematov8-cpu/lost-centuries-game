@@ -1451,6 +1451,18 @@
 		"ru": "Откройте %d полководцев",
 		"tr": "%d komutanın kilidini açın"
 	},
+	"MET_WINS_1": {
+		"uz": "Birinchi jangda g'alaba qozoning",
+		"en": "Win your first battle",
+		"ru": "Выиграйте первую битву",
+		"tr": "İlk savaşını kazan"
+	},
+	"MET_BOSSES_1": {
+		"uz": "Birinchi viloyat bossini yenging",
+		"en": "Defeat your first region boss",
+		"ru": "Победите первого босса области",
+		"tr": "İlk bölge patronunu yen"
+	},
 	"ACHIEVEMENTS": {
 		"uz": "Yutuqlar",
 		"en": "Achievements",
