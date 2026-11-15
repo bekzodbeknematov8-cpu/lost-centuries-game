@@ -1,0 +1,27 @@
+{
+	"order": ["first_win", "wins_25", "wins_100", "stars_30", "stars_150", "stars_600", "boss_1", "boss_10", "boss_40",
+		"wave_10", "wave_25", "kills_500", "kills_5000", "upgrades_10", "upgrades_40", "chests_10", "tactics_20",
+		"daily_7", "outfits_3", "heroes_4"],
+	"list": {
+		"first_win":   {"metric": "wins",       "target": 1,    "reward": {"type": "coins", "amount": 50}},
+		"wins_25":     {"metric": "wins",       "target": 25,   "reward": {"type": "coins", "amount": 300}},
+		"wins_100":    {"metric": "wins",       "target": 100,  "reward": {"type": "gems", "amount": 20}},
+		"stars_30":    {"metric": "stars",      "target": 30,   "reward": {"type": "coins", "amount": 100}},
+		"stars_150":   {"metric": "stars",      "target": 150,  "reward": {"type": "gems", "amount": 15}},
+		"stars_600":   {"metric": "stars",      "target": 600,  "reward": {"type": "gems", "amount": 50}},
+		"boss_1":      {"metric": "bosses",     "target": 1,    "reward": {"type": "coins", "amount": 100}},
+		"boss_10":     {"metric": "bosses",     "target": 10,   "reward": {"type": "gems", "amount": 20}},
+		"boss_40":     {"metric": "bosses",     "target": 40,   "reward": {"type": "gems", "amount": 80}},
+		"wave_10":     {"metric": "best_wave",  "target": 10,   "reward": {"type": "coins", "amount": 150}},
+		"wave_25":     {"metric": "best_wave",  "target": 25,   "reward": {"type": "gems", "amount": 25}},
+		"kills_500":   {"metric": "kills",      "target": 500,  "reward": {"type": "coins", "amount": 200}},
+		"kills_5000":  {"metric": "kills",      "target": 5000, "reward": {"type": "gems", "amount": 30}},
+		"upgrades_10": {"metric": "upgrades",   "target": 10,   "reward": {"type": "coins", "amount": 150}},
+		"upgrades_40": {"metric": "upgrades",   "target": 40,   "reward": {"type": "gems", "amount": 25}},
+		"chests_10":   {"metric": "chests",     "target": 10,   "reward": {"type": "gems", "amount": 15}},
+		"tactics_20":  {"metric": "tactics",    "target": 20,   "reward": {"type": "coins", "amount": 150}},
+		"daily_7":     {"metric": "daily",      "target": 7,    "reward": {"type": "gems", "amount": 20}},
+		"outfits_3":   {"metric": "outfits",    "target": 3,    "reward": {"type": "coins", "amount": 150}},
+		"heroes_4":    {"metric": "heroes",     "target": 4,    "reward": {"type": "gems", "amount": 30}}
+	}
+}

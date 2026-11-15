@@ -1264,5 +1264,209 @@
 		"en": "for master commanders only",
 		"ru": "только для мастеров",
 		"tr": "yalnızca usta komutanlar için"
+	},
+	"ACH_FIRST_WIN": {
+		"uz": "Birinchi g'alaba",
+		"en": "First victory",
+		"ru": "Первая победа",
+		"tr": "İlk zafer"
+	},
+	"ACH_WINS_25": {
+		"uz": "Tajribali sarkarda",
+		"en": "Seasoned commander",
+		"ru": "Опытный полководец",
+		"tr": "Tecrübeli komutan"
+	},
+	"ACH_WINS_100": {
+		"uz": "Yuz jang qahramoni",
+		"en": "Hero of a hundred battles",
+		"ru": "Герой ста битв",
+		"tr": "Yüz savaşın kahramanı"
+	},
+	"ACH_STARS_30": {
+		"uz": "Yulduzlar yo'li",
+		"en": "Path of stars",
+		"ru": "Путь звёзд",
+		"tr": "Yıldızların yolu"
+	},
+	"ACH_STARS_150": {
+		"uz": "Yulduzli sarkarda",
+		"en": "Starry commander",
+		"ru": "Звёздный полководец",
+		"tr": "Yıldızlı komutan"
+	},
+	"ACH_STARS_600": {
+		"uz": "Osmon hukmdori",
+		"en": "Ruler of the sky",
+		"ru": "Владыка неба",
+		"tr": "Göklerin hâkimi"
+	},
+	"ACH_BOSS_1": {
+		"uz": "Birinchi viloyat",
+		"en": "First region",
+		"ru": "Первая область",
+		"tr": "İlk bölge"
+	},
+	"ACH_BOSS_10": {
+		"uz": "Fotih",
+		"en": "Conqueror",
+		"ru": "Завоеватель",
+		"tr": "Fatih"
+	},
+	"ACH_BOSS_40": {
+		"uz": "Jahongir",
+		"en": "World conqueror",
+		"ru": "Покоритель мира",
+		"tr": "Cihangir"
+	},
+	"ACH_WAVE_10": {
+		"uz": "Mustahkam qal'a",
+		"en": "Steadfast fortress",
+		"ru": "Стойкая крепость",
+		"tr": "Sarsılmaz kale"
+	},
+	"ACH_WAVE_25": {
+		"uz": "Yengilmas devor",
+		"en": "Unbreakable wall",
+		"ru": "Несокрушимая стена",
+		"tr": "Yıkılmaz sur"
+	},
+	"ACH_KILLS_500": {
+		"uz": "Jang maydoni",
+		"en": "Battlefield",
+		"ru": "Поле битвы",
+		"tr": "Savaş meydanı"
+	},
+	"ACH_KILLS_5000": {
+		"uz": "Afsonaviy qo'shin",
+		"en": "Legendary army",
+		"ru": "Легендарное войско",
+		"tr": "Efsanevi ordu"
+	},
+	"ACH_UPGRADES_10": {
+		"uz": "Usta",
+		"en": "Craftsman",
+		"ru": "Мастер",
+		"tr": "Usta"
+	},
+	"ACH_UPGRADES_40": {
+		"uz": "Bosh usta",
+		"en": "Master craftsman",
+		"ru": "Главный мастер",
+		"tr": "Baş usta"
+	},
+	"ACH_CHESTS_10": {
+		"uz": "Xazinachi",
+		"en": "Treasurer",
+		"ru": "Казначей",
+		"tr": "Hazinedar"
+	},
+	"ACH_TACTICS_20": {
+		"uz": "Hiylakor",
+		"en": "Tactician",
+		"ru": "Тактик",
+		"tr": "Taktisyen"
+	},
+	"ACH_DAILY_7": {
+		"uz": "Sodiq sarkarda",
+		"en": "Loyal commander",
+		"ru": "Верный полководец",
+		"tr": "Sadık komutan"
+	},
+	"ACH_OUTFITS_3": {
+		"uz": "Bezakli qo'shin",
+		"en": "Splendid army",
+		"ru": "Нарядное войско",
+		"tr": "Gösterişli ordu"
+	},
+	"ACH_HEROES_4": {
+		"uz": "To'rt sarkarda",
+		"en": "Four commanders",
+		"ru": "Четыре полководца",
+		"tr": "Dört komutan"
+	},
+	"MET_WINS": {
+		"uz": "%d ta jangda g'alaba qozoning",
+		"en": "Win %d battles",
+		"ru": "Выиграйте %d битв",
+		"tr": "%d savaş kazanın"
+	},
+	"MET_STARS": {
+		"uz": "Bitta saqlashda %d ★ to'plang",
+		"en": "Collect %d ★ in one save",
+		"ru": "Соберите %d ★ в одном сохранении",
+		"tr": "Bir kayıtta %d ★ toplayın"
+	},
+	"MET_BOSSES": {
+		"uz": "%d ta viloyat bossini yenging",
+		"en": "Defeat %d region bosses",
+		"ru": "Победите %d боссов областей",
+		"tr": "%d bölge bossunu yenin"
+	},
+	"MET_BEST_WAVE": {
+		"uz": "Cheksiz mudofaada %d-to'lqinga yeting",
+		"en": "Reach wave %d in Endless Defense",
+		"ru": "Дойдите до волны %d в обороне",
+		"tr": "Sonsuz Savunmada %d. dalgaya ulaşın"
+	},
+	"MET_KILLS": {
+		"uz": "%d ta dushman jangchisini yenging",
+		"en": "Defeat %d enemy soldiers",
+		"ru": "Победите %d вражеских воинов",
+		"tr": "%d düşman askerini yenin"
+	},
+	"MET_UPGRADES": {
+		"uz": "Ustaxonada %d ta yaxshilanish oling",
+		"en": "Buy %d workshop upgrades",
+		"ru": "Купите %d улучшений",
+		"tr": "Atölyede %d geliştirme alın"
+	},
+	"MET_CHESTS": {
+		"uz": "%d ta sandiq oching",
+		"en": "Open %d chests",
+		"ru": "Откройте %d сундуков",
+		"tr": "%d sandık açın"
+	},
+	"MET_TACTICS": {
+		"uz": "%d ta hiyla ishlating",
+		"en": "Use %d tactics",
+		"ru": "Используйте %d хитростей",
+		"tr": "%d taktik kullanın"
+	},
+	"MET_DAILY": {
+		"uz": "Kunlik mukofotni %d marta oling",
+		"en": "Claim the daily reward %d times",
+		"ru": "Заберите ежедневную награду %d раз",
+		"tr": "Günlük ödülü %d kez alın"
+	},
+	"MET_OUTFITS": {
+		"uz": "%d ta libosga ega bo'ling",
+		"en": "Own %d outfits",
+		"ru": "Имейте %d облачения",
+		"tr": "%d kıyafete sahip olun"
+	},
+	"MET_HEROES": {
+		"uz": "%d ta sarkardani oching",
+		"en": "Unlock %d commanders",
+		"ru": "Откройте %d полководцев",
+		"tr": "%d komutanın kilidini açın"
+	},
+	"ACHIEVEMENTS": {
+		"uz": "Yutuqlar",
+		"en": "Achievements",
+		"ru": "Достижения",
+		"tr": "Başarımlar"
+	},
+	"CLAIM": {
+		"uz": "Olish",
+		"en": "Claim",
+		"ru": "Забрать",
+		"tr": "Al"
+	},
+	"CLAIMED": {
+		"uz": "Olindi",
+		"en": "Claimed",
+		"ru": "Получено",
+		"tr": "Alındı"
 	}
 }

@@ -806,3 +806,26 @@ func test_difficulty_scales_enemy() -> void:
 	var n := Campaign.battle_config(c, "temur_03#2", ai_params, 1, "normal")
 	var l := Campaign.battle_config(c, "temur_03#2", ai_params, 1, "legend")
 	check(float(l.cfg.income_mult[1]) > float(n.cfg.income_mult[1]) and int(l.cfg.castle_hp[1]) > int(n.cfg.castle_hp[1]), "Afsona qiyinroq emas")
+
+
+# --- Yutuqlar ---------------------------------------------------------------
+
+func test_achievements() -> void:
+	var ach := load_json("res://data/achievements.json")
+	check(ach.order.size() >= 15, "kamida 15 ta yutuq bo'lishi kerak")
+	for id in ach.order:
+		check(ach.list.has(id), "%s: ta'rif yo'q" % id)
+	var path := "user://test_ach.json"
+	var st := ProgressStore.new(path)
+	check(not Achievements.claimable(ach, st.data, "first_win"), "g'alabasiz yutuq ochildi")
+	st.record_battle(true, 12)
+	check(Achievements.metric(st.data, "kills") == 12, "o'ldirishlar sanalmadi")
+	check(st.claim_achievement(ach, "first_win") and int(st.data.coins) == 50, "yutuq mukofoti berilmadi")
+	check(not st.claim_achievement(ach, "first_win"), "yutuq ikki marta olindi")
+	st.data.slots[1].stars = {"chingiz_01": 3, "chingiz_02": 2}
+	check(Achievements.metric(st.data, "bosses") == 2, "bosslar boshqa slotdan sanalmadi")
+	check(Achievements.claimable(ach, st.data, "heroes_4", 4) and not Achievements.claimable(ach, st.data, "heroes_4", 2), "qahramonlar yutug'i noto'g'ri")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check("first_win" in st2.data.ach_claimed and int(st2.data.stats.wins) == 1, "yutuqlar saqlanmadi")
+	DirAccess.remove_absolute(path)

@@ -48,9 +48,16 @@ class RoundIcon:
 			var bg := Color(0.16, 0.1, 0.06, 0.82) if st != "pressed" else Color(0.4, 0.25, 0.1, 0.9)
 			add_theme_stylebox_override(st, UITheme.box(bg, Color(0.86, 0.6, 0.2, 0.8), 38, 3))
 
+	func _process(_d: float) -> void:
+		if kind == "crown":
+			queue_redraw()
+
 	func _draw() -> void:
 		var c := size * 0.5
 		var g := Painter.GOLD
+		if kind == "crown" and GameState.claimable_achievements() > 0:
+			draw_circle(Vector2(size.x - 12, 12), 10.0, Color(0.9, 0.15, 0.1))
+			draw_string(get_theme_default_font(), Vector2(size.x - 22, 17), str(GameState.claimable_achievements()), HORIZONTAL_ALIGNMENT_CENTER, 20, 13, Color.WHITE)
 		match kind:
 			"daily":
 				draw_rect(Rect2(c + Vector2(-17, -13), Vector2(34, 30)), g)
@@ -187,6 +194,10 @@ func _build() -> void:
 			cb = _open_settings
 		elif k == "daily":
 			cb = _open_daily
+		elif k == "crown":
+			cb = func() -> void:
+				Sfx.play("click", 0.7)
+				get_tree().change_scene_to_file("res://scenes/achievements_screen.tscn")
 		ic.pressed.connect(cb)
 		icons.add_child(ic)
 

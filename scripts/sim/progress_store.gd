@@ -9,7 +9,7 @@ const DIFFICULTIES := ["normal", "hard", "legend"]
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
 
 
 func _init(file_path: String) -> void:
@@ -18,7 +18,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
 	if not FileAccess.file_exists(path):
 		_ensure_slots()
 		return
@@ -67,6 +67,12 @@ func load_file() -> void:
 		for x in p.bought_once:
 			data.bought_once.append(str(x))
 	data.tutorial_done = bool(p.get("tutorial_done", false))
+	if p.get("stats") is Dictionary:
+		for k in p.stats:
+			data.stats[str(k)] = maxi(0, int(p.stats[k]))
+	if p.get("ach_claimed") is Array:
+		for a in p.ach_claimed:
+			data.ach_claimed.append(str(a))
 	_ensure_slots()
 	data.adgem_day = str(p.get("adgem_day", ""))
 	data.adgem_count = maxi(0, int(p.get("adgem_count", 0)))
@@ -216,6 +222,7 @@ func consume_tactic(id: String) -> bool:
 	if int(data.tactics.get(id, 0)) <= 0:
 		return false
 	data.tactics[id] = int(data.tactics[id]) - 1
+	_bump("tactics", 1)
 	save_file()
 	return true
 
@@ -226,6 +233,7 @@ func open_chest(chest_data: Dictionary, kind: String, tactic_ids: Array, rng: Ra
 	if int(data.chests.get(kind, 0)) <= 0:
 		return []
 	data.chests[kind] = int(data.chests[kind]) - 1
+	_bump("chests", 1)
 	var rewards := Rewards.roll_chest(chest_data.chests[kind], tactic_ids, rng)
 	for r in rewards:
 		Rewards.apply(data, r)
@@ -253,6 +261,7 @@ func claim_daily(chest_data: Dictionary, today: String) -> Dictionary:
 		return {}
 	var reward: Dictionary = chest_data.daily[st.day]
 	Rewards.apply(data, reward)
+	_bump("daily", 1)
 	data.daily_last = today
 	data.daily_streak = st.streak
 	save_file()
@@ -351,3 +360,25 @@ func take_reserve(type: String, n: int) -> int:
 	data.reserves[type] = have - k
 	save_file()
 	return k
+
+
+# --- Statistika va yutuqlar ---------------------------------------------------
+
+func _bump(stat: String, n: int) -> void:
+	data.stats[stat] = int(data.stats.get(stat, 0)) + n
+
+
+func record_battle(won: bool, kills: int) -> void:
+	if won:
+		_bump("wins", 1)
+	_bump("kills", kills)
+	save_file()
+
+
+func claim_achievement(ach: Dictionary, id: String, heroes_owned := 1) -> bool:
+	if not Achievements.claimable(ach, data, id, heroes_owned):
+		return false
+	Rewards.apply(data, ach.list[id].reward)
+	data.ach_claimed.append(id)
+	save_file()
+	return true

@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -267,3 +267,32 @@ func delete_slot(i: int) -> void:
 func slot_difficulty() -> String:
 	_store.data = progress
 	return _store.slot_difficulty()
+
+
+# --- Yutuqlar ---------------------------------------------------------------------
+
+func heroes_owned_count() -> int:
+	var n := 0
+	for h in ["chingiz", "jaloliddin", "temur", "boyazid"]:
+		if hero_owned(h):
+			n += 1
+	return n
+
+
+func record_battle(won: bool, kills: int) -> void:
+	_store.data = progress
+	_store.record_battle(won, kills)
+
+
+func claim_achievement(id: String) -> bool:
+	_store.data = progress
+	return _store.claim_achievement(GameData.achievements, id, heroes_owned_count())
+
+
+func claimable_achievements() -> int:
+	var n := 0
+	var ho := heroes_owned_count()
+	for id in GameData.achievements.order:
+		if Achievements.claimable(GameData.achievements, progress, id, ho):
+			n += 1
+	return n

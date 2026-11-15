@@ -6,6 +6,15 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-15 (14) — Yutuqlar (rejali ish)
+**Bajarildi**
+- 20 yutuq (`data/achievements.json`): g'alabalar, yulduzlar, viloyat bosslari, cheksiz mudofaa to'lqini,
+  yengilgan dushmanlar, ustaxona, sandiqlar, hiylalar, kunlik mukofot, libos, sarkardalar; har biri tanga/la'l beradi.
+- Statistika hisoblagichlari (g'alaba, o'ldirish, sandiq, hiyla, kunlik) saqlashga qo'shildi; bosslar barcha
+  slotlardan sanaladi.
+- Yutuqlar ekrani (progress chizig'i, "Olish"), bosh menyudagi tojda olinadigan mukofotlar soni (qizil nuqta).
+- 1 yangi test (52), smoke 32.
+
 ### 2026-11-15 (13) — 3 saqlash sloti va qiyinlik (rejali ish)
 **Bajarildi**
 - Saqlash formati v2: 3 slot, har birida kampaniya yulduzlari va qiyinlik (O'rta / Qiyin / Afsona).
@@ -150,7 +159,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · keyingi: yutuqlar, so'ng sayqal (grafika/ovoz)
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · keyingi: 5-bosqich sayqal (grafika/ovoz)
 
 ### 2026-11-13
 **Bajarildi**

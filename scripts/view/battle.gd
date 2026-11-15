@@ -131,6 +131,8 @@ func _process(delta: float) -> void:
 		Sfx.play("victory" if sim.winner == 0 else "defeat", 1.0, 0.0)
 		var won := sim.winner == 0
 		var result := {"won": won, "stars": 0, "coins": 0, "new_stars": 0, "level": level}
+		if auto_player == null:
+			GameState.record_battle(won, sim.teams[0].stats.killed)
 		if sim.endless:
 			result.endless = true
 			result.waves = sim.wave
