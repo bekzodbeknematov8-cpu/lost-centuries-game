@@ -770,3 +770,39 @@ func test_tutorial_steps_progress() -> void:
 	s.set_stance(0, TeamState.Stance.ATTACK)
 	check(TutorialLogic.step_done(3, s, ctx), "hujum qadami tugamadi")
 	check(TutorialLogic.enemy_paused(1) and not TutorialLogic.enemy_paused(3), "dushman pauza qoidasi noto'g'ri")
+
+
+# --- Saqlash slotlari -------------------------------------------------------
+
+func test_save_slots() -> void:
+	var path := "user://test_slots.json"
+	var st := ProgressStore.new(path)
+	check(st.data.slots.size() == 3, "3 ta slot bo'lishi kerak")
+	st.create_slot(1, "hard")
+	st.record_result("chingiz_01#1", 3, 50)
+	check(int(st.data.slots[1].stars.get("chingiz_01#1", 0)) == 3, "yulduz aktiv slotga yozilmadi")
+	check(st.data.slots[0].stars.is_empty(), "yulduz boshqa slotga tushib qoldi")
+	st.select_slot(0)
+	check(st.data.stars.is_empty() and int(st.data.coins) == 50, "slot almashganda yulduzlar/tangalar noto'g'ri")
+	var st2 := ProgressStore.new(path)
+	st2.load_file()
+	check(int(st2.data.slots[1].stars.get("chingiz_01#1", 0)) == 3 and st2.data.slots[1].difficulty == "hard", "slot saqlanmadi")
+	st2.select_slot(1)
+	check(int(st2.data.stars.get("chingiz_01#1", 0)) == 3, "aktiv slot yulduzlari yuklanmadi")
+	st2.delete_slot(1)
+	check(not bool(st2.data.slots[1].used) and st2.data.slots[1].stars.is_empty(), "slot o'chirilmadi")
+	# Eski formatdan ko'chirish
+	var f := FileAccess.open(path, FileAccess.WRITE)
+	f.store_string(JSON.stringify({"version": 1, "stars": {"chingiz_01#1": 2}, "coins": 9}))
+	f.close()
+	var st3 := ProgressStore.new(path)
+	st3.load_file()
+	check(int(st3.data.stars.get("chingiz_01#1", 0)) == 2 and bool(st3.data.slots[0].used), "eski progress 1-slotga ko'chirilmadi")
+	DirAccess.remove_absolute(path)
+
+
+func test_difficulty_scales_enemy() -> void:
+	var c := camp()
+	var n := Campaign.battle_config(c, "temur_03#2", ai_params, 1, "normal")
+	var l := Campaign.battle_config(c, "temur_03#2", ai_params, 1, "legend")
+	check(float(l.cfg.income_mult[1]) > float(n.cfg.income_mult[1]) and int(l.cfg.castle_hp[1]) > int(n.cfg.castle_hp[1]), "Afsona qiyinroq emas")

@@ -20,3 +20,4 @@
 | 2026-11-13 | Saqlash `user://progress.json`, atomik yozish | Telefon o'chib qolsa ham progress buzilmaydi |
 | 2026-11-13 | 2× reklama kuniga 5 marta, faqat tugma bosilganda | Foydalanuvchi talabi; reklama bezor qilmasin, tangalar qadrsizlanmasin |
 | 2026-11-13 | Reklama `Ads` autoload orqali (hozir sinov rejimi) | AdMob plaginini keyin kod o'zgartirmasdan ulash uchun |
+| 2026-11-15 | Saqlash slotlarida faqat kampaniya progressi; iqtisod va xaridlar umumiy | Pullik narsalar bir slotda qolib ketmasligi uchun |

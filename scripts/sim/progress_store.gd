@@ -2,30 +2,47 @@ class_name ProgressStore
 extends RefCounted
 ## Kampaniya progressini (yulduzlar, tangalar) saqlash/yuklash. Autoload'larga bog'liq emas.
 
-const VERSION := 1
+const VERSION := 2
+const SLOT_COUNT := 3
+const DIFFICULTIES := ["normal", "hard", "legend"]
 
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0}
 
 
 func _init(file_path: String) -> void:
 	path = file_path
+	_ensure_slots()
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0}
 	if not FileAccess.file_exists(path):
+		_ensure_slots()
 		return
 	var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string(path))
 	if not (parsed is Dictionary):
 		push_warning("progress fayli buzilgan, yangidan boshlanadi")
+		_ensure_slots()
 		return
 	var p: Dictionary = parsed
-	if p.get("stars") is Dictionary:
+	if p.get("slots") is Array:
+		for sl in p.slots:
+			if sl is Dictionary:
+				var st := {}
+				if sl.get("stars") is Dictionary:
+					for k in sl.stars:
+						st[str(k)] = clampi(int(sl.stars[k]), 0, 3)
+				data.slots.append({"stars": st, "difficulty": str(sl.get("difficulty", "normal")), "used": bool(sl.get("used", false))})
+	elif p.get("stars") is Dictionary:
+		# Eski format: bitta progress -> 1-slot
+		var st2 := {}
 		for k in p.stars:
-			data.stars[str(k)] = clampi(int(p.stars[k]), 0, 3)
+			st2[str(k)] = clampi(int(p.stars[k]), 0, 3)
+		data.slots.append({"stars": st2, "difficulty": "normal", "used": not st2.is_empty()})
+	data.active_slot = clampi(int(p.get("active_slot", 0)), 0, SLOT_COUNT - 1)
 	data.coins = maxi(0, int(p.get("coins", 0)))
 	data.gems = maxi(0, int(p.get("gems", 0)))
 	if p.get("upgrades") is Dictionary:
@@ -50,6 +67,7 @@ func load_file() -> void:
 		for x in p.bought_once:
 			data.bought_once.append(str(x))
 	data.tutorial_done = bool(p.get("tutorial_done", false))
+	_ensure_slots()
 	data.adgem_day = str(p.get("adgem_day", ""))
 	data.adgem_count = maxi(0, int(p.get("adgem_count", 0)))
 	if p.get("outfits") is Array:
@@ -63,6 +81,34 @@ func load_file() -> void:
 	data.best_wave = maxi(0, int(p.get("best_wave", 0)))
 	data.ad_day = str(p.get("ad_day", ""))
 	data.ad_count = maxi(0, int(p.get("ad_count", 0)))
+
+
+func _ensure_slots() -> void:
+	while data.slots.size() < SLOT_COUNT:
+		data.slots.append({"stars": {}, "difficulty": "normal", "used": false})
+	data.active_slot = clampi(int(data.active_slot), 0, SLOT_COUNT - 1)
+	data.stars = data.slots[data.active_slot].stars   # bir xil lug'at (alias)
+
+
+func select_slot(i: int) -> void:
+	data.active_slot = clampi(i, 0, SLOT_COUNT - 1)
+	_ensure_slots()
+	save_file()
+
+
+func create_slot(i: int, difficulty: String) -> void:
+	data.slots[i] = {"stars": {}, "difficulty": difficulty if difficulty in DIFFICULTIES else "normal", "used": true}
+	select_slot(i)
+
+
+func delete_slot(i: int) -> void:
+	data.slots[i] = {"stars": {}, "difficulty": "normal", "used": false}
+	_ensure_slots()
+	save_file()
+
+
+func slot_difficulty() -> String:
+	return str(data.slots[data.active_slot].difficulty)
 
 
 func save_file() -> void:
@@ -79,6 +125,7 @@ func save_file() -> void:
 
 func record_result(level_id: String, stars: int, coins: int) -> int:
 	## Natijani yozadi; yangi qo'shilgan yulduzlar sonini qaytaradi.
+	data.slots[data.active_slot].used = true
 	var old := int(data.stars.get(level_id, 0))
 	if stars > old:
 		data.stars[level_id] = stars

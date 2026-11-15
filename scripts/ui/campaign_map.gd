@@ -168,7 +168,7 @@ func _ready() -> void:
 	back.custom_minimum_size = Vector2(120, 50)
 	back.pressed.connect(func() -> void:
 		Sfx.play("click", 0.7)
-		get_tree().change_scene_to_file("res://scenes/main_menu.tscn"))
+		get_tree().change_scene_to_file("res://scenes/slots_screen.tscn"))
 	top.add_child(back)
 	for cid in GameData.campaigns.order:
 		var tb := Tab.new(cid)

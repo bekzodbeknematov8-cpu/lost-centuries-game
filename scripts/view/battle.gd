@@ -31,7 +31,7 @@ func _ready() -> void:
 	var my_hero := GameState.hero
 	var enemy_hero := ""
 	if GameState.level_id != "":
-		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi())
+		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi(), GameState.slot_difficulty())
 		bc.cfg.upgrades = [GameState.upgrade_effects(), {}]
 		level = bc.level
 		ai_p = bc.ai

@@ -158,7 +158,7 @@ func _build_difficulty() -> void:
 
 func _campaign() -> void:
 	Sfx.play("click", 0.7)
-	get_tree().change_scene_to_file("res://scenes/campaign_map.tscn")
+	get_tree().change_scene_to_file("res://scenes/slots_screen.tscn")
 
 
 func _skirmish() -> void:

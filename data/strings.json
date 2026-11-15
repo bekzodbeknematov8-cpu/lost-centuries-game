@@ -1192,5 +1192,77 @@
 		"en": "Replay tutorial",
 		"ru": "Пройти обучение снова",
 		"tr": "Eğitimi tekrar oyna"
+	},
+	"SLOT_N": {
+		"uz": "%d-saqlash",
+		"en": "Save %d",
+		"ru": "Сохранение %d",
+		"tr": "Kayıt %d"
+	},
+	"SLOT_EMPTY": {
+		"uz": "Bo'sh joy",
+		"en": "Empty slot",
+		"ru": "Пустой слот",
+		"tr": "Boş yuva"
+	},
+	"NEW_CAMPAIGN": {
+		"uz": "Yangi kampaniya",
+		"en": "New campaign",
+		"ru": "Новая кампания",
+		"tr": "Yeni sefer"
+	},
+	"CONTINUE": {
+		"uz": "Davom etish",
+		"en": "Continue",
+		"ru": "Продолжить",
+		"tr": "Devam et"
+	},
+	"DELETE": {
+		"uz": "O'chirish",
+		"en": "Delete",
+		"ru": "Удалить",
+		"tr": "Sil"
+	},
+	"SLOT_DELETE_Q": {
+		"uz": "Bu saqlashdagi kampaniya progressi o'chiriladi. Tanga, la'l va xaridlar saqlanib qoladi. Davom etasizmi?",
+		"en": "Campaign progress in this save will be deleted. Coins, rubies and purchases are kept. Continue?",
+		"ru": "Прогресс кампании в этом сохранении будет удалён. Монеты, рубины и покупки сохранятся. Продолжить?",
+		"tr": "Bu kayıttaki sefer ilerlemesi silinecek. Altın, yakut ve satın alımlar korunur. Devam?"
+	},
+	"DIFF_NORMAL": {
+		"uz": "O'rta",
+		"en": "Normal",
+		"ru": "Средне",
+		"tr": "Orta"
+	},
+	"DIFF_HARD": {
+		"uz": "Qiyin",
+		"en": "Hard",
+		"ru": "Сложно",
+		"tr": "Zor"
+	},
+	"DIFF_LEGEND": {
+		"uz": "Afsona",
+		"en": "Legend",
+		"ru": "Легенда",
+		"tr": "Efsane"
+	},
+	"DIFF_NORMAL_DESC": {
+		"uz": "tavsiya etiladi",
+		"en": "recommended",
+		"ru": "рекомендуется",
+		"tr": "önerilen"
+	},
+	"DIFF_HARD_DESC": {
+		"uz": "kuchliroq dushman",
+		"en": "stronger enemies",
+		"ru": "враги сильнее",
+		"tr": "daha güçlü düşman"
+	},
+	"DIFF_LEGEND_DESC": {
+		"uz": "faqat mohir sarkardalar uchun",
+		"en": "for master commanders only",
+		"ru": "только для мастеров",
+		"tr": "yalnızca usta komutanlar için"
 	}
 }

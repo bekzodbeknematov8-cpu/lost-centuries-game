@@ -12,6 +12,12 @@ const STAR_CASTLE_2 := 0.5    ## 2-yulduz: qal'a kamida 50% butun
 const STAR_CASTLE_3 := 0.8    ## 3-yulduz: qal'a kamida 80% butun YOKI par vaqtdan tez
 const REGION_LEVELS := 10     ## 1.0 da har viloyatda 10 level (keyin 25 gacha)
 const UNLOCK_AFTER_REGION := 4  ## Keyingi kampaniya: oldingisining shuncha viloyati zabt etilgach
+## Saqlash sloti qiyinligi: dushman iqtisodi, qal'asi va AI darajasi
+const DIFFICULTY := {
+	"normal": {"income": 1.0, "castle": 1.0, "ai_up": false},
+	"hard": {"income": 1.12, "castle": 1.1, "ai_up": true},
+	"legend": {"income": 1.25, "castle": 1.25, "ai_up": true},
+}
 
 static var _cache: Dictionary = {}
 
@@ -128,11 +134,15 @@ static func next_level_id(data: Dictionary, level_id: String) -> String:
 
 # --- Jang sozlamasi ------------------------------------------------------------
 
-static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dictionary, seed_value: int) -> Dictionary:
+static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dictionary, seed_value: int, difficulty := "normal") -> Dictionary:
 	## Leveldan BattleSim.setup() uchun cfg va dushman AI parametrlarini quradi.
 	var lv := level_by_id(data, level_id)
 	var cid := campaign_of(data, level_id)
-	var ai_p: Dictionary = ai_profiles.get(str(lv.get("ai", "normal")), ai_profiles.normal).duplicate(true)
+	var dif: Dictionary = DIFFICULTY.get(difficulty, DIFFICULTY.normal)
+	var ai_name := str(lv.get("ai", "normal"))
+	if bool(dif.ai_up):
+		ai_name = {"easy": "normal", "normal": "hard", "hard": "hard"}.get(ai_name, "hard")
+	var ai_p: Dictionary = ai_profiles.get(ai_name, ai_profiles.normal).duplicate(true)
 	if lv.get("objective", "destroy") == "survive":
 		# Mudofaa levellarida dushman tajovuzkorroq.
 		ai_p.attack_ratio = 0.9
@@ -142,8 +152,8 @@ static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dicti
 	var cfg := {
 		"seed": seed_value,
 		"start_gold": [int(lv.get("player_gold", DEFAULT_PLAYER_GOLD)), int(lv.get("enemy_gold", 300))],
-		"castle_hp": [int(lv.get("player_castle", 2000)), int(lv.get("enemy_castle", 2000))],
-		"income_mult": [1.0, float(lv.get("enemy_income", 1.0))],
+		"castle_hp": [int(lv.get("player_castle", 2000)), int(float(lv.get("enemy_castle", 2000)) * float(dif.castle))],
+		"income_mult": [1.0, float(lv.get("enemy_income", 1.0)) * float(dif.income)],
 		"start_units": [["worker", "worker"], ["worker", "worker"]],
 		"allowed": [lv.get("allowed", all_units), lv.get("enemy_allowed", all_units)],
 		"heroes": [str(data.campaigns[cid].hero), eh if eh != "" else "sardor"],

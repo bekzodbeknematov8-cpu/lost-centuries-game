@@ -6,6 +6,15 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-15 (13) — 3 saqlash sloti va qiyinlik (rejali ish)
+**Bajarildi**
+- Saqlash formati v2: 3 slot, har birida kampaniya yulduzlari va qiyinlik (O'rta / Qiyin / Afsona).
+  Tanga, la'l, xaridlar, libos, yaxshilanishlar — umumiy (slotga bog'liq emas, pullik narsa yo'qolmaydi).
+  Eski progress avtomatik 1-slotga ko'chiriladi.
+- Qiyinlik: Qiyin — dushman iqtisodi ×1,12, qal'a ×1,1, AI bir daraja yuqori; Afsona — ×1,25 / ×1,25.
+- Slotlar ekrani (progress %, ★, qiyinlik, "Davom etish", o'chirish tasdig'i bilan); Kampaniya shu orqali.
+- 2 yangi test (51), smoke 30.
+
 ### 2026-11-14 (12) — §12(h): O'rgatuvchi bosqich (rejali ish)
 **Bajarildi**
 - 7 qadamli o'rgatish (`TutorialLogic`): ishchi → qilichboz → 3 askar to'plash → Hujum → qahramon kuchi →
@@ -141,7 +150,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · keyingi: 5-bosqich sayqal (grafika/ovoz), 3 saqlash sloti, yutuqlar
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · keyingi: yutuqlar, so'ng sayqal (grafika/ovoz)
 
 ### 2026-11-13
 **Bajarildi**
