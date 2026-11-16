@@ -169,7 +169,7 @@ func _ready() -> void:
 	ht.add_theme_font_size_override("font_size", 26)
 	ht.add_theme_color_override("font_color", Painter.GOLD)
 	hv.add_child(ht)
-	for hid in ["chingiz", "jaloliddin", "temur", "boyazid"]:
+	for hid in ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]:
 		var row := HBoxContainer.new()
 		row.add_theme_constant_override("separation", 8)
 		hv.add_child(row)

@@ -1,7 +1,7 @@
 extends Control
 ## Jangdan oldin qahramon tanlash ekrani.
 
-const ORDER := ["chingiz", "jaloliddin", "temur", "boyazid"]
+const ORDER := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]
 
 var _t := 0.0
 var _cards: Array = []

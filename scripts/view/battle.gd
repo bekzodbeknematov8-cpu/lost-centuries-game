@@ -325,6 +325,9 @@ func _on_event(e: Dictionary) -> void:
 					Sfx.play("thunder", 1.0, 0.03)
 					_effects.append({"kind": "lightning", "from": x, "to": float(e.to), "t": 0.0, "life": 0.6, "seed": randi()})
 					_shake = minf(1.2, _shake + 0.5)
+				"cannon":
+					Sfx.play("drum", 1.0, 0.0)
+					Sfx.play("horn_attack", 0.6, 0.0)
 				"rally":
 					Sfx.play("rally", 1.0, 0.0)
 					_effects.append({"kind": "ring", "pos": Vector2(x, _unit_y(0.55) - 40.0), "t": 0.0, "life": 1.2, "color": Painter.GOLD})
@@ -337,6 +340,14 @@ func _on_event(e: Dictionary) -> void:
 			_shake = minf(1.2, _shake + 0.6)
 			_effects.append({"kind": "ring", "pos": Vector2(x, _unit_y(0.55)), "t": 0.0, "life": 0.6, "color": Color(0.85, 0.75, 0.55)})
 			_add_dust(Vector2(x, _unit_y(0.55)), 10)
+		"cannon_blast":
+			Sfx.play("cannon", maxf(0.5, _vol_at(x)), 0.06)
+			_shake = minf(1.2, _shake + 0.45)
+			var gp := Vector2(x, _unit_y(0.55))
+			_effects.append({"kind": "blast", "pos": gp, "t": 0.0, "life": 0.5})
+			_effects.append({"kind": "ring", "pos": gp, "t": 0.0, "life": 0.5, "color": Color(1.0, 0.7, 0.3)})
+			_add_dust(gp, 12)
+			_add_debris(gp)
 		"rain_tick":
 			Sfx.play("arrow_flesh", _vol_at(x) * 0.5)
 			for i in 9:
@@ -601,6 +612,14 @@ func _draw_effects() -> void:
 				var d := Vector2(fx.dir * 260.0, 900.0).normalized()
 				draw_line(fx.pos - d * 22.0, fx.pos, Painter.WOOD.lightened(0.2), 2.0)
 				draw_line(fx.pos - d * 22.0, fx.pos - d * 16.0 + d.orthogonal() * 4.0, Color(0.95, 0.95, 0.9), 1.5)
+			"blast":
+				# Portlash chaqnashi (qonsiz): sariq-to'q sariq yorug'lik va tutun
+				var bp: Vector2 = fx.pos
+				draw_circle(bp + Vector2(0, -30), 20.0 + k * 70.0, Color(1.0, 0.85, 0.4, 0.75 * (1.0 - k)))
+				draw_circle(bp + Vector2(0, -30), 10.0 + k * 40.0, Color(1.0, 0.98, 0.85, 0.9 * (1.0 - k)))
+				for j in 5:
+					var ang := TAU * j / 5.0 + 0.4
+					draw_circle(bp + Vector2(cos(ang) * 40.0, -30.0 + sin(ang) * 18.0) * (0.5 + k), 14.0 + k * 16.0, Color(0.45, 0.42, 0.4, 0.5 * (1.0 - k)))
 			"ring":
 				var rc: Color = fx.color
 				rc.a = 1.0 - k

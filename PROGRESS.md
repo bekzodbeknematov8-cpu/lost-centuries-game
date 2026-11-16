@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-16 (21) — Yangilanish: Yangi sarkarda Bobur, 1-qism (rejali ish)
+- Zahiriddin Muhammad Bobur: Temuriylar uslubidagi yashil salla va oltin jig'a, yashil plash.
+- Maxsus kuch "To'p zarbasi": 3 ta ketma-ket portlash (zarar 55, itarish, 0.8 s karaxtlik), yangi zambarak ovozi.
+- Erkin jang, turnir va ustaxonada (4500 tanga) mavjud. Qahramonlar balansi: o'rtacha, keskin ustunlik yo'q.
+- Tuzatildi: maxsus kuch tugmasidagi to'liq doira poligoni "triangulation failed" xatosini berardi
+  (smoke test endi bu xatoni ham ushlaydi).
+- Keyingi qism: Bobur kampaniyasi (10 viloyat), xarita, tarixiy faktlar.
+
 ### 2026-11-16 (20) — Yangilanish: Turnir (rejali ish)
 - Rejim tanlashdagi "Turnir" kartasi ochildi: sarkarda tanlanadi, ketma-ket 8 jang, raqib — boshqa sarkardalar
   navbat bilan, AI va iqtisod kuchayib boradi (`data/tournament.json`).
@@ -206,7 +214,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · (c) turnir ✅ · keyingi: (d) yangi sarkarda; 7-bosqich foydalanuvchi akkauntini kutadi
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · (c) turnir ✅ · (d) Bobur 1-qism ✅ · keyingi: (d) Bobur kampaniyasi va xaritasi; 7-bosqich foydalanuvchi akkauntini kutadi
 
 ### 2026-11-13
 **Bajarildi**

@@ -305,6 +305,30 @@
 		"ru": "Молнией проносится вперёд, поражая и оглушая всех врагов на пути.",
 		"tr": "Yıldırım gibi atılır; yolundaki tüm düşmanları vurur ve sersemletir."
 	},
+	"HERO_BOBUR": {
+		"uz": "Zahiriddin Bobur",
+		"en": "Babur",
+		"ru": "Бабур",
+		"tr": "Babür Şah"
+	},
+	"HERO_BOBUR_TITLE": {
+		"uz": "Shoir, Boburiylar saltanati asoschisi (1483–1530)",
+		"en": "Poet, founder of the Mughal Empire (1483–1530)",
+		"ru": "Поэт, основатель империи Великих Моголов (1483–1530)",
+		"tr": "Şair, Babür İmparatorluğu'nun kurucusu (1483–1530)"
+	},
+	"ABIL_CANNON": {
+		"uz": "To'p zarbasi",
+		"en": "Cannon Barrage",
+		"ru": "Пушечный залп",
+		"tr": "Top Atışı"
+	},
+	"ABIL_CANNON_DESC": {
+		"uz": "Zambaraklar dushman to'dasiga ketma-ket uch marta o'q uzadi: zarar, itarib yuborish va karaxtlik.",
+		"en": "Cannons fire three blasts in a row into the enemy ranks: damage, knockback and a short stun.",
+		"ru": "Пушки трижды бьют по вражескому строю: урон, отбрасывание и короткое оглушение.",
+		"tr": "Toplar düşman safına art arda üç atış yapar: hasar, geri itme ve kısa sersemletme."
+	},
 	"CAMPAIGN": {
 		"uz": "Kampaniya",
 		"en": "Campaign",

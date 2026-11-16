@@ -318,6 +318,15 @@ def sfx_castle_hit():
     return out
 
 
+def sfx_cannon():
+    # Zambarak: keskin "qars" + past gumburlash + uzoqqa ketuvchi aks-sado
+    crack = band(noise(0.08), 400, 4000) * env_exp(0.08, 0.02, 0.0005) * 1.0
+    boom = glide(rng.uniform(110, 130), 38, 0.9) * env_exp(0.9, 0.3, 0.001) * 1.2
+    rum = band(noise(1.2), 30, 300) * env_exp(1.2, 0.5, 0.01) * 0.6
+    out = mix(crack, boom, rum)
+    return reverb(out, length=1.0, decay=0.35, wet=0.3)
+
+
 def sfx_castle_fall():
     dur = 3.0
     rum = band(noise(dur), 30, 400) * env_exp(dur, 1.0, 0.05) * 1.2
@@ -479,7 +488,7 @@ SFX = {
     "deny": (sfx_deny, 1), "horn_attack": (sfx_horn_attack, 1), "horn_retreat": (sfx_horn_retreat, 1),
     "horn_enemy": (sfx_horn_enemy, 1), "drum": (sfx_drum, 1), "victory": (sfx_victory, 1),
     "defeat": (sfx_defeat, 1), "arrow_rain": (sfx_arrow_rain, 1), "leap": (sfx_leap, 1),
-    "thunder": (sfx_thunder, 1), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
+    "thunder": (sfx_thunder, 1), "cannon": (sfx_cannon, 2), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
 }
 
 

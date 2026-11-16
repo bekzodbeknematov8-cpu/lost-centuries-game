@@ -30,3 +30,16 @@
 - Yulduz talablari ~1.5 yulduz/level: 75 / 150 / 225 (avval 60 / 130 / 200).
 - Migratsiya: kampaniyada allaqachon yulduz bo'lsa, u ochiq qoladi (yangi qoidalar eski progressni yopmaydi).
 - `region_levels` va `unlock_after_region` endi `data/campaigns.json` da (balans JSON'da).
+
+## 2026-11-16 — Yangi sarkarda: Zahiriddin Muhammad Bobur
+- **Nega Bobur (To'maris emas):** hayoti yaxshi hujjatlashtirilgan — o'zining "Boburnoma" xotiralari
+  (asosiy manba), shuningdek Abul Fazlning "Akbarnoma"si. 10 ta viloyatlik kampaniya uchun yetarli aniq voqealar bor:
+  Andijon (1494) → Samarqand (1497, 1500, 1511) → Kobul (1504) → Qandahor → Panipat (1526) → Xanva (1527).
+  To'maris haqida asosan Gerodotning bitta hikoyasi bor — butun kampaniya uchun manba yetarli emas.
+- **Maxsus kuch "To'p zarbasi":** Panipat jangida (1526) Bobur qo'shini zambarak va miltiqlardan foydalangani
+  "Boburnoma"da yozilgan. O'yinda: dushman to'dasiga 3 ta ketma-ket portlash — zarar, itarish, qisqa karaxtlik.
+  Qon yo'q: faqat chaqnash, tutun va chang.
+- **Hurmat:** raqiblar (Shayboniyxon, Lodiylar, Rajput hukmdorlari) neytral, tarixiy hukmdor sifatida
+  ko'rsatiladi; hech bir xalq salbiy tasvirlanmaydi.
+- Ikki bosqichda: (1) sarkarda, kuch, ko'rinish, erkin jang/turnir/ustaxona; (2) kampaniya, xarita, faktlar.
+- Narxi ustaxonada 4500 tanga (oldingilari 1500/2500/3500); kampaniyasi qo'shilgach u orqali ham ochiladi.

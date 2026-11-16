@@ -1060,3 +1060,40 @@ func test_tournament_save_load() -> void:
 	st2.load_file()
 	check(bool(st2.data.tournament.active) and int(st2.data.tournament.round) == 1 and str(st2.data.tournament.hero) == "boyazid", "turnir holati saqlanmadi")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_tourn.json"))
+
+
+# --- Bobur: To'p zarbasi --------------------------------------------------------------
+
+func test_cannon_blasts_hit_and_push() -> void:
+	var s := hero_sim("bobur")
+	var h := s.hero_of(0)
+	h.x = 1000.0
+	var es := place_enemies(s, "swordsman", [1260.0, 1300.0, 1350.0, 1420.0])
+	var far: UnitState = place_enemies(s, "swordsman", [2200.0])[0]
+	var x0: Array = []
+	for e in es:
+		x0.append(e.x)
+	s.teams[0].ability_cd = 0.0
+	check(s.ability_targets(0) >= 3, "AI uchun nishonlar soni hisoblanmadi: %d" % s.ability_targets(0))
+	check(s.use_ability(0), "maxsus kuch ishlamadi")
+	var blasts := 0
+	var pushed := 0
+	for i in int(2.5 / BattleSim.STEP):
+		var before: Array = []
+		for e in es:
+			before.append(e.x)
+		s.step()
+		for ev in s.pop_events():
+			if ev.type == "cannon_blast":
+				blasts += 1
+				for k in es.size():
+					if absf(es[k].x - float(before[k])) > 20.0:
+						pushed += 1
+	check(blasts == 3, "3 ta portlash kutilgan: %d" % blasts)
+	var hurt := 0
+	for i in es.size():
+		if es[i].hp < es[i].max_hp or not es[i].is_alive():
+			hurt += 1
+	check(hurt >= 3, "portlash dushmanlarga tegmadi (%d)" % hurt)
+	check(pushed >= 1, "dushmanlar itarilmadi")
+	check(far.hp == far.max_hp, "uzoqdagi dushmanga tegmasligi kerak")

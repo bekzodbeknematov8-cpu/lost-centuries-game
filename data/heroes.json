@@ -193,6 +193,56 @@
 			"stun": 1.5
 		}
 	},
+	"bobur": {
+		"name": "HERO_BOBUR",
+		"title": "HERO_BOBUR_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 720,
+		"pop": 0,
+		"hp": 840,
+		"damage": 27,
+		"range": 36,
+		"cooldown": 0.9,
+		"speed": 135,
+		"armor": 6,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {},
+		"look": {
+			"cape": [
+				0.1,
+				0.42,
+				0.28
+			],
+			"helm": "bobur_turban",
+			"plume": [
+				0.95,
+				0.82,
+				0.3
+			]
+		},
+		"ability": {
+			"id": "cannon",
+			"name": "ABIL_CANNON",
+			"desc": "ABIL_CANNON_DESC",
+			"cooldown": 30,
+			"dist": 300,
+			"radius": 85,
+			"damage": 55,
+			"ticks": 3,
+			"spread": 90,
+			"interval": 0.55,
+			"knock": 45,
+			"stun": 0.8
+		}
+	},
 	"sardor": {
 		"name": "HERO_SARDOR",
 		"title": "HERO_SARDOR_TITLE",

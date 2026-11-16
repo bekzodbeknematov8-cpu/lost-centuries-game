@@ -224,6 +224,10 @@ func ability_targets(team_idx: int) -> int:
 				if dx > -10.0 and dx < float(a.dist): n += 1
 			"rally":
 				if absf(e.x - h.x) < 500.0: n += 1
+			"cannon":
+				var cc := _rain_center(h, a, dir)
+				var half := float(a.spread) * (int(a.ticks) - 1) * 0.5 + float(a.radius)
+				if absf(e.x - (cc + dir * float(a.spread) * (int(a.ticks) - 1) * 0.5)) < half: n += 1
 	return n
 
 
@@ -265,6 +269,14 @@ func use_ability(team_idx: int) -> bool:
 			h.dash_to = clampf(h.x + dir * float(a.dist), 40.0, WORLD_LEN - 40.0)
 			h.dash_hit = {}
 			ev.to = h.dash_to
+		"cannon":
+			# Zambaraklar: to'daga ketma-ket bir nechta portlash (oldinga qarab siljiydi)
+			var cc := _rain_center(h, a, dir)
+			zones.append({"kind": "cannon", "team": team_idx, "x": cc, "dir": dir, "radius": float(a.radius),
+				"damage": float(a.damage), "ticks": int(a.ticks), "total": int(a.ticks), "spread": float(a.spread),
+				"interval": float(a.interval), "knock": float(a.knock), "stun": float(a.stun), "t": 0.0, "next": 0.5})
+			ev.x = cc
+			h.attack_anim = 0.35
 		"rally":
 			t.buff_time = float(a.duration)
 			t.buff_dmg = float(a.damage_mult)
@@ -369,10 +381,21 @@ func _update_zones(dt: float) -> void:
 		if z.next <= 0.0 and z.ticks > 0:
 			z.ticks -= 1
 			z.next = z.interval
-			for e in units:
-				if e.team != z.team and e.is_alive() and absf(e.x - z.x) < z.radius:
-					_pending_hits.append([e, z.damage, "arrow", null])
-			events.append({"type": "rain_tick", "team": z.team, "x": z.x})
+			if z.kind == "cannon":
+				var bx: float = z.x + z.dir * z.spread * float(z.total - 1 - z.ticks)
+				for e in units:
+					if e.team != z.team and e.is_alive() and absf(e.x - bx) < z.radius:
+						_pending_hits.append([e, z.damage, "blast", null])
+						e.stun = maxf(e.stun, z.stun)
+						if not e.hero:
+							e.x = clampf(e.x + signf(e.x - bx if e.x != bx else z.dir) * z.knock, 20.0, WORLD_LEN - 20.0)
+							_idx_new.append(e)
+				events.append({"type": "cannon_blast", "team": z.team, "x": bx})
+			else:
+				for e in units:
+					if e.team != z.team and e.is_alive() and absf(e.x - z.x) < z.radius:
+						_pending_hits.append([e, z.damage, "arrow", null])
+				events.append({"type": "rain_tick", "team": z.team, "x": z.x})
 		if z.ticks > 0 or z.next > -0.5:
 			keep.append(z)
 	zones = keep

@@ -203,10 +203,13 @@ class AbilityButton:
 		elif team.ability_cd > 0.0:
 			var a: Dictionary = _u.def.ability
 			var k := team.ability_cd / float(a.cooldown)
-			var pts := PackedVector2Array([c])
-			for i in 33:
-				pts.append(c + Vector2.from_angle(-PI / 2 + TAU * k * i / 32.0) * (size.x * 0.5 - 3))
-			if k > 0.01:
+			if k >= 0.995:
+				# To'liq doira: poligon o'z boshiga qaytib "buziladi", shuning uchun oddiy doira
+				draw_circle(c, size.x * 0.5 - 3, Color(0, 0, 0, 0.55))
+			elif k > 0.01:
+				var pts := PackedVector2Array([c])
+				for i in 33:
+					pts.append(c + Vector2.from_angle(-PI / 2 + TAU * k * i / 32.0) * (size.x * 0.5 - 3))
 				draw_colored_polygon(pts, Color(0, 0, 0, 0.55))
 			var txt2 := "%d" % ceili(team.ability_cd)
 			draw_string_outline(font, Vector2(0, c.y + 10), txt2, HORIZONTAL_ALIGNMENT_CENTER, size.x, 28, 5, Color.BLACK)

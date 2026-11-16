@@ -1,7 +1,7 @@
 extends Control
 ## Turnir: sarkarda tanlash, 8 raundli zinapoya, boshlash/davom ettirish.
 
-const HEROES := ["chingiz", "jaloliddin", "temur", "boyazid"]
+const HEROES := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]
 
 var _t := 0.0
 var _hero := ""
@@ -67,7 +67,7 @@ func _ready() -> void:
 	add_child(hb)
 	for h in HEROES:
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(230, 46)
+		b.custom_minimum_size = Vector2(212, 46)
 		b.text = tr(str(GameData.heroes[h].name))
 		b.clip_text = true
 		b.pressed.connect(func() -> void:
@@ -138,7 +138,7 @@ func _refresh() -> void:
 		b.text = tr(str(GameData.heroes[h].name))
 		var bfs := 22
 		var bf := b.get_theme_default_font()
-		while bfs > 13 and bf.get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, bfs).x > b.custom_minimum_size.x - 20:
+		while bfs > 11 and bf.get_string_size(b.text, HORIZONTAL_ALIGNMENT_LEFT, -1, bfs).x > b.custom_minimum_size.x - 34:
 			bfs -= 1
 		b.add_theme_font_size_override("font_size", bfs)
 		b.add_theme_stylebox_override("normal", UITheme.box(Color(0.5, 0.3, 0.08) if h == _hero else Color(0.25, 0.15, 0.08), Painter.GOLD if h == _hero else Color(0.5, 0.38, 0.2), 10, 3 if h == _hero else 2))

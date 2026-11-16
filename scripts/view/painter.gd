@@ -191,6 +191,18 @@ static func _draw_hero_head(ci: CanvasItem, u: UnitState, head: Vector2, a: floa
 			ci.draw_line(head + Vector2(0, -15), head + Vector2(0, -22), _c(GOLD, a), 3.0)
 			ci.draw_circle(head + Vector2(0, -23), 2.5, _c(Color(0.9, 0.2, 0.2), a))
 			ci.draw_line(head + Vector2(0, -21), head + Vector2(-9, -27), _c(plume, a), 3.0)
+		"bobur_turban":
+			# Temuriylar uslubidagi yashil salla, oq bog'ich va oltin jig'a
+			var tp := PackedVector2Array()
+			for i in 18:
+				var ang := TAU * i / 18.0
+				tp.append(head + Vector2(cos(ang) * 11.5, -11.0 + sin(ang) * 9.0))
+			ci.draw_colored_polygon(tp, _c(Color(0.12, 0.45, 0.28), a))
+			ci.draw_line(head + Vector2(-11, -8), head + Vector2(11, -14), _c(Color(0.96, 0.94, 0.86), a), 3.0)
+			ci.draw_line(head + Vector2(-10, -14), head + Vector2(10, -8), _c(Color(0.96, 0.94, 0.86), a), 2.0)
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-3, -19), head + Vector2(3, -19), head + Vector2(0, -25)]), _c(GOLD, a))
+			ci.draw_circle(head + Vector2(0, -18), 2.5, _c(Color(0.85, 0.15, 0.2), a))
+			ci.draw_line(head + Vector2(1, -22), head + Vector2(-5, -32), _c(plume, a), 2.5)
 		"white_turban":
 			var pts := PackedVector2Array()
 			for i in 18:
