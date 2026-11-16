@@ -389,20 +389,21 @@ func test_unlock_rules() -> void:
 	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "2-kampaniya yopiq bo'lishi kerak")
 	stars[first] = 1
 	check(Campaign.level_unlocked(c, stars, "chingiz_01#2"), "g'alabadan keyin keyingi level ochilishi kerak")
-	check(Campaign.next_level_id(c, "chingiz_01#9") == "chingiz_01", "9-leveldan keyin boss bo'lishi kerak")
+	check(Campaign.next_level_id(c, "chingiz_01#24") == "chingiz_01", "24-leveldan keyin boss bo'lishi kerak")
+	check(Campaign.next_level_id(c, "chingiz_01#9") == "chingiz_01#10", "9-leveldan keyin 10-level")
 	check(Campaign.next_level_id(c, "chingiz_01") == "chingiz_02#1", "bossdan keyin keyingi viloyat")
 	check(Campaign.next_level_id(c, "chingiz_10") == "", "oxirgi bossdan keyin bo'sh bo'lishi kerak")
 	stars["chingiz_01"] = 1
 	check(Campaign.region_unlocked(c, stars, "chingiz", 1), "boss yengilgach 2-viloyat ochilishi kerak")
-	# 4 viloyat zabt + yetarli yulduz -> 2-kampaniya
-	for ri in 4:
+	# 2 viloyat zabt + yetarli yulduz -> 2-kampaniya
+	for ri in 2:
 		for lv in Campaign.region_levels(c, "chingiz", ri):
 			stars[lv.id] = 1
-	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "40 yulduz yetmasligi kerak (60 talab)")
-	for ri in 4:
+	check(not Campaign.campaign_unlocked(c, stars, "jaloliddin"), "50 yulduz yetmasligi kerak (75 talab)")
+	for ri in 2:
 		for lv in Campaign.region_levels(c, "chingiz", ri):
 			stars[lv.id] = 2
-	check(Campaign.campaign_unlocked(c, stars, "jaloliddin"), "80 yulduz va 4 viloyat bilan ochilishi kerak")
+	check(Campaign.campaign_unlocked(c, stars, "jaloliddin"), "100 yulduz va 2 viloyat bilan ochilishi kerak")
 
 
 func test_region_levels_structure() -> void:
@@ -416,7 +417,7 @@ func test_region_levels_structure() -> void:
 			check(not ids.has(lv.id), "takroriy level ID: %s" % lv.id)
 			ids[lv.id] = true
 			check(Campaign.level_by_id(c, lv.id).id == lv.id, "level_by_id topmadi: %s" % lv.id)
-	check(total == 400, "jami 400 level bo'lishi kerak, %d bor" % total)
+	check(total == 1000, "jami 1000 level bo'lishi kerak, %d bor" % total)
 	# Qiyinlik viloyat ichida silliq oshadi
 	var lv1: Dictionary = Campaign.region_levels(c, "temur", 5)[0]
 	var lv9: Dictionary = Campaign.region_levels(c, "temur", 5)[8]
@@ -430,7 +431,7 @@ func test_star_requirements_reasonable() -> void:
 		var need := int(c.campaigns[c.order[i]].require_stars)
 		var levels_before := 0
 		for j in i:
-			levels_before += Campaign.REGION_LEVELS * Campaign.UNLOCK_AFTER_REGION
+			levels_before += Campaign.level_count(c) * Campaign.unlock_after(c)
 		check(need <= levels_before * 2, "%s: yulduz talabi juda yuqori (%d)" % [c.order[i], need])
 
 
@@ -874,3 +875,59 @@ func test_stress_150_units_step_fast() -> void:
 	run(s, 60.0)
 	var ms := Time.get_ticks_msec() - t0
 	check(ms < 20000, "150 birlik 60 s sinov juda sekin: %d ms" % ms)
+
+
+# --- Fathlar: 25 level/viloyat va eski saqlashlar ---------------------------------
+
+func test_thousand_levels() -> void:
+	var c := camp()
+	var total := 0
+	for cid in c.order:
+		total += Campaign.all_levels(c, cid).size()
+	check(Campaign.level_count(c) == 25, "har viloyatda 25 level bo'lishi kerak")
+	check(total == 1000, "jami 1000 level kutilgan: %d" % total)
+	var ids := {}
+	for cid in c.order:
+		for lv in Campaign.all_levels(c, cid):
+			check(not ids.has(lv.id), "takror level ID: %s" % lv.id)
+			ids[lv.id] = true
+	# Eski (10 levelli) ID'lar hammasi hali ham mavjud
+	for cid in c.order:
+		for b in Campaign.regions(c, cid):
+			for n in range(1, 10):
+				check(ids.has("%s#%d" % [b.id, n]), "eski level yo'qoldi: %s#%d" % [b.id, n])
+
+
+func test_old_save_keeps_progress() -> void:
+	## 1.0 saqlashi: chingizda 4 viloyat (10 leveldan) zabt etilgan, jaloliddinda o'ynalgan,
+	## yulduzlar yangi talabdan (75) kam. Hech narsa yopilib qolmasligi kerak.
+	var c := camp()
+	var st := {}
+	for ri in 4:
+		var b: String = Campaign.regions(c, "chingiz")[ri].id
+		for n in range(1, 10):
+			st["%s#%d" % [b, n]] = 1
+		st[b] = 1
+	var jb: String = Campaign.regions(c, "jaloliddin")[0].id
+	st[jb + "#1"] = 2
+	check(Campaign.total_stars(st) < 75, "test sharti: yulduz kam bo'lishi kerak")
+	check(Campaign.campaign_unlocked(c, st, "jaloliddin"), "eski saqlashda ochilgan kampaniya yopilib qoldi")
+	check(Campaign.level_unlocked(c, st, jb + "#2"), "jaloliddin keyingi leveli ochiq bo'lishi kerak")
+	var b3: String = Campaign.regions(c, "chingiz")[3].id
+	check(Campaign.region_unlocked(c, st, "chingiz", 4), "zabt etilgan viloyatdan keyingisi ochiq bo'lishi kerak")
+	check(Campaign.level_unlocked(c, st, b3 + "#10"), "yangi #10 level #9 dan keyin ochiq bo'lishi kerak")
+	check(not Campaign.level_unlocked(c, st, b3 + "#11"), "#11 hali yopiq bo'lishi kerak")
+	# Yangi o'yinchi: jaloliddin faqat 2 viloyat + 75 yulduzdan keyin
+	var fresh := {}
+	check(not Campaign.campaign_unlocked(c, fresh, "jaloliddin"), "yangi o'yinchida jaloliddin yopiq")
+
+
+func test_difficulty_smooth_in_25_region() -> void:
+	var c := camp()
+	for cid in c.order:
+		for ri in Campaign.regions(c, cid).size():
+			var lv: Array = Campaign.region_levels(c, cid, ri)
+			for i in range(1, lv.size() - 1):
+				var a := float(lv[i - 1].enemy_income)
+				var b := float(lv[i].enemy_income)
+				check(absf(b - a) < 0.05, "%s: keskin sakrash" % lv[i].id)

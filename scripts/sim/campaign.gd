@@ -3,15 +3,16 @@ extends RefCounted
 ## Kampaniya mantig'i: viloyatlar, levellar, yulduzlar va ochilish shartlari.
 ##
 ## Tuzilma: kampaniya (qahramon) -> viloyatlar (campaigns.json dagi har bir tarixiy bosqich = viloyat bossi)
-##          -> har viloyatda REGION_LEVELS ta level: (REGION_LEVELS-1) ta avtomatik yaratilgan + oxirida boss.
-## Level ID: boss = "temur_03", oddiy level = "temur_03#4" (1..REGION_LEVELS-1).
+##          -> har viloyatda level_count() ta level: (N-1) ta avtomatik yaratilgan + oxirida boss.
+## Level ID: boss = "temur_03", oddiy level = "temur_03#4" (1..N-1). ID'lar N o'zgarsa ham saqlanadi.
+## N va ochilish qoidasi campaigns.json da: "region_levels", "unlock_after_region".
 ## Saqlash formatidan mustaqil (stars: {level_id: 0..3}), shuning uchun testlash oson.
 
 const DEFAULT_PLAYER_GOLD := 350
 const STAR_CASTLE_2 := 0.5    ## 2-yulduz: qal'a kamida 50% butun
 const STAR_CASTLE_3 := 0.8    ## 3-yulduz: qal'a kamida 80% butun YOKI par vaqtdan tez
-const REGION_LEVELS := 10     ## 1.0 da har viloyatda 10 level (keyin 25 gacha)
-const UNLOCK_AFTER_REGION := 4  ## Keyingi kampaniya: oldingisining shuncha viloyati zabt etilgach
+const DEFAULT_REGION_LEVELS := 10
+const DEFAULT_UNLOCK_AFTER := 4
 ## Saqlash sloti qiyinligi: dushman iqtisodi, qal'asi va AI darajasi
 const DIFFICULTY := {
 	"normal": {"income": 1.0, "castle": 1.0, "ai_up": false},
@@ -24,33 +25,44 @@ static var _cache: Dictionary = {}
 
 # --- Tuzilma -----------------------------------------------------------------
 
+static func level_count(data: Dictionary) -> int:
+	## Har viloyatdagi levellar soni (boss bilan).
+	return int(data.get("region_levels", DEFAULT_REGION_LEVELS))
+
+
+static func unlock_after(data: Dictionary) -> int:
+	## Keyingi kampaniya: oldingisining shuncha viloyati zabt etilgach ochiladi.
+	return int(data.get("unlock_after_region", DEFAULT_UNLOCK_AFTER))
+
+
 static func regions(data: Dictionary, cid: String) -> Array:
 	return data.campaigns[cid].levels
 
 
 static func region_levels(data: Dictionary, cid: String, ri: int) -> Array:
-	var key := "%s/%d" % [cid, ri]
+	var n_levels := level_count(data)
+	var key := "%s/%d/%d" % [cid, ri, n_levels]
 	if _cache.has(key):
 		return _cache[key]
 	var regs: Array = regions(data, cid)
 	var boss: Dictionary = regs[ri]
 	var prev_income := float(regs[ri - 1].get("enemy_income", 1.0)) if ri > 0 else float(boss.get("enemy_income", 1.0)) * 0.85
 	var out: Array = []
-	for n in range(1, REGION_LEVELS):
-		out.append(_generate(boss, ri, n, prev_income))
+	for n in range(1, n_levels):
+		out.append(_generate(boss, ri, n, prev_income, n_levels))
 	out.append(boss)
 	_cache[key] = out
 	return out
 
 
-static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float) -> Dictionary:
+static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float, n_levels: int) -> Dictionary:
 	## Viloyat shablonidan oddiy level: qiyinlik oldingi bossdan shu bossgacha silliq oshadi.
-	var k := float(n) / REGION_LEVELS
+	var k := float(n) / n_levels
 	var boss_income := float(boss.get("enemy_income", 1.0))
 	var ai := str(boss.get("ai", "normal"))
-	if n < 6 and ai == "hard":
+	if k < 0.6 and ai == "hard":
 		ai = "normal"
-	if n < 3 and ai == "normal" and ri == 0:
+	if k < 0.3 and ai == "normal" and ri == 0:
 		ai = "easy"
 	var lv := {
 		"id": "%s#%d" % [boss.id, n],
@@ -59,8 +71,8 @@ static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float) -> 
 		"name": boss.name,
 		"ai": ai,
 		"enemy_income": snappedf(lerpf(prev_income * 0.95, boss_income, k), 0.001),
-		"par": int(boss.get("par", 300)) - 40 + n * 4,
-		"enemy_castle": int(float(boss.get("enemy_castle", 2000)) * (0.8 + 0.015 * n)),
+		"par": int(boss.get("par", 300)) - 40 + int(40.0 * k),
+		"enemy_castle": int(float(boss.get("enemy_castle", 2000)) * (0.8 + 0.15 * k)),
 	}
 	if boss.has("allowed"):
 		lv.allowed = boss.allowed
@@ -70,7 +82,7 @@ static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float) -> 
 	match n % 5:
 		4:
 			lv.objective = "survive"
-			lv.survive = 120 + 6 * n + 6 * ri
+			lv.survive = 120 + int(60.0 * k) + 6 * ri
 			lv.par = lv.survive
 		2:
 			lv.enemy_gold = 480
@@ -194,12 +206,16 @@ static func region_conquered(data: Dictionary, stars: Dictionary, cid: String, r
 
 
 static func campaign_unlocked(data: Dictionary, stars: Dictionary, cid: String) -> bool:
-	## Ochilish: oldingi kampaniyaning UNLOCK_AFTER_REGION ta viloyati zabt etilgan va jami yulduz yetarli.
+	## Ochilish: oldingi kampaniyaning unlock_after() ta viloyati zabt etilgan va jami yulduz yetarli.
+	## Kampaniyada allaqachon yulduz bo'lsa (eski saqlash), ochiq qoladi — qoidalar o'zgarsa ham progress yo'qolmaydi.
 	var idx: int = data.order.find(cid)
 	if idx <= 0:
 		return idx == 0
+	for b in regions(data, cid):
+		if int(stars.get(str(b.id), 0)) > 0 or int(stars.get("%s#1" % b.id, 0)) > 0:
+			return true
 	var prev: String = data.order[idx - 1]
-	var need_region := mini(UNLOCK_AFTER_REGION, regions(data, prev).size()) - 1
+	var need_region := mini(unlock_after(data), regions(data, prev).size()) - 1
 	return region_conquered(data, stars, prev, need_region) and total_stars(stars) >= int(data.campaigns[cid].require_stars)
 
 

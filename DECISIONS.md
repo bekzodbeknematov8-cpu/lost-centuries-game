@@ -21,3 +21,12 @@
 | 2026-11-13 | 2× reklama kuniga 5 marta, faqat tugma bosilganda | Foydalanuvchi talabi; reklama bezor qilmasin, tangalar qadrsizlanmasin |
 | 2026-11-13 | Reklama `Ads` autoload orqali (hozir sinov rejimi) | AdMob plaginini keyin kod o'zgartirmasdan ulash uchun |
 | 2026-11-15 | Saqlash slotlarida faqat kampaniya progressi; iqtisod va xaridlar umumiy | Pullik narsalar bir slotda qolib ketmasligi uchun |
+
+## 2026-11-16 — Fathlar: 25 level/viloyat (1000 level)
+- Har viloyatda 25 level (24 avtomatik + boss). Level ID'lar o'zgarmadi (`region#n`), shuning uchun
+  eski saqlashlardagi yulduzlar saqlanadi; yangi #10–#24 levellar #9 dan keyin ochiladi.
+- Keyingi kampaniya oldingisining **2** viloyati zabt etilgach ochiladi (avval 4): 2×25 = 50 level,
+  avvalgi 4×10 = 40 ga yaqin — o'yinchi kutadigan o'yin vaqti deyarli o'zgarmaydi.
+- Yulduz talablari ~1.5 yulduz/level: 75 / 150 / 225 (avval 60 / 130 / 200).
+- Migratsiya: kampaniyada allaqachon yulduz bo'lsa, u ochiq qoladi (yangi qoidalar eski progressni yopmaydi).
+- `region_levels` va `unlock_after_region` endi `data/campaigns.json` da (balans JSON'da).

@@ -6,6 +6,12 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-16 (18) — Yangilanish: Fathlar, 1000 level (rejali ish)
+- Har viloyatda 25 level → 4 sarkarda × 10 viloyat × 25 = **1000 level**. Qiyinlik viloyat ichida silliq oshadi.
+- Keyingi kampaniya: 2 viloyat zabt + 75/150/225 yulduz. Eski saqlashlar buzilmaydi (testlar bilan tekshirildi).
+- Xarita paneli 5×5 panjara (25 level) sig'diradi.
+- Kampaniya balansi qayta o'lchandi: 97% / 88% / 77% / 93% (bot), devor yo'q.
+
 ### 2026-11-15 (17) — 8-bosqich tayyorgarligi: Play Market materiallari (rejali ish)
 - `store/listing/` — nom, qisqa va to'liq tavsif 4 tilda (en-US, ru-RU, tr-TR, uz), limitlar tekshirilgan.
 - `store/screenshots/<til>/` — 6 tadan 1920×1080 skrinshot (`tools/store_shots.sh`, demo progress bilan).
@@ -184,7 +190,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · keyingi: 7-bosqich (AdMob/Billing — foydalanuvchi akkauntlari kerak)
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · keyingi: (b) haftalik vazifalar; 7-bosqich foydalanuvchi akkauntini kutadi
 
 ### 2026-11-13
 **Bajarildi**

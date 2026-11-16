@@ -72,7 +72,7 @@ class Tab:
 
 
 class LevelGrid:
-	## Viloyatdagi levellar: 2 qator x 5, oxirgisi (boss) toj bilan.
+	## Viloyatdagi levellar: 5 ustunli panjara, oxirgisi (boss) toj bilan. Ko'p level bo'lsa kichrayadi.
 	extends Control
 	var owner_screen: Node
 	var _t := 0.0
@@ -81,10 +81,16 @@ class LevelGrid:
 		_t += d
 		queue_redraw()
 
+	const COLS := 5
+
+	func scale_k() -> float:
+		var rows := ceili(float(owner_screen.current_levels().size()) / COLS)
+		return clampf(size.y / maxf(1.0, rows * 92.0), 0.55, 1.0)
+
 	func node_pos(i: int) -> Vector2:
-		var cols := 5
-		var cw := size.x / cols
-		return Vector2(cw * (i % cols) + cw * 0.5, 44.0 + (i / cols) * 92.0)
+		var k := scale_k()
+		var cw := size.x / COLS
+		return Vector2(cw * (i % COLS) + cw * 0.5, 40.0 * k + (i / COLS) * 92.0 * k)
 
 	func _gui_input(event: InputEvent) -> void:
 		var pressed: bool = (event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.pressed)
@@ -92,7 +98,7 @@ class LevelGrid:
 			return
 		var lvls: Array = owner_screen.current_levels()
 		for i in lvls.size():
-			if event.position.distance_to(node_pos(i)) < 30.0:
+			if event.position.distance_to(node_pos(i)) < 34.0 * scale_k():
 				owner_screen.select_level(lvls[i].id)
 				accept_event()
 				return
@@ -101,6 +107,7 @@ class LevelGrid:
 		var lvls: Array = owner_screen.current_levels()
 		var stars: Dictionary = GameState.progress.stars
 		var font := get_theme_default_font()
+		var sk := scale_k()
 		for i in lvls.size():
 			var lv: Dictionary = lvls[i]
 			var p := node_pos(i)
@@ -112,20 +119,24 @@ class LevelGrid:
 				col = Color(0.2, 0.4, 0.6)
 			if boss and unlocked:
 				col = Color(0.55, 0.12, 0.45)
-			var r := 27.0 if boss else 23.0
+			var r := (27.0 if boss else 23.0) * sk
 			if lv.id == owner_screen._sel:
 				draw_circle(p, r + 7.0 + sin(_t * 5.0) * 2.0, Color(1, 0.85, 0.3, 0.85))
 			draw_circle(p, r + 3.0, Color(0.2, 0.12, 0.05))
 			draw_circle(p, r, col)
 			if boss:
-				draw_colored_polygon(PackedVector2Array([p + Vector2(-11, -r + 2), p + Vector2(-11, -r - 10), p + Vector2(-5, -r - 4), p + Vector2(0, -r - 13), p + Vector2(5, -r - 4), p + Vector2(11, -r - 10), p + Vector2(11, -r + 2)]), Painter.GOLD)
+				var c := [Vector2(-11, 2), Vector2(-11, -10), Vector2(-5, -4), Vector2(0, -13), Vector2(5, -4), Vector2(11, -10), Vector2(11, 2)]
+				var cp := PackedVector2Array()
+				for q in c:
+					cp.append(p + Vector2(0, -r) + (q as Vector2) * sk)
+				draw_colored_polygon(cp, Painter.GOLD)
 			if unlocked:
-				draw_string(font, p + Vector2(-20, 8), str(i + 1), HORIZONTAL_ALIGNMENT_CENTER, 40, 22, Color(1, 0.95, 0.85))
+				draw_string(font, p + Vector2(-20, 8 * sk), str(i + 1), HORIZONTAL_ALIGNMENT_CENTER, 40, int(22 * sk), Color(1, 0.95, 0.85))
 			else:
-				draw_arc(p + Vector2(0, -4), 6.0, PI, TAU, 10, Color(0.8, 0.77, 0.72), 2.5)
-				draw_rect(Rect2(p + Vector2(-8, -4), Vector2(16, 12)), Color(0.8, 0.77, 0.72))
+				draw_arc(p + Vector2(0, -4) * sk, 6.0 * sk, PI, TAU, 10, Color(0.8, 0.77, 0.72), 2.5 * sk)
+				draw_rect(Rect2(p + Vector2(-8, -4) * sk, Vector2(16, 12) * sk), Color(0.8, 0.77, 0.72))
 			for k in 3:
-				_star(p + Vector2((k - 1) * 15.0, r + 14.0), 7.0, Painter.GOLD if k < st else Color(0.5, 0.44, 0.36, 0.85))
+				_star(p + Vector2((k - 1) * 15.0 * sk, r + 13.0 * sk), 7.0 * sk, Painter.GOLD if k < st else Color(0.5, 0.44, 0.36, 0.85))
 
 	func _star(c: Vector2, r: float, col: Color) -> void:
 		var pts := PackedVector2Array()
@@ -239,7 +250,7 @@ func _ready() -> void:
 	v.add_child(_panel_sub)
 	_levels = LevelGrid.new()
 	_levels.owner_screen = self
-	_levels.custom_minimum_size = Vector2(0, 200)
+	_levels.custom_minimum_size = Vector2(0, minf(340.0, ceilf(Campaign.level_count(GameData.campaigns) / 5.0) * 92.0 + 16.0))
 	_levels.mouse_filter = Control.MOUSE_FILTER_STOP
 	v.add_child(_levels)
 	_info = Label.new()
@@ -276,7 +287,7 @@ func _select_campaign(cid: String, sound := true) -> void:
 	var stars: Dictionary = GameState.progress.stars
 	if not Campaign.campaign_unlocked(GameData.campaigns, stars, cid):
 		Sfx.play("deny", 0.6)
-		_info.text = tr("UNLOCK_RULE_REGIONS") % [Campaign.UNLOCK_AFTER_REGION, int(GameData.campaigns.campaigns[cid].require_stars)]
+		_info.text = tr("UNLOCK_RULE_REGIONS") % [Campaign.unlock_after(GameData.campaigns), int(GameData.campaigns.campaigns[cid].require_stars)]
 		return
 	if sound:
 		Sfx.play("click", 0.7)
@@ -341,7 +352,7 @@ func _update_panel() -> void:
 			done += 1
 	_panel_sub.text = tr("REGION_PROGRESS") % [_region + 1, done, current_levels().size()]
 	var lv := Campaign.level_by_id(GameData.campaigns, _sel)
-	var idx: int = int(lv.get("index", Campaign.REGION_LEVELS))
+	var idx: int = int(lv.get("index", Campaign.level_count(GameData.campaigns)))
 	var desc := ""
 	if Campaign.is_boss(_sel):
 		desc = "♛ " + tr("BOSS_LEVEL") + "\n"
