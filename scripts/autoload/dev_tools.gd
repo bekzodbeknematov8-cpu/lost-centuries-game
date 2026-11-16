@@ -27,6 +27,8 @@ func _ready() -> void:
 		GameState.level_id = args.level
 	if args.has("hero"):
 		GameState.hero = args.hero
+	if str(args.get("mode", "")) == "tournament" and not bool(GameState.progress.tournament.get("active", false)):
+		GameState.start_tournament(str(args.get("hero", "chingiz")))
 	if args.has("locale"):
 		GameState.set_locale(args.locale)
 	if args.has("speed"):

@@ -871,6 +871,22 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		if result.get("record", false):
 			stats.text += "   ★ " + tr("NEW_RECORD")
 		stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
+	if result.has("tournament"):
+		var tr_r: Dictionary = result.tournament
+		var total := Tournament.rounds(GameData.tournament)
+		if bool(tr_r.champion):
+			title.text = tr("TOURN_CHAMPION")
+			title.add_theme_color_override("font_color", Painter.GOLD)
+		elif victory:
+			stats.text += "\n" + tr("TOURN_WON_ROUND") % [int(tr_r.round), total]
+		else:
+			stats.text += "\n" + tr("TOURN_OVER") % [int(tr_r.round) - 1, total]
+		if int(tr_r.coins) > 0:
+			stats.text += "\n" + tr("COINS_EARNED") % int(tr_r.coins)
+		if bool(tr_r.champion):
+			stats.text += "\n▣ " + tr("CHEST_REWARD") % tr(str(GameData.chests.chests.gold.name))
+		_next_btn.text = tr("NEXT_ROUND")
+		_next_btn.visible = victory and not bool(tr_r.finished)
 	if int(result.get("coins", 0)) > 0 and GameState.ads_left() > 0:
 		_ad_btn.text = "▶  " + tr("AD_DOUBLE") % [int(result.coins), GameState.ads_left()]
 		if bool(GameState.progress.get("no_ads", false)):
@@ -882,7 +898,7 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		if int(result.coins) > 0:
 			stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
 		for ch in result.get("chests", []):
-			stats.text += "\n🎁 " + tr("CHEST_REWARD") % tr(str(GameData.chests.chests[ch].name))
+			stats.text += "\n▣ " + tr("CHEST_REWARD") % tr(str(GameData.chests.chests[ch].name))
 		if not victory:
 			stats.text += "\n" + tr("HINT_DEFEAT")
 		var f: Dictionary = GameData.facts.get(str(lv.id), {})
@@ -913,6 +929,10 @@ func _on_ad() -> void:
 
 
 func _on_next() -> void:
+	if _end_result.has("tournament"):
+		get_tree().paused = false
+		get_tree().reload_current_scene()
+		return
 	var lv: Dictionary = _end_result.get("level", {})
 	var nxt := Campaign.next_level_id(GameData.campaigns, str(lv.get("id", "")))
 	get_tree().paused = false
@@ -930,11 +950,21 @@ func _on_pause() -> void:
 
 func _on_restart() -> void:
 	get_tree().paused = false
+	if GameState.mode == "tournament" and GameState.level_id == "":
+		# Turnirda raund qayta boshlanmaydi: turnir ekraniga qaytamiz
+		_on_menu()
+		return
 	get_tree().reload_current_scene()
 
 
 func _on_menu() -> void:
 	get_tree().paused = false
+	if GameState.mode == "tournament" and GameState.level_id == "":
+		# Jangdan chiqib ketish = mag'lubiyat (aks holda yutqazayotganda chiqib qayta urinish mumkin bo'lardi)
+		if not _end_panel.visible and bool(GameState.progress.tournament.get("active", false)):
+			GameState.tournament_result(false)
+		Transition.go("res://scenes/tournament_screen.tscn")
+		return
 	if GameState.level_id != "":
 		Transition.go("res://scenes/campaign_map.tscn")
 	else:

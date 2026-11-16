@@ -999,3 +999,64 @@ func test_weekly_counters_bumped() -> void:
 	check(int(st.data.stats.boss_wins) == 1, "boss g'alabasi hisoblanmadi")
 	check(int(st.data.stats.waves) == 6, "to'lqinlar hisoblanmadi")
 	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_wcount.json"))
+
+
+# --- Turnir --------------------------------------------------------------------
+
+func test_tournament_flow() -> void:
+	var td := load_json("res://data/tournament.json")
+	var hd := load_json("res://data/heroes.json")
+	var p := {"coins": 0, "gems": 0, "chests": {}, "tournament": Tournament.default_state()}
+	check(Tournament.rounds(td) == 8, "turnirda 8 raund")
+	Tournament.start(p, "temur")
+	var total := 0
+	for i in 7:
+		var r := Tournament.result(td, p, true)
+		total += int(r.coins)
+		check(not bool(r.finished) and int(p.tournament.round) == i + 1, "raund %d dan keyin davom etishi kerak" % (i + 1))
+	var last := Tournament.result(td, p, true)
+	check(bool(last.champion) and bool(last.finished), "8-raunddan keyin chempion")
+	check(int(p.tournament.champion) == 1 and int(p.tournament.best) == 8, "chempionlik hisoblanmadi")
+	check(int(p.gems) == 15 and int(p.chests.get("gold", 0)) == 1, "chempion mukofoti berilmadi")
+	check(int(p.coins) == total + int(last.coins), "tangalar noto'g'ri")
+	# Yangi turnir: 2-raundda yutqazish
+	Tournament.start(p, "chingiz")
+	Tournament.result(td, p, true)
+	var lost := Tournament.result(td, p, false)
+	check(bool(lost.finished) and not bool(p.tournament.active), "mag'lubiyat turnirni tugatishi kerak")
+	check(int(p.tournament.best) == 8, "rekord kamaymasligi kerak")
+	var again := Tournament.result(td, p, true)
+	check(int(again.coins) == 0, "tugagan turnirda mukofot berilmasin")
+
+
+func test_tournament_configs() -> void:
+	var td := load_json("res://data/tournament.json")
+	var hd := load_json("res://data/heroes.json")
+	var prev := 0.0
+	for h in ["chingiz", "jaloliddin", "temur", "boyazid"]:
+		for i in 8:
+			var bc := Tournament.battle_config(td, i, ai_params, hd, h, 5)
+			check(str(bc.cfg.heroes[1]) != h and str(bc.cfg.heroes[1]) != "", "raqib sarkarda o'yinchi bilan bir xil")
+			check(bool(hd[str(bc.cfg.heroes[1])].get("selectable", true)), "raqib tanlanadigan sarkarda bo'lishi kerak")
+	# AI darajasi kamaymaydi; bir xil daraja ichida daromad*qal'a kamaymaydi
+	var lvl := {"easy": 0, "normal": 1, "hard": 2}
+	var prev_ai := 0
+	for i in 8:
+		var r: Dictionary = td.rounds[i]
+		var a := int(lvl[str(r.ai)])
+		var score := float(r.income) * float(r.castle)
+		check(a >= prev_ai, "%d-raundda AI darajasi pasaydi" % (i + 1))
+		if a == prev_ai:
+			check(score >= prev, "%d-raund oldingisidan oson bo'lmasligi kerak" % (i + 1))
+		prev_ai = a
+		prev = score
+
+
+func test_tournament_save_load() -> void:
+	var st := ProgressStore.new("user://test_tourn.json")
+	st.start_tournament("boyazid")
+	st.tournament_result(load_json("res://data/tournament.json"), true)
+	var st2 := ProgressStore.new("user://test_tourn.json")
+	st2.load_file()
+	check(bool(st2.data.tournament.active) and int(st2.data.tournament.round) == 1 and str(st2.data.tournament.hero) == "boyazid", "turnir holati saqlanmadi")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_tourn.json"))

@@ -1505,6 +1505,102 @@
 		"ru": "Выполнено %d / %d",
 		"tr": "%d / %d tamamlandı"
 	},
+	"TOURN_START": {
+		"uz": "Turnirni boshlash",
+		"en": "Start tournament",
+		"ru": "Начать турнир",
+		"tr": "Turnuvaya başla"
+	},
+	"TOURN_CONTINUE": {
+		"uz": "Davom etish — %d-raund",
+		"en": "Continue — round %d",
+		"ru": "Продолжить — раунд %d",
+		"tr": "Devam — %d. tur"
+	},
+	"TOURN_GIVE_UP": {
+		"uz": "Taslim bo'lish",
+		"en": "Give up",
+		"ru": "Сдаться",
+		"tr": "Pes et"
+	},
+	"TOURN_ROUND": {
+		"uz": "%d-raund",
+		"en": "Round %d",
+		"ru": "Раунд %d",
+		"tr": "%d. tur"
+	},
+	"TOURN_RULES": {
+		"uz": "Ketma-ket 8 jang, raqiblar kuchayib boradi. Bitta mag'lubiyat turnirni tugatadi. Jangdan chiqish ham mag'lubiyat.",
+		"en": "8 battles in a row against ever stronger rivals. One defeat ends the tournament. Leaving a battle counts as a defeat.",
+		"ru": "8 битв подряд, соперники всё сильнее. Одно поражение завершает турнир. Выход из боя — тоже поражение.",
+		"tr": "Art arda 8 savaş, rakipler giderek güçlenir. Tek yenilgi turnuvayı bitirir. Savaştan çıkmak da yenilgidir."
+	},
+	"TOURN_BEST": {
+		"uz": "Eng yaxshi natija: %d / %d",
+		"en": "Best result: %d / %d",
+		"ru": "Лучший результат: %d / %d",
+		"tr": "En iyi sonuç: %d / %d"
+	},
+	"TOURN_BEST_SHORT": {
+		"uz": "Rekord: %d / %d",
+		"en": "Best: %d / %d",
+		"ru": "Рекорд: %d / %d",
+		"tr": "Rekor: %d / %d"
+	},
+	"TOURN_CHAMP_COUNT": {
+		"uz": "Chempion: %d marta",
+		"en": "Champion: %d×",
+		"ru": "Чемпион: %d×",
+		"tr": "Şampiyon: %d kez"
+	},
+	"TOURN_WON_ROUND": {
+		"uz": "%d / %d raund yutildi!",
+		"en": "Round %d of %d won!",
+		"ru": "Раунд %d из %d выигран!",
+		"tr": "%d / %d tur kazanıldı!"
+	},
+	"TOURN_OVER": {
+		"uz": "Turnir tugadi: %d / %d",
+		"en": "Tournament over: %d / %d",
+		"ru": "Турнир окончен: %d / %d",
+		"tr": "Turnuva bitti: %d / %d"
+	},
+	"TOURN_CHAMPION": {
+		"uz": "TURNIR CHEMPIONI!",
+		"en": "TOURNAMENT CHAMPION!",
+		"ru": "ЧЕМПИОН ТУРНИРА!",
+		"tr": "TURNUVA ŞAMPİYONU!"
+	},
+	"TOURN_PRIZE": {
+		"uz": "Sovrin: sandiq + ♦15",
+		"en": "Prize: chest + ♦15",
+		"ru": "Приз: сундук + ♦15",
+		"tr": "Ödül: sandık + ♦15"
+	},
+	"NEXT_ROUND": {
+		"uz": "Keyingi raund ›",
+		"en": "Next round ›",
+		"ru": "Следующий раунд ›",
+		"tr": "Sonraki tur ›"
+	},
+	"AI_EASY": {
+		"uz": "Oson raqib",
+		"en": "Easy rival",
+		"ru": "Лёгкий соперник",
+		"tr": "Kolay rakip"
+	},
+	"AI_NORMAL": {
+		"uz": "O'rta raqib",
+		"en": "Normal rival",
+		"ru": "Средний соперник",
+		"tr": "Orta rakip"
+	},
+	"AI_HARD": {
+		"uz": "Kuchli raqib",
+		"en": "Strong rival",
+		"ru": "Сильный соперник",
+		"tr": "Güçlü rakip"
+	},
 	"ACHIEVEMENTS": {
 		"uz": "Yutuqlar",
 		"en": "Achievements",

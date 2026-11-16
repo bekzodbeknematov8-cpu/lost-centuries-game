@@ -40,6 +40,15 @@ func _ready() -> void:
 		my_hero = str(bc.cfg.heroes[0])
 		enemy_hero = str(bc.cfg.heroes[1])
 		sim.setup(GameData.units, bc.cfg, GameData.heroes)
+	elif GameState.mode == "tournament":
+		var t: Dictionary = GameState.progress.tournament
+		my_hero = str(t.hero)
+		var tc := Tournament.battle_config(GameData.tournament, int(t.round), GameData.ai, GameData.heroes, my_hero, randi())
+		tc.cfg.upgrades = [GameState.upgrade_effects(), {}]
+		ai_p = tc.ai
+		enemy_hero = str(tc.cfg.heroes[1])
+		terrain = str(tc.round.get("terrain", terrain))
+		sim.setup(GameData.units, tc.cfg, GameData.heroes)
 	elif GameState.mode == "endless":
 		sim.setup(GameData.units, {
 			"seed": randi(),
@@ -159,6 +168,9 @@ func _process(delta: float) -> void:
 				result.chests.append(str(GameData.chests.boss_chest))
 			for i in GameState.grant_star_milestones():
 				result.chests.append("gold")
+		if GameState.mode == "tournament" and level.is_empty() and not sim.endless:
+			result.tournament = GameState.tournament_result(won)
+			result.coins = int(result.tournament.coins)
 		hud.show_end(won, result)
 		if OS.get_cmdline_user_args().has("--press_ad"):
 			get_tree().create_timer(1.0).timeout.connect(func() -> void: hud._on_ad())

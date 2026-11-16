@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-16 (20) — Yangilanish: Turnir (rejali ish)
+- Rejim tanlashdagi "Turnir" kartasi ochildi: sarkarda tanlanadi, ketma-ket 8 jang, raqib — boshqa sarkardalar
+  navbat bilan, AI va iqtisod kuchayib boradi (`data/tournament.json`).
+- Bitta mag'lubiyat turnirni tugatadi; jangdan chiqish yoki qayta boshlash ham mag'lubiyat (aldashning oldini olish).
+- Har raund uchun tanga, chempionga oltin sandiq + ♦15; eng yaxshi natija va chempionlik soni saqlanadi.
+- Qiyinlik bot bilan o'lchandi (`tools/tournament_balance.gd`): har raund 58–91%, devor yo'q.
+- Shriftda yo'q emoji (🔒, 🎁) olib tashlandi.
+
 ### 2026-11-16 (19) — Yangilanish: Haftalik vazifalar (rejali ish)
 - Rejim tanlashdagi "Haftalik vazifalar" kartasi ochildi: har hafta (dushanbadan) 5 ta vazifa,
   sana bo'yicha deterministik tanlanadi (`data/weekly.json` hovuzidan 12 ta, ko'rsatkichlar takrorlanmaydi).
@@ -198,7 +206,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · keyingi: (c) turnir; 7-bosqich foydalanuvchi akkauntini kutadi
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · (c) turnir ✅ · keyingi: (d) yangi sarkarda; 7-bosqich foydalanuvchi akkauntini kutadi
 
 ### 2026-11-13
 **Bajarildi**

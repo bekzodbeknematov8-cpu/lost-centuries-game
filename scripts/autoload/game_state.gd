@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}, "tournament": {"active": false, "hero": "", "round": 0, "best": 0, "champion": 0}}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -325,3 +325,21 @@ func claim_weekly_bonus() -> bool:
 func weekly_claimable() -> int:
 	Weekly.ensure_week(progress, today())
 	return Weekly.claimable_count(GameData.weekly, progress, today())
+
+
+# --- Turnir ------------------------------------------------------------------------
+
+func start_tournament(h: String) -> void:
+	_store.data = progress
+	_store.start_tournament(h)
+
+
+func give_up_tournament() -> void:
+	_store.data = progress
+	_store.give_up_tournament()
+
+
+func tournament_result(won: bool) -> Dictionary:
+	Weekly.ensure_week(progress, today())
+	_store.data = progress
+	return _store.tournament_result(GameData.tournament, won)

@@ -1,0 +1,16 @@
+{
+	"rounds": [
+		{"ai": "easy",    "income": 0.95, "castle": 1800, "enemy_gold": 300, "terrain": "steppe",    "coins": 60},
+		{"ai": "easy",    "income": 1.05, "castle": 1850, "enemy_gold": 320, "terrain": "green",     "coins": 80},
+		{"ai": "normal",  "income": 0.75, "castle": 1900, "enemy_gold": 330, "terrain": "desert",    "coins": 100},
+		{"ai": "normal",  "income": 0.78, "castle": 1950, "enemy_gold": 340, "terrain": "mountain",  "coins": 120},
+		{"ai": "normal",  "income": 0.82, "castle": 2000, "enemy_gold": 350, "terrain": "steppe",    "coins": 150},
+		{"ai": "normal",  "income": 0.86, "castle": 2050, "enemy_gold": 360, "terrain": "green",     "coins": 180},
+		{"ai": "hard",    "income": 0.70, "castle": 2100, "enemy_gold": 370, "terrain": "desert",    "coins": 220},
+		{"ai": "hard",    "income": 0.75, "castle": 2200, "enemy_gold": 380, "terrain": "mountain",  "coins": 280}
+	],
+	"champion": [
+		{"type": "chest", "id": "gold", "count": 1},
+		{"type": "gems", "amount": 15}
+	]
+}

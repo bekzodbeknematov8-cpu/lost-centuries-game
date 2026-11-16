@@ -114,7 +114,7 @@ func _ready() -> void:
 		["campaign", tr("MENU_CAMPAIGN"), tr("MODE_CAMPAIGN_SUB"), false, _campaign],
 		["skirmish", tr("MENU_SKIRMISH"), tr("MODE_SKIRMISH_SUB"), false, _skirmish],
 		["endless", tr("MENU_ENDLESS"), tr("BEST_WAVE") % best if best > 0 else tr("MODE_ENDLESS_SUB"), false, _endless],
-		["tournament", tr("MODE_TOURNAMENT"), tr("COMING_SOON"), true, _locked],
+		["tournament", tr("MODE_TOURNAMENT"), _tourn_sub(), false, _tournament],
 		["weekly", tr("MODE_WEEKLY"), _weekly_sub(), false, _weekly],
 	]
 	for cd in cards:
@@ -157,6 +157,18 @@ func _build_difficulty() -> void:
 	close.custom_minimum_size = Vector2(360, 50)
 	close.pressed.connect(func() -> void: _diff_panel.visible = false)
 	v.add_child(close)
+
+
+func _tourn_sub() -> String:
+	var t: Dictionary = GameState.progress.tournament
+	if bool(t.active):
+		return tr("TOURN_ROUND") % (int(t.round) + 1)
+	return tr("TOURN_BEST_SHORT") % [int(t.best), Tournament.rounds(GameData.tournament)]
+
+
+func _tournament() -> void:
+	Sfx.play("click", 0.7)
+	Transition.go("res://scenes/tournament_screen.tscn")
 
 
 func _weekly_sub() -> String:

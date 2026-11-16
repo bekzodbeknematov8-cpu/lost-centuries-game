@@ -14,6 +14,7 @@ var outfits: Dictionary = {}
 var market: Dictionary = {}
 var achievements: Dictionary = {}
 var weekly: Dictionary = {}
+var tournament: Dictionary = {}
 
 
 func _init() -> void:
@@ -30,6 +31,7 @@ func _init() -> void:
 	market = load_json("res://data/market.json")
 	achievements = load_json("res://data/achievements.json")
 	weekly = load_json("res://data/weekly.json")
+	tournament = load_json("res://data/tournament.json")
 
 
 static func load_json(path: String) -> Dictionary:
