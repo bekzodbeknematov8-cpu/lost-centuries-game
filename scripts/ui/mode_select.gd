@@ -86,7 +86,10 @@ class ModeCard:
 			fs -= 1
 		draw_string_outline(font, Vector2(0, size.y - 50), title, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, 5, Color(0, 0, 0, 0.8))
 		draw_string(font, Vector2(0, size.y - 50), title, HORIZONTAL_ALIGNMENT_CENTER, size.x, fs, g)
-		draw_string(font, Vector2(0, size.y - 22), sub, HORIZONTAL_ALIGNMENT_CENTER, size.x, 15, UITheme.PARCHMENT)
+		var sfs := 15
+		while sfs > 10 and font.get_string_size(sub, HORIZONTAL_ALIGNMENT_LEFT, -1, sfs).x > size.x - 8:
+			sfs -= 1
+		draw_string(font, Vector2(0, size.y - 22), sub, HORIZONTAL_ALIGNMENT_CENTER, size.x, sfs, UITheme.PARCHMENT)
 
 
 func _ready() -> void:
@@ -112,7 +115,7 @@ func _ready() -> void:
 		["skirmish", tr("MENU_SKIRMISH"), tr("MODE_SKIRMISH_SUB"), false, _skirmish],
 		["endless", tr("MENU_ENDLESS"), tr("BEST_WAVE") % best if best > 0 else tr("MODE_ENDLESS_SUB"), false, _endless],
 		["tournament", tr("MODE_TOURNAMENT"), tr("COMING_SOON"), true, _locked],
-		["weekly", tr("MODE_WEEKLY"), tr("COMING_SOON"), true, _locked],
+		["weekly", tr("MODE_WEEKLY"), _weekly_sub(), false, _weekly],
 	]
 	for cd in cards:
 		var card := ModeCard.new(cd[0], cd[1], cd[2], cd[3])
@@ -154,6 +157,20 @@ func _build_difficulty() -> void:
 	close.custom_minimum_size = Vector2(360, 50)
 	close.pressed.connect(func() -> void: _diff_panel.visible = false)
 	v.add_child(close)
+
+
+func _weekly_sub() -> String:
+	var tasks := GameState.weekly_tasks()
+	var n := 0
+	for id in tasks:
+		if Weekly.is_done(GameData.weekly, GameState.progress, id):
+			n += 1
+	return tr("WEEKLY_SUB") % [n, tasks.size()]
+
+
+func _weekly() -> void:
+	Sfx.play("click", 0.7)
+	Transition.go("res://scenes/weekly_screen.tscn")
 
 
 func _campaign() -> void:

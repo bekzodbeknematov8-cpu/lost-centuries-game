@@ -9,7 +9,7 @@ var difficulty: String = "easy"
 var hero: String = "temur"
 var level_id: String = ""          ## "" = erkin jang, aks holda kampaniya bosqichi
 var mode: String = "skirmish"      ## "skirmish" | "campaign" | "endless"
-var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
+var progress: Dictionary = {"version": PROGRESS_VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}}
 var _store := ProgressStore.new(PROGRESS_PATH)
 var settings: Dictionary = {
 	"locale": "uz",
@@ -72,6 +72,7 @@ func load_progress() -> void:
 	_store.load_file()
 	_store.give_starter_tactics(GameData.tactics)
 	progress = _store.data
+	Weekly.ensure_week(progress, today())
 	apply_outfit()
 
 
@@ -81,11 +82,13 @@ func save_progress() -> void:
 
 
 func record_result(lid: String, stars: int, coins: int) -> int:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	return _store.record_result(lid, stars, coins)
 
 
 func record_wave(waves: int, coins: int) -> bool:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	return _store.record_wave(waves, coins)
 
@@ -135,6 +138,7 @@ func buy_tactic(id: String) -> bool:
 
 
 func consume_tactic(id: String) -> bool:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	return _store.consume_tactic(id)
 
@@ -146,6 +150,7 @@ func tactic_count(id: String) -> int:
 # --- Sandiqlar va kunlik mukofot ----------------------------------------------
 
 func open_chest(kind: String) -> Array:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	var rng := RandomNumberGenerator.new()
 	rng.randomize()
@@ -162,6 +167,7 @@ func daily_status() -> Dictionary:
 
 
 func claim_daily() -> Dictionary:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	return _store.claim_daily(GameData.chests, today())
 
@@ -280,6 +286,7 @@ func heroes_owned_count() -> int:
 
 
 func record_battle(won: bool, kills: int) -> void:
+	Weekly.ensure_week(progress, today())
 	_store.data = progress
 	_store.record_battle(won, kills)
 
@@ -296,3 +303,25 @@ func claimable_achievements() -> int:
 		if Achievements.claimable(GameData.achievements, progress, id, ho):
 			n += 1
 	return n
+
+
+# --- Haftalik vazifalar -----------------------------------------------------------
+
+func weekly_tasks() -> Array:
+	Weekly.ensure_week(progress, today())
+	return Weekly.tasks_for_week(GameData.weekly, Weekly.week_index(today()))
+
+
+func claim_weekly(id: String) -> bool:
+	_store.data = progress
+	return _store.claim_weekly(GameData.weekly, id, today())
+
+
+func claim_weekly_bonus() -> bool:
+	_store.data = progress
+	return _store.claim_weekly_bonus(GameData.weekly, today())
+
+
+func weekly_claimable() -> int:
+	Weekly.ensure_week(progress, today())
+	return Weekly.claimable_count(GameData.weekly, progress, today())

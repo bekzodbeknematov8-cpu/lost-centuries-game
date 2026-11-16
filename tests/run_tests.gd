@@ -931,3 +931,71 @@ func test_difficulty_smooth_in_25_region() -> void:
 				var a := float(lv[i - 1].enemy_income)
 				var b := float(lv[i].enemy_income)
 				check(absf(b - a) < 0.05, "%s: keskin sakrash" % lv[i].id)
+
+
+# --- Haftalik vazifalar --------------------------------------------------------
+
+func test_weekly_selection() -> void:
+	var w := load_json("res://data/weekly.json")
+	var a := Weekly.tasks_for_week(w, Weekly.week_index("2026-11-16"))
+	var b := Weekly.tasks_for_week(w, Weekly.week_index("2026-11-22"))   # yakshanba — o'sha hafta
+	var c := Weekly.tasks_for_week(w, Weekly.week_index("2026-11-23"))   # keyingi dushanba
+	check(a.size() == 5, "haftada 5 ta vazifa bo'lishi kerak")
+	check(a == b, "bitta haftada vazifalar bir xil bo'lishi kerak")
+	check(a != c, "yangi haftada vazifalar almashishi kerak")
+	var metrics := {}
+	for id in a:
+		metrics[w.pool[id].metric] = true
+	check(metrics.size() == 5, "bir hafta ichida ko'rsatkichlar takrorlanmasin")
+	check(Weekly.days_left("2026-11-16") == 7 and Weekly.days_left("2026-11-22") == 1, "qolgan kunlar noto'g'ri")
+	for wk in range(2900, 2960):
+		for id in Weekly.tasks_for_week(w, wk):
+			check(w.pool.has(id), "noma'lum vazifa")
+
+
+func test_weekly_progress_and_claim() -> void:
+	var w := load_json("res://data/weekly.json")
+	var st := ProgressStore.new("user://test_weekly.json")
+	st.data.stats = {"wins": 40, "kills": 900}   # o'tgan haftalardagi natijalar hisoblanmasligi kerak
+	var day := "2026-11-16"
+	Weekly.ensure_week(st.data, day)
+	var tasks := Weekly.tasks_for_week(w, Weekly.week_index(day))
+	var id: String = tasks[0]
+	var t: Dictionary = w.pool[id]
+	check(Weekly.progress_of(w, st.data, id) == 0, "hafta boshida progress 0 bo'lishi kerak")
+	check(not st.claim_weekly(w, id, day), "bajarilmagan vazifa olinmasligi kerak")
+	st.data.stats[t.metric] = int(st.data.stats.get(t.metric, 0)) + int(t.target)
+	var coins := int(st.data.coins)
+	var gems := int(st.data.gems)
+	check(st.claim_weekly(w, id, day), "bajarilgan vazifa olinishi kerak")
+	check(int(st.data.coins) > coins or int(st.data.gems) > gems or not st.data.chests.is_empty(), "mukofot berilmadi")
+	check(not st.claim_weekly(w, id, day), "ikki marta olinmasligi kerak")
+	check(not Weekly.bonus_ready(w, st.data, day), "bonus hali tayyor emas")
+	for x in tasks:
+		st.data.stats[w.pool[x].metric] = int(st.data.stats.get(w.pool[x].metric, 0)) + int(w.pool[x].target)
+		st.claim_weekly(w, x, day)
+	check(Weekly.bonus_ready(w, st.data, day), "hamma vazifadan keyin bonus tayyor")
+	check(st.claim_weekly_bonus(w, day), "bonus olinishi kerak")
+	check(not st.claim_weekly_bonus(w, day), "bonus ikki marta olinmasin")
+	# Saqlash va qayta yuklash
+	var st2 := ProgressStore.new("user://test_weekly.json")
+	st2.load_file()
+	check(bool(st2.data.weekly.bonus) and st2.data.weekly.claimed.size() == 5, "haftalik holat saqlanmadi")
+	# Yangi hafta: hammasi yangilanadi
+	Weekly.ensure_week(st2.data, "2026-11-23")
+	check(st2.data.weekly.claimed.is_empty() and not bool(st2.data.weekly.bonus), "yangi haftada holat tozalanishi kerak")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_weekly.json"))
+
+
+func test_weekly_counters_bumped() -> void:
+	var st := ProgressStore.new("user://test_wcount.json")
+	st.record_battle(true, 7)
+	st.record_result("chingiz_01#1", 2, 10)
+	st.record_result("chingiz_01#1", 3, 10)
+	st.record_result("chingiz_01", 1, 10)
+	st.record_wave(6, 10)
+	check(int(st.data.stats.battles) == 1 and int(st.data.stats.wins) == 1, "jang hisoblagichi")
+	check(int(st.data.stats.stars_gained) == 4, "yangi yulduzlar: 2+1+1 = 4, bor: %s" % st.data.stats.get("stars_gained"))
+	check(int(st.data.stats.boss_wins) == 1, "boss g'alabasi hisoblanmadi")
+	check(int(st.data.stats.waves) == 6, "to'lqinlar hisoblanmadi")
+	DirAccess.remove_absolute(ProjectSettings.globalize_path("user://test_wcount.json"))

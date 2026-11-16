@@ -1,0 +1,18 @@
+{
+	"tasks_per_week": 5,
+	"pool": {
+		"w_wins_8":      {"metric": "wins",         "target": 8,   "reward": {"type": "coins", "amount": 250}},
+		"w_wins_15":     {"metric": "wins",         "target": 15,  "reward": {"type": "coins", "amount": 450}},
+		"w_battles_12":  {"metric": "battles",      "target": 12,  "reward": {"type": "coins", "amount": 250}},
+		"w_kills_150":   {"metric": "kills",        "target": 150, "reward": {"type": "coins", "amount": 250}},
+		"w_kills_400":   {"metric": "kills",        "target": 400, "reward": {"type": "gems",  "amount": 8}},
+		"w_stars_15":    {"metric": "stars_gained", "target": 15,  "reward": {"type": "coins", "amount": 300}},
+		"w_stars_30":    {"metric": "stars_gained", "target": 30,  "reward": {"type": "gems",  "amount": 10}},
+		"w_boss_2":      {"metric": "boss_wins",    "target": 2,   "reward": {"type": "chest", "id": "silver", "count": 1}},
+		"w_waves_20":    {"metric": "waves",        "target": 20,  "reward": {"type": "coins", "amount": 300}},
+		"w_tactics_4":   {"metric": "tactics",      "target": 4,   "reward": {"type": "coins", "amount": 200}},
+		"w_chests_3":    {"metric": "chests",       "target": 3,   "reward": {"type": "coins", "amount": 200}},
+		"w_daily_4":     {"metric": "daily",        "target": 4,   "reward": {"type": "gems",  "amount": 5}}
+	},
+	"bonus": {"type": "chest", "id": "gold", "count": 1}
+}

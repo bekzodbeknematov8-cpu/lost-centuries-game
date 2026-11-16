@@ -1424,19 +1424,19 @@
 	"MET_CHESTS": {
 		"uz": "%d ta sandiq oching",
 		"en": "Open %d chests",
-		"ru": "Откройте %d сундуков",
+		"ru": "Откройте сундуки: %d",
 		"tr": "%d sandık açın"
 	},
 	"MET_TACTICS": {
 		"uz": "%d ta hiyla ishlating",
 		"en": "Use %d tactics",
-		"ru": "Используйте %d хитростей",
+		"ru": "Используйте хитрости: %d",
 		"tr": "%d taktik kullanın"
 	},
 	"MET_DAILY": {
 		"uz": "Kunlik mukofotni %d marta oling",
 		"en": "Claim the daily reward %d times",
-		"ru": "Заберите ежедневную награду %d раз",
+		"ru": "Заберите ежедневную награду (раз): %d",
 		"tr": "Günlük ödülü %d kez alın"
 	},
 	"MET_OUTFITS": {
@@ -1462,6 +1462,48 @@
 		"en": "Defeat your first region boss",
 		"ru": "Победите первого босса области",
 		"tr": "İlk bölge patronunu yen"
+	},
+	"MET_BATTLES": {
+		"uz": "%d ta jang o'tkazing",
+		"en": "Fight %d battles",
+		"ru": "Проведите %d битв",
+		"tr": "%d savaş yap"
+	},
+	"MET_STARS_GAINED": {
+		"uz": "%d ta yangi ★ to'plang",
+		"en": "Earn %d new ★",
+		"ru": "Получите %d новых ★",
+		"tr": "%d yeni ★ kazan"
+	},
+	"MET_BOSS_WINS": {
+		"uz": "Viloyat bossini %d marta yenging",
+		"en": "Defeat region bosses %d times",
+		"ru": "Победите боссов областей: %d",
+		"tr": "Bölge patronlarını %d kez yen"
+	},
+	"MET_WAVES": {
+		"uz": "Cheksiz mudofaada jami %d ta to'lqin qaytaring",
+		"en": "Repel %d waves in Endless Defense",
+		"ru": "Отбейте %d волн в Бесконечной обороне",
+		"tr": "Sonsuz Savunma'da %d dalga püskürt"
+	},
+	"WEEKLY_DAYS_LEFT": {
+		"uz": "Yangi vazifalar %d kundan keyin",
+		"en": "New tasks in %d days",
+		"ru": "Новые задания через %d дн.",
+		"tr": "Yeni görevler %d gün sonra"
+	},
+	"WEEKLY_BONUS": {
+		"uz": "Hamma vazifalar bajarilsa: %s",
+		"en": "Complete all tasks: %s",
+		"ru": "Выполните все задания: %s",
+		"tr": "Tüm görevleri tamamla: %s"
+	},
+	"WEEKLY_SUB": {
+		"uz": "%d / %d bajarildi",
+		"en": "%d / %d done",
+		"ru": "Выполнено %d / %d",
+		"tr": "%d / %d tamamlandı"
 	},
 	"ACHIEVEMENTS": {
 		"uz": "Yutuqlar",

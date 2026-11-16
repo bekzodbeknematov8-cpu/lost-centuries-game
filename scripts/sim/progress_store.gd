@@ -9,7 +9,7 @@ const DIFFICULTIES := ["normal", "hard", "legend"]
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}}
 
 
 func _init(file_path: String) -> void:
@@ -18,7 +18,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": []}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}}
 	if not FileAccess.file_exists(path):
 		_ensure_slots()
 		return
@@ -73,6 +73,15 @@ func load_file() -> void:
 	if p.get("ach_claimed") is Array:
 		for a in p.ach_claimed:
 			data.ach_claimed.append(str(a))
+	if p.get("weekly") is Dictionary and p.weekly.get("base") is Dictionary:
+		var wb := {}
+		for k in p.weekly.base:
+			wb[str(k)] = maxi(0, int(p.weekly.base[k]))
+		var wc: Array = []
+		if p.weekly.get("claimed") is Array:
+			for x in p.weekly.claimed:
+				wc.append(str(x))
+		data.weekly = {"week": int(p.weekly.get("week", -1)), "base": wb, "claimed": wc, "bonus": bool(p.weekly.get("bonus", false))}
 	_ensure_slots()
 	data.adgem_day = str(p.get("adgem_day", ""))
 	data.adgem_count = maxi(0, int(p.get("adgem_count", 0)))
@@ -135,6 +144,9 @@ func record_result(level_id: String, stars: int, coins: int) -> int:
 	var old := int(data.stars.get(level_id, 0))
 	if stars > old:
 		data.stars[level_id] = stars
+		_bump("stars_gained", stars - old)
+	if stars > 0 and Campaign.is_boss(level_id):
+		_bump("boss_wins", 1)
 	data.coins = int(data.coins) + coins
 	save_file()
 	return maxi(0, stars - old)
@@ -145,6 +157,7 @@ func record_wave(waves: int, coins: int) -> bool:
 	var rec := waves > int(data.best_wave)
 	if rec:
 		data.best_wave = waves
+	_bump("waves", waves)
 	data.coins = int(data.coins) + coins
 	save_file()
 	return rec
@@ -369,6 +382,7 @@ func _bump(stat: String, n: int) -> void:
 
 
 func record_battle(won: bool, kills: int) -> void:
+	_bump("battles", 1)
 	if won:
 		_bump("wins", 1)
 	_bump("kills", kills)
@@ -380,5 +394,27 @@ func claim_achievement(ach: Dictionary, id: String, heroes_owned := 1) -> bool:
 		return false
 	Rewards.apply(data, ach.list[id].reward)
 	data.ach_claimed.append(id)
+	save_file()
+	return true
+
+
+# --- Haftalik vazifalar ---------------------------------------------------------
+
+func claim_weekly(def: Dictionary, id: String, date: String) -> bool:
+	Weekly.ensure_week(data, date)
+	if not Weekly.claimable(def, data, id, date):
+		return false
+	Rewards.apply(data, def.pool[id].reward)
+	data.weekly.claimed.append(id)
+	save_file()
+	return true
+
+
+func claim_weekly_bonus(def: Dictionary, date: String) -> bool:
+	Weekly.ensure_week(data, date)
+	if not Weekly.bonus_ready(def, data, date):
+		return false
+	Rewards.apply(data, def.bonus)
+	data.weekly.bonus = true
 	save_file()
 	return true

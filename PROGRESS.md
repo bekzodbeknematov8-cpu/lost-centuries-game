@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-16 (19) — Yangilanish: Haftalik vazifalar (rejali ish)
+- Rejim tanlashdagi "Haftalik vazifalar" kartasi ochildi: har hafta (dushanbadan) 5 ta vazifa,
+  sana bo'yicha deterministik tanlanadi (`data/weekly.json` hovuzidan 12 ta, ko'rsatkichlar takrorlanmaydi).
+- Progress = hafta boshidagi qiymatdan farq; o'tgan haftalardagi natijalar hisoblanmaydi.
+- Mukofotlar: tanga / la'l / sandiq; hammasi bajarilsa oltin sandiq bonusi.
+- Yangi hisoblagichlar: battles, stars_gained, boss_wins, waves.
+- Rus tilidagi ko'plik xatolari ("3 сундуков") ikki nuqtali shaklga o'tkazildi; rejim kartasi izohi sig'may qolsa kichrayadi.
+
 ### 2026-11-16 (18) — Yangilanish: Fathlar, 1000 level (rejali ish)
 - Har viloyatda 25 level → 4 sarkarda × 10 viloyat × 25 = **1000 level**. Qiyinlik viloyat ichida silliq oshadi.
 - Keyingi kampaniya: 2 viloyat zabt + 75/150/225 yulduz. Eski saqlashlar buzilmaydi (testlar bilan tekshirildi).
@@ -190,7 +198,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · keyingi: (b) haftalik vazifalar; 7-bosqich foydalanuvchi akkauntini kutadi
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · keyingi: (c) turnir; 7-bosqich foydalanuvchi akkauntini kutadi
 
 ### 2026-11-13
 **Bajarildi**
