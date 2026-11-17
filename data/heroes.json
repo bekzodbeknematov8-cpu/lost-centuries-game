@@ -243,6 +243,53 @@
 			"stun": 0.8
 		}
 	},
+	"alp": {
+		"name": "HERO_ALP",
+		"title": "HERO_ALP_TITLE",
+		"hero": true,
+		"cost": 0,
+		"value": 720,
+		"pop": 0,
+		"hp": 820,
+		"damage": 27,
+		"range": 36,
+		"cooldown": 0.9,
+		"speed": 145,
+		"armor": 5,
+		"class": "melee",
+		"tags": [
+			"cavalry",
+			"hero"
+		],
+		"weapon": "sabre",
+		"armor_type": "metal",
+		"mount": true,
+		"bonus": {},
+		"look": {
+			"cape": [
+				0.08,
+				0.42,
+				0.52
+			],
+			"helm": "seljuk_cap",
+			"plume": [
+				0.93,
+				0.93,
+				0.97
+			]
+		},
+		"ability": {
+			"id": "raid",
+			"name": "ABIL_RAID",
+			"desc": "ABIL_RAID_DESC",
+			"cooldown": 34,
+			"unit": "archer",
+			"count": 4,
+			"hp": 120,
+			"speed": 150,
+			"duration": 15
+		}
+	},
 	"sardor": {
 		"name": "HERO_SARDOR",
 		"title": "HERO_SARDOR_TITLE",

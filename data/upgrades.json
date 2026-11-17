@@ -8,5 +8,5 @@
 		"start_gold": {"name": "UPG_START_GOLD", "desc": "UPG_START_GOLD_DESC", "icon": "coin",   "max": 5,  "base_cost": 100, "growth": 1.55, "per_level": 50},
 		"hero_power": {"name": "UPG_HERO",       "desc": "UPG_HERO_DESC",       "icon": "crown",  "max": 10, "base_cost": 160, "growth": 1.42, "per_level": 0.06}
 	},
-	"hero_prices": {"chingiz": 0, "jaloliddin": 1500, "temur": 2500, "boyazid": 3500, "bobur": 4500}
+	"hero_prices": {"chingiz": 0, "jaloliddin": 1500, "temur": 2500, "boyazid": 3500, "bobur": 4500, "alp": 5500}
 }

@@ -26,6 +26,7 @@ var dead_time: float = 0.0
 var controlled: bool = false
 var slot: float = 0.0          ## safdagi joy siljishi
 var hero: bool = false
+var life: float = -1.0       ## >0: chaqirilgan askar; vaqt tugasa jangdan chiqib ketadi (o'lim hisoblanmaydi)
 var stun: float = 0.0          ## >0 bo'lsa, hayratda (harakat qilolmaydi)
 var dash_time: float = 0.0     ## qahramon sakrashi/yashin hujumi davom etmoqda
 var dash_total: float = 0.0

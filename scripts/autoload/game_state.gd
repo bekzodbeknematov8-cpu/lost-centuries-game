@@ -279,7 +279,7 @@ func slot_difficulty() -> String:
 
 func heroes_owned_count() -> int:
 	var n := 0
-	for h in ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]:
+	for h in ["chingiz", "jaloliddin", "temur", "boyazid", "bobur", "alp"]:
 		if hero_owned(h):
 			n += 1
 	return n

@@ -1100,3 +1100,39 @@ func test_cannon_blasts_hit_and_push() -> void:
 	check(hurt >= 3, "portlash dushmanlarga tegmadi (%d)" % hurt)
 	check(pushed >= 1, "dushmanlar itarilmadi")
 	check(far.hp == far.max_hp, "uzoqdagi dushmanga tegmasligi kerak")
+
+
+# --- Alp Arslon: Saljuq chopqini -----------------------------------------------------
+
+func test_raid_summons_and_leaves() -> void:
+	var s := hero_sim("alp")
+	var h := s.hero_of(0)
+	h.x = 1000.0
+	place_enemies(s, "swordsman", [1300.0, 1350.0, 1400.0])
+	var pop0 := s.teams[0].pop
+	var n0 := s.alive_units(0).size()
+	s.teams[0].ability_cd = 0.0
+	check(s.ability_targets(0) >= 3, "AI uchun nishonlar soni: %d" % s.ability_targets(0))
+	check(s.use_ability(0), "maxsus kuch ishlamadi")
+	var summoned: Array = []
+	for u in s.units:
+		if u.team == 0 and u.life > 0.0:
+			summoned.append(u)
+	check(summoned.size() == 4, "4 ta otliq kamonchi chaqirilishi kerak: %d" % summoned.size())
+	check(s.teams[0].pop == pop0, "chaqirilganlar aholi chegarasini egallamasligi kerak")
+	for u in summoned:
+		check(Painter.is_mounted(u) and u.is_ranged(), "chaqirilgan askar otliq kamonchi bo'lishi kerak")
+	var lost0 := int(s.teams[0].stats.lost)
+	var left := 0
+	for i in int(16.5 / BattleSim.STEP):
+		s.step()
+		for ev in s.pop_events():
+			if ev.type == "summon_leave":
+				left += 1
+	var still := 0
+	for u in s.units:
+		if u.team == 0 and u.is_alive() and u.life > 0.0:
+			still += 1
+	check(still == 0, "15 soniyadan keyin chaqirilganlar ketishi kerak")
+	var killed_summons := 4 - left
+	check(int(s.teams[0].stats.lost) - lost0 == killed_summons, "ketib qolganlar yo'qotish hisoblanmasligi kerak")

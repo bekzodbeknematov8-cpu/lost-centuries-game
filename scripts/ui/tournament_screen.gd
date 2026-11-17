@@ -1,7 +1,7 @@
 extends Control
 ## Turnir: sarkarda tanlash, 8 raundli zinapoya, boshlash/davom ettirish.
 
-const HEROES := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]
+const HEROES := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur", "alp"]
 
 var _t := 0.0
 var _hero := ""
@@ -67,7 +67,7 @@ func _ready() -> void:
 	add_child(hb)
 	for h in HEROES:
 		var b := Button.new()
-		b.custom_minimum_size = Vector2(212, 46)
+		b.custom_minimum_size = Vector2(186, 46)
 		b.text = tr(str(GameData.heroes[h].name))
 		b.clip_text = true
 		b.pressed.connect(func() -> void:

@@ -1,7 +1,7 @@
 extends Control
 ## Jangdan oldin qahramon tanlash ekrani.
 
-const ORDER := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur"]
+const ORDER := ["chingiz", "jaloliddin", "temur", "boyazid", "bobur", "alp"]
 
 var _t := 0.0
 var _cards: Array = []
@@ -18,7 +18,7 @@ class HeroCard:
 
 	func _init(id: String) -> void:
 		hero_id = id
-		custom_minimum_size = Vector2(210, 250)
+		custom_minimum_size = Vector2(186, 250)
 		focus_mode = Control.FOCUS_NONE
 		_u.type = id
 		_u.def = GameData.heroes[id]

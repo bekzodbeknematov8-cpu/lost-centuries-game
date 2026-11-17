@@ -191,6 +191,13 @@ static func _draw_hero_head(ci: CanvasItem, u: UnitState, head: Vector2, a: floa
 			ci.draw_line(head + Vector2(0, -15), head + Vector2(0, -22), _c(GOLD, a), 3.0)
 			ci.draw_circle(head + Vector2(0, -23), 2.5, _c(Color(0.9, 0.2, 0.2), a))
 			ci.draw_line(head + Vector2(0, -21), head + Vector2(-9, -27), _c(plume, a), 3.0)
+		"seljuk_cap":
+			# Baland uchli qalpoq, oltin hoshiya va orqaga tushuvchi lenta
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-10, -3), head + Vector2(10, -3), head + Vector2(5, -18), head + Vector2(1, -29), head + Vector2(-4, -18)]), _c(Color(0.62, 0.16, 0.12), a))
+			ci.draw_line(head + Vector2(-11, -4), head + Vector2(11, -4), _c(GOLD, a), 4.0)
+			ci.draw_circle(head + Vector2(1, -29), 2.5, _c(GOLD, a))
+			ci.draw_line(head + Vector2(-9, -5), head + Vector2(-16, 8), _c(plume, a), 3.0)
+			ci.draw_line(head + Vector2(-7, -5), head + Vector2(-13, 10), _c(plume.darkened(0.15), a), 2.5)
 		"bobur_turban":
 			# Temuriylar uslubidagi yashil salla, oq bog'ich va oltin jig'a
 			var tp := PackedVector2Array()

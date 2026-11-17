@@ -329,6 +329,30 @@
 		"ru": "Пушки трижды бьют по вражескому строю: урон, отбрасывание и короткое оглушение.",
 		"tr": "Toplar düşman safına art arda üç atış yapar: hasar, geri itme ve kısa sersemletme."
 	},
+	"HERO_ALP": {
+		"uz": "Alp Arslon",
+		"en": "Alp Arslan",
+		"ru": "Алп-Арслан",
+		"tr": "Alparslan"
+	},
+	"HERO_ALP_TITLE": {
+		"uz": "Saljuqiylar sultoni (hukmronligi 1063–1072)",
+		"en": "Sultan of the Seljuks (reigned 1063–1072)",
+		"ru": "Султан сельджуков (правил в 1063–1072)",
+		"tr": "Büyük Selçuklu Sultanı (1063–1072)"
+	},
+	"ABIL_RAID": {
+		"uz": "Saljuq chopqini",
+		"en": "Seljuk Raid",
+		"ru": "Сельджукский набег",
+		"tr": "Selçuklu Akını"
+	},
+	"ABIL_RAID_DESC": {
+		"uz": "Sarkarda yoniga 15 soniyaga 4 ta otliq kamonchi chaqiradi; so'ng ular jangdan chiqib ketadi.",
+		"en": "Calls 4 horse archers to the commander's side for 15 seconds; then they ride away.",
+		"ru": "Призывает к полководцу 4 конных лучников на 15 секунд, затем они уходят.",
+		"tr": "Komutanın yanına 15 saniyeliğine 4 atlı okçu çağırır; sonra savaştan ayrılırlar."
+	},
 	"CAMPAIGN": {
 		"uz": "Kampaniya",
 		"en": "Campaign",

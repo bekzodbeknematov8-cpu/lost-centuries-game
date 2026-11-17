@@ -43,3 +43,14 @@
   ko'rsatiladi; hech bir xalq salbiy tasvirlanmaydi.
 - Ikki bosqichda: (1) sarkarda, kuch, ko'rinish, erkin jang/turnir/ustaxona; (2) kampaniya, xarita, faktlar.
 - Narxi ustaxonada 4500 tanga (oldingilari 1500/2500/3500); kampaniyasi qo'shilgach u orqali ham ochiladi.
+
+## 2026-11-17 — Oltinchi sarkarda: Alp Arslon
+- **Nega Alp Arslon (To'maris emas):** manbalar ko'p va mustaqil — Ibn al-Asir ("al-Komil fi-t-tarix"),
+  Nizomulmulk davri yozuvlari, Malazgirt (1071) jangini ko'rgan vizantiyalik tarixchi Mixail Attaleiat.
+  10 viloyatlik kampaniya uchun aniq voqealar bor (Xuroson, Ani 1064, Gurjiston, Halab 1070, Malazgirt 1071 ...).
+  To'maris haqida asosan Gerodotning bitta hikoyasi — kampaniya uchun yetarli emas (yana qoldirildi).
+- **Maxsus kuch "Saljuq chopqini" (yangi tur — chaqiruv):** 15 soniyaga 4 ta otliq kamonchi chaqiradi,
+  keyin ular jangdan chiqib ketadi (o'lim/yo'qotish hisoblanmaydi, aholi chegarasini egallamaydi).
+  Saljuqiy qo'shinida otliq kamonchilar asosiy kuch bo'lgani manbalarda qayd etilgan.
+- **Hurmat:** raqiblar (Vizantiya, Fotimiylar, Qoraxoniylar va b.) neytral, tarixiy davlatlar sifatida.
+- Narx: ustaxonada 5500 tanga. 2-qism: kampaniya, xarita, faktlar.

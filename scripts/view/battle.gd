@@ -325,6 +325,10 @@ func _on_event(e: Dictionary) -> void:
 					Sfx.play("thunder", 1.0, 0.03)
 					_effects.append({"kind": "lightning", "from": x, "to": float(e.to), "t": 0.0, "life": 0.6, "seed": randi()})
 					_shake = minf(1.2, _shake + 0.5)
+				"raid":
+					Sfx.play("horn_attack", 0.9, 0.0)
+					Sfx.play("horse", 1.0, 0.05)
+					_add_dust(Vector2(x, _unit_y(0.55)), 14)
 				"cannon":
 					Sfx.play("drum", 1.0, 0.0)
 					Sfx.play("horn_attack", 0.6, 0.0)
@@ -340,6 +344,8 @@ func _on_event(e: Dictionary) -> void:
 			_shake = minf(1.2, _shake + 0.6)
 			_effects.append({"kind": "ring", "pos": Vector2(x, _unit_y(0.55)), "t": 0.0, "life": 0.6, "color": Color(0.85, 0.75, 0.55)})
 			_add_dust(Vector2(x, _unit_y(0.55)), 10)
+		"summon_leave":
+			_add_dust(Vector2(x, _unit_y(0.55)), 6)
 		"cannon_blast":
 			Sfx.play("cannon", maxf(0.5, _vol_at(x)), 0.06)
 			_shake = minf(1.2, _shake + 0.45)

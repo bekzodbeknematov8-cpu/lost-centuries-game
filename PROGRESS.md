@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-17 (23) — 2-navbat (A): Alp Arslon, 1-qism (rejali ish)
+- Oltinchi sarkarda Alp Arslon: baland uchli qalpoq, oltin hoshiya, lentalar; zangori plash.
+- Yangi turdagi kuch "Saljuq chopqini": 15 s ga 4 ta otliq kamonchi chaqiradi; keyin ular chiqib ketadi
+  (aholi chegarasi va yo'qotishlar hisobiga kirmaydi). Yangi `UnitState.life` mexanizmi.
+- Erkin jang, turnir, ustaxona (5500 tanga). Sarkarda tanlash va turnir tugmalari 6 tasini sig'diradi.
+- Qahramonlar balansi: o'rtacha (~66%), keskin ustunlik yo'q. Keyingisi: Alp Arslon kampaniyasi.
+
 ### 2026-11-17 (22) — Yangilanish: Bobur kampaniyasi, 2-qism (rejali ish)
 - 5-kampaniya "Bobur yo'li" (1494–1527): Andijon, Samarqand, Saripul, Kobul, Qandahor, Hisor, Bajaur,
   Lahor, Panipat, Xanva — 10 viloyat × 25 = 250 level (jami **1250 level**). 300 ★ va Boyazidning 2 viloyatidan keyin ochiladi.

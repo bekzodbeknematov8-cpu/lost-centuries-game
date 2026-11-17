@@ -224,6 +224,8 @@ func ability_targets(team_idx: int) -> int:
 				if dx > -10.0 and dx < float(a.dist): n += 1
 			"rally":
 				if absf(e.x - h.x) < 500.0: n += 1
+			"raid":
+				if dx > -50.0 and dx < 700.0: n += 1
 			"cannon":
 				var cc := _rain_center(h, a, dir)
 				var half := float(a.spread) * (int(a.ticks) - 1) * 0.5 + float(a.radius)
@@ -276,6 +278,24 @@ func use_ability(team_idx: int) -> bool:
 				"damage": float(a.damage), "ticks": int(a.ticks), "total": int(a.ticks), "spread": float(a.spread),
 				"interval": float(a.interval), "knock": float(a.knock), "stun": float(a.stun), "t": 0.0, "next": 0.5})
 			ev.x = cc
+			h.attack_anim = 0.35
+		"raid":
+			# Chaqiruv: sarkarda yonida vaqtinchalik otliq kamonchilar paydo bo'ladi
+			for i in int(a.count):
+				var d: Dictionary = (defs[str(a.unit)] as Dictionary).duplicate(true)
+				d.mount = true
+				d.pop = 0
+				d.value = 0
+				d.hp = float(a.hp)
+				d.speed = float(a.speed)
+				if not ("cavalry" in d.tags):
+					d.tags.append("cavalry")
+				var su := spawn_unit(team_idx, str(a.unit), d)
+				su.hp = float(a.hp)
+				su.max_hp = su.hp
+				su.x = clampf(h.x - dir * (30.0 + 22.0 * i), 20.0, WORLD_LEN - 20.0)
+				su.life = float(a.duration)
+				su.facing = int(dir)
 			h.attack_anim = 0.35
 		"rally":
 			t.buff_time = float(a.duration)
@@ -586,6 +606,19 @@ func _update_team(t: TeamState, dt: float) -> void:
 
 
 func _update_unit(u: UnitState, dt: float) -> void:
+	if u.life > 0.0:
+		u.life -= dt
+		if u.life <= 0.0:
+			# Chaqirilgan askar jangdan chiqib ketadi: o'lim yoki yo'qotish hisoblanmaydi
+			u.state = UnitState.State.DEAD
+			u.hp = 0.0
+			u.dead_time = CORPSE_TIME + 1.0
+			if u.controlled:
+				u.controlled = false
+				control_dir = 0
+				control_attack = false
+			events.append({"type": "summon_leave", "team": u.team, "x": u.x})
+			return
 	u.cooldown -= dt
 	u.attack_anim = maxf(0.0, u.attack_anim - dt)
 	u.hurt_flash = maxf(0.0, u.hurt_flash - dt)
