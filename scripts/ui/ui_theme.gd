@@ -52,3 +52,16 @@ static func fill(col: Color) -> StyleBoxFlat:
 	s.content_margin_top = 0
 	s.content_margin_bottom = 0
 	return s
+
+
+static func fit_text(font: Font, text: String, width: float, max_fs: int, min_fs: int) -> Array:
+	## Matnni kenglikka sig'diradi: avval shriftni kichraytiradi, yetmasa oxirini "…" bilan qisqartiradi.
+	## Qaytaradi: [matn, shrift_o'lchami].
+	var fs := max_fs
+	while fs > min_fs and font.get_string_size(text, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > width:
+		fs -= 1
+	var t := text
+	while t.length() > 2 and font.get_string_size(t, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > width:
+		t = t.substr(0, t.length() - 2) + "…"
+		t = t.replace("……", "…")
+	return [t, fs]

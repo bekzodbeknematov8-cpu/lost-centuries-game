@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-17 (24) — 2-navbat (A): Alp Arslon kampaniyasi, 2-qism (rejali ish)
+- 6-kampaniya "Malazgirt sari" (1063–1072): Marv, Ray, Ani, Jand, Kirmon, Isfahon, Gurjiston, Halab,
+  Malazgirt, Amudaryo — 250 level (jami **1500 level**). 375 ★ va Boburning 2 viloyatidan keyin ochiladi.
+- Xarita va 10 ta manbali fakt (Ibn al-Asir, Attaleiat va b. asosida), 4 tilda.
+- Qiyinlik: birinchi o'lchov 100% (juda oson) → dushman iqtisodi oshirildi → 90%, bosslar 50–75%.
+- `UITheme.fit_text`: uzun nomlar kichrayadi, sig'masa "…" bilan qisqaradi (kampaniya tablari, kuch tugmasi).
+- Kampaniya tablari 6 tasini sig'diradi.
+
 ### 2026-11-17 (23) — 2-navbat (A): Alp Arslon, 1-qism (rejali ish)
 - Oltinchi sarkarda Alp Arslon: baland uchli qalpoq, oltin hoshiya, lentalar; zangori plash.
 - Yangi turdagi kuch "Saljuq chopqini": 15 s ga 4 ta otliq kamonchi chaqiradi; keyin ular chiqib ketadi

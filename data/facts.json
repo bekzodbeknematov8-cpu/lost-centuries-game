@@ -298,5 +298,65 @@
 		"en": "On 17 March 1527, at the Battle of Khanwa, Babur won against the Rajput alliance led by Rana Sanga.",
 		"ru": "17 марта 1527 года в битве при Кханве Бабур одержал победу над союзом раджпутов во главе с Раной Сангой.",
 		"tr": "17 Mart 1527'deki Hanva Savaşı'nda Babür, Rana Sanga liderliğindeki Racput ittifakına karşı zafer kazandı."
+	},
+	"alp_01": {
+		"uz": "Alp Arslon taxminan 1029-yilda tug'ilgan; uning otasi Chag'ribek Xurosonni Marvdan boshqargan.",
+		"en": "Alp Arslan was born around 1029; his father Chaghri Beg ruled Khorasan from Merv.",
+		"ru": "Алп-Арслан родился около 1029 года; его отец Чагры-бек правил Хорасаном из Мерва.",
+		"tr": "Alparslan 1029 civarında doğdu; babası Çağrı Bey Horasan'ı Merv'den yönetti."
+	},
+	"alp_02": {
+		"uz": "Taxtga o'tirgach, 1064-yilda Alp Arslon Ray yaqinida qarindoshi Qutalmishning qo'zg'olonini bostirgan.",
+		"en": "Soon after taking the throne, in 1064 Alp Arslan defeated the revolt of his kinsman Kutalmish near Rey.",
+		"ru": "Вскоре после восшествия на престол, в 1064 году, Алп-Арслан подавил мятеж своего родича Куталмыша близ Рея.",
+		"tr": "Tahta çıktıktan kısa süre sonra, 1064'te Alparslan akrabası Kutalmış'ın isyanını Rey yakınlarında bastırdı."
+	},
+	"alp_03": {
+		"uz": "1064-yilda Alp Arslon mustahkam qal'ali Ani shahrini egallagan.",
+		"en": "In 1064 Alp Arslan captured the strongly fortified city of Ani.",
+		"ru": "В 1064 году Алп-Арслан взял хорошо укреплённый город Ани.",
+		"tr": "Alparslan 1064'te güçlü surlarla çevrili Ani şehrini aldı."
+	},
+	"alp_04": {
+		"uz": "Saljuqiylarning ota-bobolari Sirdaryo bo'yidagi Jand shahri atrofida yashagan; Alp Arslon 1065-yilda bu yerga yurish qilgan.",
+		"en": "The Seljuks' ancestors lived around Jand on the Syr Darya; Alp Arslan campaigned there in 1065.",
+		"ru": "Предки сельджуков жили в районе Дженда на Сырдарье; Алп-Арслан совершил туда поход в 1065 году.",
+		"tr": "Selçukluların ataları Seyhun kıyısındaki Cend çevresinde yaşadı; Alparslan 1065'te oraya sefer düzenledi."
+	},
+	"alp_05": {
+		"uz": "Kirmonni Alp Arslonning akasi Qovurdbek boshqargan.",
+		"en": "Kerman was ruled by Alp Arslan's elder brother, Qavurt.",
+		"ru": "Керманом правил старший брат Алп-Арслана — Кавурд.",
+		"tr": "Kirman'ı Alparslan'ın ağabeyi Kavurt yönetiyordu."
+	},
+	"alp_06": {
+		"uz": "Alp Arslonning vaziri Nizomulmulk Bag'dod va boshqa shaharlarda Nizomiya madrasalariga asos solgan.",
+		"en": "Alp Arslan's vizier, Nizam al-Mulk, founded the Nizamiyya colleges in Baghdad and other cities.",
+		"ru": "Визирь Алп-Арслана Низам аль-Мульк основал медресе Низамия в Багдаде и других городах.",
+		"tr": "Alparslan'ın veziri Nizamülmülk, Bağdat ve başka şehirlerde Nizamiye medreselerini kurdu."
+	},
+	"alp_07": {
+		"uz": "1068-yilda Alp Arslon Kavkazga, Gurjistonga ikkinchi marta yurish qilgan.",
+		"en": "In 1068 Alp Arslan led his second campaign into Georgia in the Caucasus.",
+		"ru": "В 1068 году Алп-Арслан совершил второй поход в Грузию на Кавказе.",
+		"tr": "Alparslan 1068'de Kafkasya'da Gürcistan'a ikinci seferini yaptı."
+	},
+	"alp_08": {
+		"uz": "1071-yil boshida Halab hukmdori Alp Arslonning hokimiyatini tan olgan.",
+		"en": "In early 1071 the ruler of Aleppo recognised Alp Arslan's authority.",
+		"ru": "В начале 1071 года правитель Алеппо признал власть Алп-Арслана.",
+		"tr": "1071 başında Halep hükümdarı Alparslan'ın otoritesini tanıdı."
+	},
+	"alp_09": {
+		"uz": "1071-yil 26-avgustda Malazgirt jangidan so'ng Alp Arslon asir olingan Vizantiya imperatori Roman IV Diogenni hurmat bilan ozod qilgan.",
+		"en": "After the Battle of Manzikert on 26 August 1071, Alp Arslan released the captured Byzantine emperor Romanos IV Diogenes with honour.",
+		"ru": "После битвы при Манцикерте 26 августа 1071 года Алп-Арслан с почётом отпустил пленённого византийского императора Романа IV Диогена.",
+		"tr": "26 Ağustos 1071'deki Malazgirt Savaşı'ndan sonra Alparslan, esir alınan Bizans İmparatoru IV. Romanos Diogenes'i onurla serbest bıraktı."
+	},
+	"alp_10": {
+		"uz": "1072-yilda Movarounnahrga yurish paytida Alp Arslon Amudaryo bo'yida vafot etgan; taxtga o'g'li Malikshoh o'tirgan.",
+		"en": "In 1072, during a campaign into Transoxiana, Alp Arslan died by the Amu Darya; his son Malik-Shah succeeded him.",
+		"ru": "В 1072 году, во время похода в Мавераннахр, Алп-Арслан скончался у Амударьи; престол унаследовал его сын Мелик-шах.",
+		"tr": "Alparslan 1072'de Maveraünnehir seferi sırasında Ceyhun kıyısında öldü; yerine oğlu Melikşah geçti."
 	}
 }

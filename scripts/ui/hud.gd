@@ -217,9 +217,9 @@ class AbilityButton:
 		else:
 			var pulse := 0.5 + 0.5 * sin(_t * 5.0)
 			draw_arc(c, size.x * 0.5 - 2, 0, TAU, 40, Color(1, 0.85, 0.3, 0.6 + 0.4 * pulse), 4.0)
-		var name := tr(str(_u.def.ability.name))
-		draw_string_outline(font, Vector2(0, size.y - 6), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, 3, Color(0, 0, 0, 0.9))
-		draw_string(font, Vector2(0, size.y - 6), name, HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, Painter.GOLD)
+		var fit := UITheme.fit_text(font, tr(str(_u.def.ability.name)), size.x + 24.0, 13, 10)
+		draw_string_outline(font, Vector2(-12, size.y - 6), fit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x + 24.0, fit[1], 3, Color(0, 0, 0, 0.9))
+		draw_string(font, Vector2(-12, size.y - 6), fit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x + 24.0, fit[1], Painter.GOLD)
 
 
 class StarRow:

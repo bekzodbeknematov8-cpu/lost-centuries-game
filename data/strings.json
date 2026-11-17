@@ -606,10 +606,10 @@
 		"tr": "Yakında!"
 	},
 	"MODE_CAMPAIGN_SUB": {
-		"uz": "1250 level · 5 sarkarda",
-		"en": "1250 levels · 5 commanders",
-		"ru": "1250 уровней · 5 полководцев",
-		"tr": "1250 bölüm · 5 komutan"
+		"uz": "1500 level · 6 sarkarda",
+		"en": "1500 levels · 6 commanders",
+		"ru": "1500 уровней · 6 полководцев",
+		"tr": "1500 bölüm · 6 komutan"
 	},
 	"MODE_SKIRMISH_SUB": {
 		"uz": "Tezkor jang",

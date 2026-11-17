@@ -6,7 +6,8 @@
 		"jaloliddin",
 		"temur",
 		"boyazid",
-		"bobur"
+		"bobur",
+		"alp"
 	],
 	"campaigns": {
 		"chingiz": {
@@ -735,6 +736,139 @@
 					},
 					"ai": "hard",
 					"enemy_income": 0.98,
+					"par": 330
+				}
+			]
+		},
+		"alp": {
+			"name": {
+				"uz": "Malazgirt sari",
+				"en": "Road to Manzikert",
+				"ru": "Путь к Манцикерту",
+				"tr": "Malazgirt'e Giden Yol"
+			},
+			"years": "1063–1072",
+			"require_stars": 375,
+			"hero": "alp",
+			"levels": [
+				{
+					"id": "alp_01",
+					"name": {
+						"uz": "Marv",
+						"en": "Merv",
+						"ru": "Мерв",
+						"tr": "Merv"
+					},
+					"ai": "normal",
+					"enemy_income": 1.15,
+					"par": 320
+				},
+				{
+					"id": "alp_02",
+					"name": {
+						"uz": "Ray",
+						"en": "Rey",
+						"ru": "Рей",
+						"tr": "Rey"
+					},
+					"ai": "normal",
+					"enemy_income": 1.2,
+					"par": 320
+				},
+				{
+					"id": "alp_03",
+					"name": {
+						"uz": "Ani",
+						"en": "Ani",
+						"ru": "Ани",
+						"tr": "Ani"
+					},
+					"ai": "normal",
+					"enemy_income": 1.25,
+					"par": 320
+				},
+				{
+					"id": "alp_04",
+					"name": {
+						"uz": "Jand",
+						"en": "Jand",
+						"ru": "Дженд",
+						"tr": "Cend"
+					},
+					"ai": "normal",
+					"enemy_income": 1.3,
+					"par": 320
+				},
+				{
+					"id": "alp_05",
+					"name": {
+						"uz": "Kirmon",
+						"en": "Kerman",
+						"ru": "Керман",
+						"tr": "Kirman"
+					},
+					"ai": "normal",
+					"enemy_income": 1.35,
+					"par": 320
+				},
+				{
+					"id": "alp_06",
+					"name": {
+						"uz": "Isfahon",
+						"en": "Isfahan",
+						"ru": "Исфахан",
+						"tr": "İsfahan"
+					},
+					"ai": "normal",
+					"enemy_income": 1.4,
+					"par": 320
+				},
+				{
+					"id": "alp_07",
+					"name": {
+						"uz": "Gurjiston",
+						"en": "Georgia",
+						"ru": "Грузия",
+						"tr": "Gürcistan"
+					},
+					"ai": "normal",
+					"enemy_income": 1.45,
+					"par": 320
+				},
+				{
+					"id": "alp_08",
+					"name": {
+						"uz": "Halab",
+						"en": "Aleppo",
+						"ru": "Алеппо",
+						"tr": "Halep"
+					},
+					"ai": "hard",
+					"enemy_income": 1.1,
+					"par": 320
+				},
+				{
+					"id": "alp_09",
+					"name": {
+						"uz": "Malazgirt",
+						"en": "Manzikert",
+						"ru": "Манцикерт",
+						"tr": "Malazgirt"
+					},
+					"ai": "hard",
+					"enemy_income": 1.15,
+					"par": 320
+				},
+				{
+					"id": "alp_10",
+					"name": {
+						"uz": "Amudaryo",
+						"en": "Amu Darya",
+						"ru": "Амударья",
+						"tr": "Ceyhun"
+					},
+					"ai": "hard",
+					"enemy_income": 1.2,
 					"par": 330
 				}
 			]

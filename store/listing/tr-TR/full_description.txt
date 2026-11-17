@@ -1,11 +1,11 @@
 Cihangirler, tarihin büyük komutanlarıyla oynanan 2D strateji savaş oyunudur.
 
-Cengiz Han, Celaleddin Harezmşah, Timur, Yıldırım Bayezid ve Babür Şah'a liderlik et: ordunu topla, işçilerinle altın çıkar ve düşman kalesini yık.
+Cengiz Han, Celaleddin Harezmşah, Timur, Yıldırım Bayezid, Babür Şah ve Alparslan'a liderlik et: ordunu topla, işçilerinle altın çıkar ve düşman kalesini yık.
 
-⚔️ 5 KOMUTAN — 5 SEFER
+⚔️ 6 KOMUTAN — 6 SEFER
 • Her komutanın bölgeler, nehirler ve dağlarla dolu tarihi haritası
-• 1250 bölüm, her bölgenin sonunda güçlü bir patron
-• Özel kahraman güçleri: Bozkır Fırtınası, İndus Sıçrayışı, Güç Adalettedir, Yıldırım Hücumu, Top Atışı
+• 1500 bölüm, her bölgenin sonunda güçlü bir patron
+• Özel kahraman güçleri: Bozkır Fırtınası, İndus Sıçrayışı, Güç Adalettedir, Yıldırım Hücumu, Top Atışı, Selçuklu Akını
 
 🏰 STRATEJİ
 • İşçi, kılıççı, mızrakçı, okçu ve süvari — her biri diğerine karşı güçlü

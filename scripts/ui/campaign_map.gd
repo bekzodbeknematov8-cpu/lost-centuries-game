@@ -34,7 +34,7 @@ class Tab:
 	func _init(id: String) -> void:
 		cid = id
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(180, 60)
+		custom_minimum_size = Vector2(156, 60)
 		var hero: String = GameData.campaigns.campaigns[id].hero
 		_u.type = hero
 		_u.def = GameData.heroes[hero]
@@ -57,11 +57,8 @@ class Tab:
 		Painter.draw_unit(self, _u, Vector2(30, 56), 0.4, _t)
 		var font := get_theme_default_font()
 		var col := Painter.GOLD if not locked else Color(0.6, 0.55, 0.5)
-		var nm := tr(str(_u.def.name))
-		var fs := 15
-		while fs > 10 and font.get_string_size(nm, HORIZONTAL_ALIGNMENT_LEFT, -1, fs).x > size.x - 64:
-			fs -= 1
-		draw_string(font, Vector2(58, 26), nm, HORIZONTAL_ALIGNMENT_LEFT, size.x - 62, fs, col)
+		var fit := UITheme.fit_text(font, tr(str(_u.def.name)), size.x - 62.0, 15, 10)
+		draw_string(font, Vector2(58, 26), fit[0], HORIZONTAL_ALIGNMENT_LEFT, size.x - 60, fit[1], col)
 		var sub: String
 		if locked:
 			sub = tr("NEED_STARS") % int(GameData.campaigns.campaigns[cid].require_stars)

@@ -1,11 +1,11 @@
 Jahongirlar is a 2D strategy battle game starring the great commanders of history.
 
-Lead Genghis Khan, Jalal al-Din Mingburnu, Amir Timur, Bayezid the Thunderbolt and Babur: gather an army, mine gold with your workers and bring down the enemy fortress.
+Lead Genghis Khan, Jalal al-Din Mingburnu, Amir Timur, Bayezid the Thunderbolt, Babur and Alp Arslan: gather an army, mine gold with your workers and bring down the enemy fortress.
 
-⚔️ 5 COMMANDERS — 5 CAMPAIGNS
+⚔️ 6 COMMANDERS — 6 CAMPAIGNS
 • Every commander has a historical map of regions, rivers and mountains
-• 1250 levels, with a powerful boss at the end of each region
-• Unique hero powers: Steppe Storm, Indus Leap, Strength in Justice, Thunderbolt Charge, Cannon Barrage
+• 1500 levels, with a powerful boss at the end of each region
+• Unique hero powers: Steppe Storm, Indus Leap, Strength in Justice, Thunderbolt Charge, Cannon Barrage, Seljuk Raid
 
 🏰 STRATEGY
 • Workers, swordsmen, spearmen, archers and cavalry — each strong against another

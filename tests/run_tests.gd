@@ -356,7 +356,7 @@ func test_campaign_data_valid() -> void:
 	var c := camp()
 	var hd := load_json("res://data/heroes.json")
 	var facts := load_json("res://data/facts.json")
-	check(c.order.size() == 5, "5 ta kampaniya bo'lishi kerak")
+	check(c.order.size() == 6, "6 ta kampaniya bo'lishi kerak")
 	var maps := load_json("res://data/maps.json")
 	for cid in c.order:
 		check(maps.has(cid) and maps[cid].regions.size() == c.campaigns[cid].levels.size(), "%s: xarita viloyatlari mos emas" % cid)
@@ -1136,3 +1136,13 @@ func test_raid_summons_and_leaves() -> void:
 	check(still == 0, "15 soniyadan keyin chaqirilganlar ketishi kerak")
 	var killed_summons := 4 - left
 	check(int(s.teams[0].stats.lost) - lost0 == killed_summons, "ketib qolganlar yo'qotish hisoblanmasligi kerak")
+
+
+func test_fit_text() -> void:
+	var font := ThemeDB.fallback_font
+	var r := UITheme.fit_text(font, "Qisqa", 400.0, 15, 10)
+	check(r[0] == "Qisqa" and int(r[1]) == 15, "qisqa matn o'zgarmasligi kerak")
+	var long := "Джалаладдин Мангуберди Джалаладдин Мангуберди"
+	var r2 := UITheme.fit_text(font, long, 90.0, 15, 10)
+	check(int(r2[1]) == 10 and str(r2[0]).ends_with("…"), "uzun matn kichrayib, '…' bilan tugashi kerak")
+	check(font.get_string_size(str(r2[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x <= 90.0, "matn kenglikka sig'ishi kerak")
