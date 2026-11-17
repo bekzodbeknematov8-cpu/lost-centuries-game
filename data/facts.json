@@ -238,5 +238,65 @@
 		"en": "Bayezid lost the Battle of Ankara to Timur in 1402 and died in captivity in 1403.",
 		"ru": "Баязид проиграл Тимуру Анкарскую битву в 1402 году и умер в плену в 1403 году.",
 		"tr": "Bayezid 1402'de Ankara Savaşı'nı Timur'a kaybetti ve 1403'te esaret altında öldü."
+	},
+	"bobur_01": {
+		"uz": "Bobur 1494-yilda, 11 yoshida Farg'ona taxtiga o'tirgan.",
+		"en": "Babur became ruler of Fergana in 1494, at the age of eleven.",
+		"ru": "Бабур стал правителем Ферганы в 1494 году, в одиннадцать лет.",
+		"tr": "Babür 1494'te, on bir yaşında Fergana tahtına çıktı."
+	},
+	"bobur_02": {
+		"uz": "1497-yilda 14 yoshli Bobur Samarqandni egallagan, ammo uni taxminan 100 kun saqlab qola olgan.",
+		"en": "In 1497 the 14-year-old Babur took Samarkand, but held it for only about 100 days.",
+		"ru": "В 1497 году 14-летний Бабур взял Самарканд, но удержал его лишь около 100 дней.",
+		"tr": "1497'de 14 yaşındaki Babür Semerkant'ı aldı, ancak şehri yalnızca yaklaşık 100 gün elinde tutabildi."
+	},
+	"bobur_03": {
+		"uz": "1501-yildagi Saripul jangidan so'ng Bobur Samarqandda qamalda qolgan va shaharni tark etishga majbur bo'lgan.",
+		"en": "After the Battle of Sar-i-Pul in 1501, Babur was besieged in Samarkand and had to leave the city.",
+		"ru": "После битвы при Сарипуле в 1501 году Бабур оказался в осаде в Самарканде и был вынужден покинуть город.",
+		"tr": "1501'deki Saripul Savaşı'ndan sonra Babür Semerkant'ta kuşatıldı ve şehri terk etmek zorunda kaldı."
+	},
+	"bobur_04": {
+		"uz": "1504-yilda Bobur Kobulni egallagan; bu shahar keyingi yigirma yildan ko'proq vaqt davomida uning tayanchi bo'lgan.",
+		"en": "In 1504 Babur took Kabul, which became his base for more than twenty years.",
+		"ru": "В 1504 году Бабур занял Кабул, ставший его опорой более чем на двадцать лет.",
+		"tr": "Babür 1504'te Kâbil'i aldı; şehir yirmi yılı aşkın süre onun dayanağı oldu."
+	},
+	"bobur_05": {
+		"uz": "Bobur Qandahorni 1507-yilda egallagan, shaharni uzil-kesil esa 1522-yilda qo'lga kiritgan.",
+		"en": "Babur first took Kandahar in 1507 and secured it for good in 1522.",
+		"ru": "Бабур впервые взял Кандагар в 1507 году, а окончательно закрепился в нём в 1522 году.",
+		"tr": "Babür Kandahar'ı ilk kez 1507'de aldı, şehri kesin olarak 1522'de ele geçirdi."
+	},
+	"bobur_06": {
+		"uz": "1511-yilda Bobur Samarqandga uchinchi marta kirgan, biroq bir yildan so'ng uni yana yo'qotgan.",
+		"en": "In 1511 Babur entered Samarkand for the third time, but lost it again a year later.",
+		"ru": "В 1511 году Бабур в третий раз вошёл в Самарканд, но через год снова его потерял.",
+		"tr": "1511'de Babür Semerkant'a üçüncü kez girdi, ancak bir yıl sonra şehri yeniden kaybetti."
+	},
+	"bobur_07": {
+		"uz": "\"Boburnoma\"ga ko'ra, 1519-yilda Bajaur qal'asi qamalida Bobur qo'shini o'qotar qurollardan foydalangan.",
+		"en": "According to the Baburnama, Babur's army used firearms at the siege of Bajaur fort in 1519.",
+		"ru": "Согласно «Бабур-наме», при осаде крепости Баджаур в 1519 году войско Бабура применило огнестрельное оружие.",
+		"tr": "Baburname'ye göre Babür'ün ordusu 1519'da Bajaur kalesi kuşatmasında ateşli silah kullandı."
+	},
+	"bobur_08": {
+		"uz": "Bobur o'z xotiralarini — \"Boburnoma\"ni ona tilida, chig'atoy turkiyida yozgan.",
+		"en": "Babur wrote his memoirs, the Baburnama, in his native Chagatai Turkic.",
+		"ru": "Бабур написал свои воспоминания, «Бабур-наме», на родном чагатайском тюркском языке.",
+		"tr": "Babür anılarını, Baburname'yi, ana dili Çağatay Türkçesiyle yazdı."
+	},
+	"bobur_09": {
+		"uz": "1526-yil 21-aprelda Panipat jangida Bobur zambaraklar va qanotdan aylanib o'tish (to'lg'ama) usulini qo'llagan.",
+		"en": "At the Battle of Panipat on 21 April 1526, Babur used cannons and the flanking tactic known as tulughma.",
+		"ru": "В битве при Панипате 21 апреля 1526 года Бабур применил пушки и фланговый охват — тулугму.",
+		"tr": "21 Nisan 1526'daki Panipat Savaşı'nda Babür toplar ve tulgama denen kuşatma taktiğini kullandı."
+	},
+	"bobur_10": {
+		"uz": "1527-yil 17-martda Xanva jangida Bobur Rana Sanga boshchiligidagi Rajput ittifoqi qo'shini bilan jang qilib, g'alaba qozongan.",
+		"en": "On 17 March 1527, at the Battle of Khanwa, Babur won against the Rajput alliance led by Rana Sanga.",
+		"ru": "17 марта 1527 года в битве при Кханве Бабур одержал победу над союзом раджпутов во главе с Раной Сангой.",
+		"tr": "17 Mart 1527'deki Hanva Savaşı'nda Babür, Rana Sanga liderliğindeki Racput ittifakına karşı zafer kazandı."
 	}
 }

@@ -12,7 +12,7 @@
 					250
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_02",
@@ -21,7 +21,7 @@
 					440
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_03",
@@ -30,7 +30,7 @@
 					345
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_04",
@@ -39,7 +39,7 @@
 					170
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_05",
@@ -48,7 +48,7 @@
 					330
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_06",
@@ -57,7 +57,7 @@
 					370
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_07",
@@ -66,7 +66,7 @@
 					95
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_08",
@@ -75,7 +75,7 @@
 					480
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_09",
@@ -84,7 +84,7 @@
 					355
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "temur_10",
@@ -93,7 +93,7 @@
 					215
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			}
 		],
 		"seas": [
@@ -316,7 +316,7 @@
 					210
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_02",
@@ -325,7 +325,7 @@
 					140
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_03",
@@ -334,7 +334,7 @@
 					95
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_04",
@@ -343,7 +343,7 @@
 					300
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_05",
@@ -352,7 +352,7 @@
 					280
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_06",
@@ -361,7 +361,7 @@
 					230
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_07",
@@ -370,7 +370,7 @@
 					170
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_08",
@@ -379,7 +379,7 @@
 					390
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_09",
@@ -388,7 +388,7 @@
 					300
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "chingiz_10",
@@ -397,7 +397,7 @@
 					330
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			}
 		],
 		"seas": [
@@ -520,7 +520,7 @@
 					140
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_02",
@@ -529,7 +529,7 @@
 					240
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_03",
@@ -538,7 +538,7 @@
 					265
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_04",
@@ -547,7 +547,7 @@
 					150
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_05",
@@ -556,7 +556,7 @@
 					280
 				],
 				"terrain": "desert",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_06",
@@ -565,7 +565,7 @@
 					430
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_07",
@@ -574,7 +574,7 @@
 					370
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_08",
@@ -583,7 +583,7 @@
 					310
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_09",
@@ -592,7 +592,7 @@
 					520
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "jaloliddin_10",
@@ -601,7 +601,7 @@
 					460
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			}
 		],
 		"seas": [
@@ -740,7 +740,7 @@
 					230
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_02",
@@ -749,7 +749,7 @@
 					330
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_03",
@@ -758,7 +758,7 @@
 					150
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_04",
@@ -767,7 +767,7 @@
 					245
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_05",
@@ -776,7 +776,7 @@
 					215
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_06",
@@ -785,7 +785,7 @@
 					90
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_07",
@@ -794,7 +794,7 @@
 					110
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_08",
@@ -803,7 +803,7 @@
 					170
 				],
 				"terrain": "green",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_09",
@@ -812,7 +812,7 @@
 					320
 				],
 				"terrain": "mountain",
-				"levels": 10
+				"levels": 25
 			},
 			{
 				"id": "boyazid_10",
@@ -821,7 +821,7 @@
 					300
 				],
 				"terrain": "steppe",
-				"levels": 10
+				"levels": 25
 			}
 		],
 		"seas": [
@@ -957,6 +957,206 @@
 					400
 				]
 			]
+		]
+	},
+	"bobur": {
+		"size": [
+			1000,
+			600
+		],
+		"seas": [
+			[
+				[
+					0,
+					0
+				],
+				[
+					130,
+					0
+				],
+				[
+					170,
+					60
+				],
+				[
+					110,
+					120
+				],
+				[
+					0,
+					100
+				]
+			]
+		],
+		"rivers": [
+			[
+				[
+					980,
+					60
+				],
+				[
+					860,
+					80
+				],
+				[
+					760,
+					60
+				],
+				[
+					680,
+					40
+				]
+			],
+			[
+				[
+					700,
+					170
+				],
+				[
+					600,
+					160
+				],
+				[
+					480,
+					180
+				],
+				[
+					340,
+					140
+				],
+				[
+					200,
+					110
+				]
+			],
+			[
+				[
+					560,
+					260
+				],
+				[
+					600,
+					380
+				],
+				[
+					620,
+					480
+				],
+				[
+					600,
+					600
+				]
+			],
+			[
+				[
+					900,
+					330
+				],
+				[
+					880,
+					430
+				],
+				[
+					920,
+					520
+				],
+				[
+					960,
+					600
+				]
+			]
+		],
+		"regions": [
+			{
+				"id": "bobur_01",
+				"center": [
+					820,
+					110
+				],
+				"terrain": "green",
+				"levels": 25
+			},
+			{
+				"id": "bobur_02",
+				"center": [
+					600,
+					120
+				],
+				"terrain": "green",
+				"levels": 25
+			},
+			{
+				"id": "bobur_03",
+				"center": [
+					450,
+					90
+				],
+				"terrain": "steppe",
+				"levels": 25
+			},
+			{
+				"id": "bobur_04",
+				"center": [
+					430,
+					330
+				],
+				"terrain": "mountain",
+				"levels": 25
+			},
+			{
+				"id": "bobur_05",
+				"center": [
+					210,
+					440
+				],
+				"terrain": "desert",
+				"levels": 25
+			},
+			{
+				"id": "bobur_06",
+				"center": [
+					560,
+					220
+				],
+				"terrain": "mountain",
+				"levels": 25
+			},
+			{
+				"id": "bobur_07",
+				"center": [
+					600,
+					330
+				],
+				"terrain": "mountain",
+				"levels": 25
+			},
+			{
+				"id": "bobur_08",
+				"center": [
+					730,
+					380
+				],
+				"terrain": "green",
+				"levels": 25
+			},
+			{
+				"id": "bobur_09",
+				"center": [
+					850,
+					460
+				],
+				"terrain": "steppe",
+				"levels": 25
+			},
+			{
+				"id": "bobur_10",
+				"center": [
+					740,
+					540
+				],
+				"terrain": "desert",
+				"levels": 25
+			}
 		]
 	}
 }

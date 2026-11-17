@@ -1,11 +1,11 @@
 Jahongirlar — tarixning buyuk sarkardalari bilan 2D strategik jang o'yini.
 
-Chingizxon, Jaloliddin Manguberdi, Amir Temur va Boyazid Yildirim boshchiligida qo'shin to'plang, ishchilar bilan oltin qazing va dushman qal'asini yiqiting.
+Chingizxon, Jaloliddin Manguberdi, Amir Temur, Boyazid Yildirim va Zahiriddin Bobur boshchiligida qo'shin to'plang, ishchilar bilan oltin qazing va dushman qal'asini yiqiting.
 
-⚔️ 4 SARKARDA — 4 KAMPANIYA
+⚔️ 5 SARKARDA — 5 KAMPANIYA
 • Har bir sarkardaning o'z tarixiy xaritasi: viloyatlar, daryolar, tog'lar
-• 1000 ta bosqich, har viloyat oxirida kuchli boss
-• Har sarkardaning maxsus kuchi: Dasht bo'roni, Sind sakrashi, Kuch adolatda, Yashin hujumi
+• 1250 ta bosqich, har viloyat oxirida kuchli boss
+• Har sarkardaning maxsus kuchi: Dasht bo'roni, Sind sakrashi, Kuch adolatda, Yashin hujumi, To'p zarbasi
 
 🏰 STRATEGIYA
 • Ishchi, qilichboz, nayzachi, kamonchi, otliq — har biri boshqasiga qarshi kuchli

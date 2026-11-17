@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-17 (22) — Yangilanish: Bobur kampaniyasi, 2-qism (rejali ish)
+- 5-kampaniya "Bobur yo'li" (1494–1527): Andijon, Samarqand, Saripul, Kobul, Qandahor, Hisor, Bajaur,
+  Lahor, Panipat, Xanva — 10 viloyat × 25 = 250 level (jami **1250 level**). 300 ★ va Boyazidning 2 viloyatidan keyin ochiladi.
+- Yangi xarita (`tools/gen_maps.py`), 10 ta manbali fakt ("Boburnoma" asosida), 4 tilda.
+- Qiyinlik: birinchi o'lchovda 60% (juda qiyin) → egri chiziq Temur darajasiga tushirildi → 82%, devor yo'q.
+- Kampaniya tablari 5 tasini sig'diradi; g'alaba oynasida bir xil sandiqlar "×N" bo'lib guruhlanadi
+  (ko'p yulduz birdan kelganda ro'yxat ekrandan chiqib ketardi).
+
 ### 2026-11-16 (21) — Yangilanish: Yangi sarkarda Bobur, 1-qism (rejali ish)
 - Zahiriddin Muhammad Bobur: Temuriylar uslubidagi yashil salla va oltin jig'a, yashil plash.
 - Maxsus kuch "To'p zarbasi": 3 ta ketma-ket portlash (zarar 55, itarish, 0.8 s karaxtlik), yangi zambarak ovozi.
@@ -214,7 +222,7 @@
   (Temur chorlovi +30%, 38 s; Boyazid HP 1080, yashin 85). 6-bosqichda ko'proq jang bilan qayta tekshiriladi.
 
 
-## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · (c) turnir ✅ · (d) Bobur 1-qism ✅ · keyingi: (d) Bobur kampaniyasi va xaritasi; 7-bosqich foydalanuvchi akkauntini kutadi
+## Holat: 0–3 ✅ · §12(a) xaritalar ✅ · §12(b) menyu ✅ · §12(c) ustaxona ✅ · §12(d) hiylalar ✅ · §12(e) sandiqlar ✅ · §12(f) libos ✅ · §12(g) bozor ✅ · §12(h) tutorial ✅ · 3 saqlash sloti ✅ · yutuqlar ✅ · 5-bosqich sayqal ✅ · 6-bosqich ✅ · 8-bosqich tayyorgarligi ✅ · yangilanish (a) Fathlar 1000 level ✅ · (b) haftalik vazifalar ✅ · (c) turnir ✅ · (d) Bobur 1-qism ✅ · (d) Bobur kampaniyasi ✅ · yangilanishlar navbati (a)–(d) tugadi; 7-bosqich foydalanuvchi akkauntini kutadi
 
 ### 2026-11-13
 **Bajarildi**

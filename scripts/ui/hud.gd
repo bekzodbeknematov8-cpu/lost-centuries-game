@@ -900,8 +900,14 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		star_row.reset(int(result.stars))
 		if int(result.coins) > 0:
 			stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
+		var chest_n := {}
 		for ch in result.get("chests", []):
-			stats.text += "\n▣ " + tr("CHEST_REWARD") % tr(str(GameData.chests.chests[ch].name))
+			chest_n[ch] = int(chest_n.get(ch, 0)) + 1
+		for ch in chest_n:
+			var cname := tr(str(GameData.chests.chests[ch].name))
+			if int(chest_n[ch]) > 1:
+				cname += " ×%d" % int(chest_n[ch])
+			stats.text += "\n▣ " + tr("CHEST_REWARD") % cname
 		if not victory:
 			stats.text += "\n" + tr("HINT_DEFEAT")
 		var f: Dictionary = GameData.facts.get(str(lv.id), {})

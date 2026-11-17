@@ -5,7 +5,8 @@
 		"chingiz",
 		"jaloliddin",
 		"temur",
-		"boyazid"
+		"boyazid",
+		"bobur"
 	],
 	"campaigns": {
 		"chingiz": {
@@ -602,6 +603,139 @@
 					"enemy_hero": "temur",
 					"par": 400,
 					"enemy_castle": 2600
+				}
+			]
+		},
+		"bobur": {
+			"name": {
+				"uz": "Bobur yo'li",
+				"en": "Babur's Road",
+				"ru": "Путь Бабура",
+				"tr": "Babür'ün Yolu"
+			},
+			"years": "1494–1527",
+			"require_stars": 300,
+			"hero": "bobur",
+			"levels": [
+				{
+					"id": "bobur_01",
+					"name": {
+						"uz": "Andijon taxti",
+						"en": "Throne of Andijan",
+						"ru": "Трон Андижана",
+						"tr": "Andican Tahtı"
+					},
+					"ai": "normal",
+					"enemy_income": 1.0,
+					"par": 320
+				},
+				{
+					"id": "bobur_02",
+					"name": {
+						"uz": "Samarqand",
+						"en": "Samarkand",
+						"ru": "Самарканд",
+						"tr": "Semerkant"
+					},
+					"ai": "normal",
+					"enemy_income": 1.02,
+					"par": 320
+				},
+				{
+					"id": "bobur_03",
+					"name": {
+						"uz": "Saripul",
+						"en": "Sar-i-Pul",
+						"ru": "Сарипуль",
+						"tr": "Saripul"
+					},
+					"ai": "normal",
+					"enemy_income": 1.04,
+					"par": 320
+				},
+				{
+					"id": "bobur_04",
+					"name": {
+						"uz": "Kobul",
+						"en": "Kabul",
+						"ru": "Кабул",
+						"tr": "Kâbil"
+					},
+					"ai": "normal",
+					"enemy_income": 1.06,
+					"par": 320
+				},
+				{
+					"id": "bobur_05",
+					"name": {
+						"uz": "Qandahor",
+						"en": "Kandahar",
+						"ru": "Кандагар",
+						"tr": "Kandahar"
+					},
+					"ai": "normal",
+					"enemy_income": 1.08,
+					"par": 320
+				},
+				{
+					"id": "bobur_06",
+					"name": {
+						"uz": "Hisor",
+						"en": "Hisor",
+						"ru": "Гиссар",
+						"tr": "Hisar"
+					},
+					"ai": "normal",
+					"enemy_income": 1.1,
+					"par": 320
+				},
+				{
+					"id": "bobur_07",
+					"name": {
+						"uz": "Bajaur qal'asi",
+						"en": "Bajaur Fort",
+						"ru": "Крепость Баджаур",
+						"tr": "Bajaur Kalesi"
+					},
+					"ai": "normal",
+					"enemy_income": 1.12,
+					"par": 320
+				},
+				{
+					"id": "bobur_08",
+					"name": {
+						"uz": "Lahor",
+						"en": "Lahore",
+						"ru": "Лахор",
+						"tr": "Lahor"
+					},
+					"ai": "hard",
+					"enemy_income": 0.92,
+					"par": 320
+				},
+				{
+					"id": "bobur_09",
+					"name": {
+						"uz": "Panipat",
+						"en": "Panipat",
+						"ru": "Панипат",
+						"tr": "Panipat"
+					},
+					"ai": "hard",
+					"enemy_income": 0.95,
+					"par": 320
+				},
+				{
+					"id": "bobur_10",
+					"name": {
+						"uz": "Xanva",
+						"en": "Khanwa",
+						"ru": "Кханва",
+						"tr": "Hanva"
+					},
+					"ai": "hard",
+					"enemy_income": 0.98,
+					"par": 330
 				}
 			]
 		}

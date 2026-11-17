@@ -356,8 +356,11 @@ func test_campaign_data_valid() -> void:
 	var c := camp()
 	var hd := load_json("res://data/heroes.json")
 	var facts := load_json("res://data/facts.json")
-	check(c.order.size() == 4, "4 ta kampaniya bo'lishi kerak")
+	check(c.order.size() == 5, "5 ta kampaniya bo'lishi kerak")
+	var maps := load_json("res://data/maps.json")
 	for cid in c.order:
+		check(maps.has(cid) and maps[cid].regions.size() == c.campaigns[cid].levels.size(), "%s: xarita viloyatlari mos emas" % cid)
+		check(ResourceLoader.exists("res://assets/maps/%s.png" % cid) and ResourceLoader.exists("res://assets/maps/%s_idx.png" % cid), "%s: xarita rasmi yo'q" % cid)
 		var levels: Array = c.campaigns[cid].levels
 		check(levels.size() == 10, "%s: 10 ta bosqich bo'lishi kerak" % cid)
 		check(hd.has(c.campaigns[cid].hero), "%s: qahramon topilmadi" % cid)
@@ -417,7 +420,7 @@ func test_region_levels_structure() -> void:
 			check(not ids.has(lv.id), "takroriy level ID: %s" % lv.id)
 			ids[lv.id] = true
 			check(Campaign.level_by_id(c, lv.id).id == lv.id, "level_by_id topmadi: %s" % lv.id)
-	check(total == 1000, "jami 1000 level bo'lishi kerak, %d bor" % total)
+	check(total == 250 * c.order.size(), "har kampaniyada 250 level bo'lishi kerak, %d bor" % total)
 	# Qiyinlik viloyat ichida silliq oshadi
 	var lv1: Dictionary = Campaign.region_levels(c, "temur", 5)[0]
 	var lv9: Dictionary = Campaign.region_levels(c, "temur", 5)[8]
@@ -885,7 +888,7 @@ func test_thousand_levels() -> void:
 	for cid in c.order:
 		total += Campaign.all_levels(c, cid).size()
 	check(Campaign.level_count(c) == 25, "har viloyatda 25 level bo'lishi kerak")
-	check(total == 1000, "jami 1000 level kutilgan: %d" % total)
+	check(total == 25 * 10 * c.order.size(), "jami %d level kutilgan: %d" % [250 * c.order.size(), total])
 	var ids := {}
 	for cid in c.order:
 		for lv in Campaign.all_levels(c, cid):

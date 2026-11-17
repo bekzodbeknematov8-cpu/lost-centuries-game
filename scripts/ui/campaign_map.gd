@@ -34,7 +34,7 @@ class Tab:
 	func _init(id: String) -> void:
 		cid = id
 		focus_mode = Control.FOCUS_NONE
-		custom_minimum_size = Vector2(200, 60)
+		custom_minimum_size = Vector2(180, 60)
 		var hero: String = GameData.campaigns.campaigns[id].hero
 		_u.type = hero
 		_u.def = GameData.heroes[hero]
