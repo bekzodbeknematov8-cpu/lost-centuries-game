@@ -42,6 +42,18 @@ func _ready() -> void:
 		my_hero = str(bc.cfg.heroes[0])
 		enemy_hero = str(bc.cfg.heroes[1])
 		sim.setup(GameData.units, bc.cfg, GameData.heroes)
+	elif GameState.mode == "daily":
+		var dc := DailyChallenge.battle_config(GameData.daily_challenge, GameState.today(), GameData.ai, GameData.heroes, my_hero, randi())
+		dc.cfg.upgrades = [GameState.upgrade_effects(), {}]
+		if not dc.cfg.has("allowed"):
+			# Qoida askarlarni cheklamasa: ikki tomon ham o'yinchi ochgan askarlar bilan (adolatli)
+			var ul := Campaign.unlocked_units(GameData.units, GameState.progress.stars)
+			dc.cfg.allowed = [ul, ul.duplicate()]
+		ai_p = dc.ai
+		enemy_hero = str(dc.cfg.heroes[1])
+		my_hero = str(dc.cfg.heroes[0])
+		terrain = str(dc.terrain)
+		sim.setup(GameData.units, dc.cfg, GameData.heroes)
 	elif GameState.mode == "tournament":
 		var t: Dictionary = GameState.progress.tournament
 		my_hero = str(t.hero)
@@ -180,6 +192,8 @@ func _process(delta: float) -> void:
 				result.chests.append(str(GameData.chests.boss_chest))
 			for i in GameState.grant_star_milestones():
 				result.chests.append("gold")
+		if GameState.mode == "daily" and level.is_empty() and not sim.endless:
+			result.daily = GameState.record_daily_challenge(won)
 		if GameState.mode == "tournament" and level.is_empty() and not sim.endless:
 			result.tournament = GameState.tournament_result(won)
 			result.coins = int(result.tournament.coins)

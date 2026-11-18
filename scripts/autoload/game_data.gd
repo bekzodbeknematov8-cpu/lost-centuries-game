@@ -15,6 +15,7 @@ var market: Dictionary = {}
 var achievements: Dictionary = {}
 var weekly: Dictionary = {}
 var tournament: Dictionary = {}
+var daily_challenge: Dictionary = {}
 
 
 func _init() -> void:
@@ -32,6 +33,7 @@ func _init() -> void:
 	achievements = load_json("res://data/achievements.json")
 	weekly = load_json("res://data/weekly.json")
 	tournament = load_json("res://data/tournament.json")
+	daily_challenge = load_json("res://data/daily_challenge.json")
 
 
 static func load_json(path: String) -> Dictionary:

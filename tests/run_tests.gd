@@ -1219,3 +1219,53 @@ func squad_fight(a: String, b: String) -> float:
 					break
 			wins += 1.0 if s.army_value(ta) > s.army_value(tb) else 0.0
 	return wins / 4.0
+
+
+# --- Kunlik sinov --------------------------------------------------------------------
+
+func test_daily_challenge_rules() -> void:
+	var dc := load_json("res://data/daily_challenge.json")
+	var hd := load_json("res://data/heroes.json")
+	check(DailyChallenge.rule_id(dc, "2026-11-18") == DailyChallenge.rule_id(dc, "2026-11-18"), "bir kunda qoida bir xil")
+	var seen := {}
+	var prev := ""
+	for i in 40:
+		var date := Time.get_date_string_from_unix_time(1780000000 + i * 86400)
+		var r := DailyChallenge.rule_id(dc, date)
+		check(dc.rules.has(r), "noma'lum qoida")
+		check(r != prev, "ketma-ket ikki kun bir xil qoida: %s" % date)
+		prev = r
+		seen[r] = true
+	check(seen.size() == dc.rules.size(), "40 kunda hamma qoidalar chiqishi kerak")
+	for rid in dc.rules:
+		# Har bir qoida bilan jang quriladi va oxiriga yetadi
+		var s := BattleSim.new()
+		var date := ""
+		for i in 60:
+			var dd := Time.get_date_string_from_unix_time(1780000000 + i * 86400)
+			if DailyChallenge.rule_id(dc, dd) == rid:
+				date = dd
+				break
+		var bc := DailyChallenge.battle_config(dc, date, ai_params, hd, "temur", 7)
+		s.setup(defs, bc.cfg, hd)
+		if bool(dc.rules[rid].cfg.get("no_heroes", false)):
+			check(s.hero_of(0) == null and s.hero_of(1) == null, "sarkardasiz qoidada sarkarda bo'lmasligi kerak")
+		var ais := [AIController.new(0, ai_params.normal, 1), AIController.new(1, bc.ai, 2)]
+		for k in int(900.0 / BattleSim.STEP):
+			for a in ais:
+				a.update(s, BattleSim.STEP)
+			s.step()
+			s.events.clear()
+			if s.winner >= 0:
+				break
+		check(s.winner >= 0, "%s: jang 15 daqiqada tugamadi" % rid)
+
+
+func test_daily_challenge_reward_once() -> void:
+	var dc := load_json("res://data/daily_challenge.json")
+	var p := {"coins": 0, "gems": 0, "chests": {}}
+	check(not bool(DailyChallenge.record(dc, p, "2026-11-18", false).reward), "mag'lubiyatda mukofot yo'q")
+	check(bool(DailyChallenge.record(dc, p, "2026-11-18", true).reward), "birinchi g'alabada mukofot")
+	var c1 := int(p.coins)
+	check(not bool(DailyChallenge.record(dc, p, "2026-11-18", true).reward) and int(p.coins) == c1, "bir kunda ikki marta mukofot berilmasin")
+	check(bool(DailyChallenge.record(dc, p, "2026-11-19", true).reward), "ertasi kuni yana mukofot")

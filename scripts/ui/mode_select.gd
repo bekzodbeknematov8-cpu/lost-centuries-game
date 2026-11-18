@@ -18,7 +18,7 @@ class ModeCard:
 		title = ttl
 		sub = s
 		locked = lock
-		custom_minimum_size = Vector2(212, 330)
+		custom_minimum_size = Vector2(186, 330)
 		focus_mode = Control.FOCUS_NONE
 		for st in ["normal", "hover", "pressed", "disabled"]:
 			add_theme_stylebox_override(st, StyleBoxEmpty.new())
@@ -33,7 +33,7 @@ class ModeCard:
 		draw_style_box(UITheme.box(Color(0.14, 0.08, 0.05), Painter.GOLD if hov else Color(0.7, 0.5, 0.2), 14, 4), r)
 		var art := Rect2(8, 8, size.x - 16, size.y - 96)
 		var bgc := {"campaign": Color(0.85, 0.75, 0.55), "skirmish": Color(0.62, 0.22, 0.14), "endless": Color(0.25, 0.3, 0.45),
-			"tournament": Color(0.55, 0.38, 0.1), "weekly": Color(0.22, 0.42, 0.3)}
+			"tournament": Color(0.55, 0.38, 0.1), "weekly": Color(0.22, 0.42, 0.3), "daily": Color(0.5, 0.2, 0.35)}
 		draw_rect(art, bgc.get(kind, Color.GRAY))
 		var c := art.get_center()
 		var g := Painter.GOLD
@@ -70,6 +70,14 @@ class ModeCard:
 				draw_colored_polygon(PackedVector2Array([c + Vector2(-40, -60), c + Vector2(40, -60), c + Vector2(28, 0), c + Vector2(-28, 0)]), g)
 				draw_rect(Rect2(c + Vector2(-8, 0), Vector2(16, 30)), g)
 				draw_rect(Rect2(c + Vector2(-34, 30), Vector2(68, 16)), g)
+			"daily":
+				# Quyosh va bitta belgilangan kun
+				draw_circle(c + Vector2(0, -10), 34.0, g)
+				for i in 8:
+					var ang := TAU * i / 8.0 + _t * 0.3
+					draw_line(c + Vector2(0, -10) + Vector2.from_angle(ang) * 42.0, c + Vector2(0, -10) + Vector2.from_angle(ang) * 56.0, g, 5.0)
+				draw_circle(c + Vector2(0, -10), 20.0, Color(0.5, 0.2, 0.35))
+				draw_string(get_theme_default_font(), c + Vector2(-20, 0), "1", HORIZONTAL_ALIGNMENT_CENTER, 40, 30, g)
 			"weekly":
 				draw_rect(Rect2(c + Vector2(-55, -50), Vector2(110, 100)), Color(0.95, 0.9, 0.8))
 				draw_rect(Rect2(c + Vector2(-55, -50), Vector2(110, 24)), Color(0.75, 0.2, 0.15))
@@ -107,7 +115,7 @@ func _ready() -> void:
 	row.set_anchors_preset(Control.PRESET_CENTER)
 	row.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	row.grow_vertical = Control.GROW_DIRECTION_BOTH
-	row.add_theme_constant_override("separation", 18)
+	row.add_theme_constant_override("separation", 12)
 	add_child(row)
 	var best := int(GameState.progress.get("best_wave", 0))
 	var cards := [
@@ -116,6 +124,7 @@ func _ready() -> void:
 		["endless", tr("MENU_ENDLESS"), tr("BEST_WAVE") % best if best > 0 else tr("MODE_ENDLESS_SUB"), false, _endless],
 		["tournament", tr("MODE_TOURNAMENT"), _tourn_sub(), false, _tournament],
 		["weekly", tr("MODE_WEEKLY"), _weekly_sub(), false, _weekly],
+		["daily", tr("MODE_DAILY"), _daily_sub(), false, _daily],
 	]
 	for cd in cards:
 		var card := ModeCard.new(cd[0], cd[1], cd[2], cd[3])
@@ -157,6 +166,18 @@ func _build_difficulty() -> void:
 	close.custom_minimum_size = Vector2(360, 50)
 	close.pressed.connect(func() -> void: _diff_panel.visible = false)
 	v.add_child(close)
+
+
+func _daily_sub() -> String:
+	if DailyChallenge.done_today(GameState.progress, GameState.today()):
+		return "✓ " + tr("DC_DONE")
+	var rid := DailyChallenge.rule_id(GameData.daily_challenge, GameState.today())
+	return tr(str(GameData.daily_challenge.rules[rid].name))
+
+
+func _daily() -> void:
+	Sfx.play("click", 0.7)
+	Transition.go("res://scenes/daily_screen.tscn")
 
 
 func _tourn_sub() -> String:

@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-18 (26) — 2-navbat (C): Kunlik sinov jangi (rejali ish)
+- Rejim tanlashda 6-karta "Kunlik sinov": har kuni sana bo'yicha 8 ta qoidadan biri (otliqlar kuni, zaif qal'alar,
+  oltin oqimi, o'q va nayza, sarkardasiz jang, fillar va miltiqlar, chidab tur, qilichlar to'qnashuvi),
+  ketma-ket ikki kun bir xil qoida chiqmaydi; raqib sarkarda va relyef ham kunga qarab.
+- Mukofot kuniga bir marta (◉250 + ♦5). `data/daily_challenge.json`, `tools/daily_balance.gd`.
+- Har qoida bot bilan o'lchandi: 50–75%; "Chidab tur" 37% → dushman daromadi pasaytirildi → 58%.
+- Rejim kartalari 6 tasini sig'diradi.
+
 ### 2026-11-18 (25) — 2-navbat (B): yangi askarlar — miltiqchi va jangovar fil (rejali ish)
 - Miltiqchi (100 ★): uzoqdan, sekin, kuchli; o'q va chaqnash, tutun; yangi ovoz.
 - Jangovar fil (250 ★): kajavali fil, yangi "bosib o'tish" mexanikasi (2 qo'shni dushmanga ham zarar); fil na'rasi ovozi.

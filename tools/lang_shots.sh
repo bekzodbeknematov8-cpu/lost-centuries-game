@@ -5,7 +5,7 @@ cd "$(dirname "$0")/.."
 OUT=${1:-/tmp/lang_shots}
 GODOT=${GODOT:-godot}
 mkdir -p "$OUT"
-SCENES="main_menu mode_select slots_screen campaign_map hero_select battle workshop tactics_shop chests_screen outfits_screen market achievements_screen weekly_screen tournament_screen"
+SCENES="main_menu mode_select slots_screen campaign_map hero_select battle workshop tactics_shop chests_screen outfits_screen market achievements_screen weekly_screen tournament_screen daily_screen"
 for loc in uz en ru tr; do
   for sc in $SCENES; do
     extra=""; t=2

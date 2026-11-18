@@ -653,6 +653,138 @@
 		"ru": "Задания недели",
 		"tr": "Haftalık görevler"
 	},
+	"MODE_DAILY": {
+		"uz": "Kunlik sinov",
+		"en": "Daily challenge",
+		"ru": "Испытание дня",
+		"tr": "Günlük meydan okuma"
+	},
+	"DC_CAVALRY": {
+		"uz": "Otliqlar kuni",
+		"en": "Day of the Riders",
+		"ru": "День всадников",
+		"tr": "Süvariler Günü"
+	},
+	"DC_CAVALRY_DESC": {
+		"uz": "Ikki tomon ham faqat otliq yollay oladi. Boshida ko'proq oltin.",
+		"en": "Both sides can only train cavalry. More starting gold.",
+		"ru": "Обе стороны нанимают только всадников. Больше золота в начале.",
+		"tr": "İki taraf da yalnızca süvari yetiştirebilir. Başlangıçta daha çok altın."
+	},
+	"DC_FRAGILE": {
+		"uz": "Zaif qal'alar",
+		"en": "Fragile Fortresses",
+		"ru": "Хрупкие крепости",
+		"tr": "Kırılgan Kaleler"
+	},
+	"DC_FRAGILE_DESC": {
+		"uz": "Ikkala qal'a ham juda zaif — tez hujum qilgan yutadi.",
+		"en": "Both fortresses are very weak — the faster attacker wins.",
+		"ru": "Обе крепости очень слабы — побеждает тот, кто атакует быстрее.",
+		"tr": "İki kale de çok zayıf — hızlı saldıran kazanır."
+	},
+	"DC_GOLD": {
+		"uz": "Oltin oqimi",
+		"en": "Gold Rush",
+		"ru": "Золотая лихорадка",
+		"tr": "Altın Akını"
+	},
+	"DC_GOLD_DESC": {
+		"uz": "Oltin juda tez qaziladi, raqib esa yanada boy. Katta qo'shinlar jangi!",
+		"en": "Gold flows fast, and the rival is even richer. A battle of huge armies!",
+		"ru": "Золото добывается очень быстро, а соперник ещё богаче. Битва огромных армий!",
+		"tr": "Altın çok hızlı akar, rakip daha da zengin. Dev orduların savaşı!"
+	},
+	"DC_ARCHERS": {
+		"uz": "O'q va nayza",
+		"en": "Arrows and Spears",
+		"ru": "Стрелы и копья",
+		"tr": "Ok ve Mızrak"
+	},
+	"DC_ARCHERS_DESC": {
+		"uz": "Faqat kamonchi va nayzachilar.",
+		"en": "Only archers and spearmen.",
+		"ru": "Только лучники и копейщики.",
+		"tr": "Yalnızca okçular ve mızrakçılar."
+	},
+	"DC_NOHERO": {
+		"uz": "Sarkardasiz jang",
+		"en": "Battle Without Commanders",
+		"ru": "Битва без полководцев",
+		"tr": "Komutansız Savaş"
+	},
+	"DC_NOHERO_DESC": {
+		"uz": "Hech bir tomonda sarkarda yo'q — hammasi qo'shin boshqaruviga bog'liq.",
+		"en": "No commanders on either side — it all comes down to how you lead the army.",
+		"ru": "Ни у одной стороны нет полководца — всё решает управление войском.",
+		"tr": "İki tarafta da komutan yok — her şey orduyu yönetmene bağlı."
+	},
+	"DC_GIANTS": {
+		"uz": "Fillar va miltiqlar",
+		"en": "Elephants and Muskets",
+		"ru": "Слоны и мушкеты",
+		"tr": "Filler ve Tüfekler"
+	},
+	"DC_GIANTS_DESC": {
+		"uz": "Faqat nayzachi, miltiqchi va jangovar fil. Bugun ular hamma uchun ochiq!",
+		"en": "Only spearmen, musketeers and war elephants. Today they are open to everyone!",
+		"ru": "Только копейщики, мушкетёры и боевые слоны. Сегодня они доступны всем!",
+		"tr": "Yalnızca mızrakçı, tüfekçi ve savaş fili. Bugün herkese açık!"
+	},
+	"DC_HOLD": {
+		"uz": "Chidab tur",
+		"en": "Hold the Line",
+		"ru": "Держать строй",
+		"tr": "Hattı Tut"
+	},
+	"DC_HOLD_DESC": {
+		"uz": "Kuchli dushmanga qarshi qal'ani 3,5 daqiqa saqlang.",
+		"en": "Defend your fortress against a stronger enemy for 3.5 minutes.",
+		"ru": "Удержите крепость против сильного врага 3,5 минуты.",
+		"tr": "Güçlü düşmana karşı kaleni 3,5 dakika savun."
+	},
+	"DC_SWORDS": {
+		"uz": "Qilichlar to'qnashuvi",
+		"en": "Clash of Swords",
+		"ru": "Звон мечей",
+		"tr": "Kılıçların Çarpışması"
+	},
+	"DC_SWORDS_DESC": {
+		"uz": "Faqat qilichbozlar — kim ko'proq va tezroq to'plasa.",
+		"en": "Swordsmen only — whoever gathers more, faster.",
+		"ru": "Только мечники — кто соберёт больше и быстрее.",
+		"tr": "Yalnızca kılıççılar — kim daha çok ve hızlı toplarsa."
+	},
+	"DC_ENEMY": {
+		"uz": "Bugungi raqib: %s",
+		"en": "Today's rival: %s",
+		"ru": "Соперник дня: %s",
+		"tr": "Bugünün rakibi: %s"
+	},
+	"DC_REWARD": {
+		"uz": "G'alaba mukofoti (kuniga bir marta): %s",
+		"en": "Victory reward (once a day): %s",
+		"ru": "Награда за победу (раз в день): %s",
+		"tr": "Zafer ödülü (günde bir kez): %s"
+	},
+	"DC_DONE": {
+		"uz": "Bugungi sinov bajarildi",
+		"en": "Today's challenge completed",
+		"ru": "Испытание дня пройдено",
+		"tr": "Bugünün görevi tamamlandı"
+	},
+	"DC_REWARD_GOT": {
+		"uz": "Kunlik sinov mukofoti:",
+		"en": "Daily challenge reward:",
+		"ru": "Награда испытания дня:",
+		"tr": "Günlük ödül:"
+	},
+	"DC_ALREADY": {
+		"uz": "Bugungi mukofot allaqachon olingan — ertaga yangi sinov!",
+		"en": "Today's reward was already claimed — a new challenge tomorrow!",
+		"ru": "Награда за сегодня уже получена — завтра новое испытание!",
+		"tr": "Bugünün ödülü zaten alındı — yarın yeni görev!"
+	},
 	"CHOOSE_DIFFICULTY": {
 		"uz": "Qiyinlikni tanlang",
 		"en": "Choose difficulty",

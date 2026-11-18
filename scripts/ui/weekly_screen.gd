@@ -89,14 +89,7 @@ func _ready() -> void:
 
 
 static func reward_text(r: Dictionary) -> String:
-	match str(r.type):
-		"coins":
-			return "◉ %d" % int(r.amount)
-		"gems":
-			return "♦ %d" % int(r.amount)
-		"chest":
-			return "▣ ×%d" % int(r.get("count", 1))
-	return ""
+	return Rewards.short_text(r)
 
 
 func _row(id: String) -> PanelContainer:

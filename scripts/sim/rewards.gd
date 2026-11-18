@@ -74,3 +74,15 @@ static func daily_status(last: String, streak: int, today: String, cycle: int) -
 	var consecutive := last != "" and day_number(today) - day_number(last) == 1
 	var new_streak := streak + 1 if consecutive else 1
 	return {"can_claim": true, "day": (new_streak - 1) % cycle, "streak": new_streak}
+
+
+static func short_text(r: Dictionary) -> String:
+	## Mukofotning qisqa ko'rinishi: "◉ 250", "♦ 5", "▣ ×1".
+	match str(r.get("type", "")):
+		"coins":
+			return "◉ %d" % int(r.amount)
+		"gems":
+			return "♦ %d" % int(r.amount)
+		"chest":
+			return "▣ ×%d" % int(r.get("count", 1))
+	return ""

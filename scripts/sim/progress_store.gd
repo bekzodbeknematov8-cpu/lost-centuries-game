@@ -9,7 +9,7 @@ const DIFFICULTIES := ["normal", "hard", "legend"]
 var path: String
 const AD_DAILY_LIMIT := 5
 
-var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}, "tournament": {"active": false, "hero": "", "round": 0, "best": 0, "champion": 0}}
+var data: Dictionary = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}, "tournament": {"active": false, "hero": "", "round": 0, "best": 0, "champion": 0}, "daily_ch": {}}
 
 
 func _init(file_path: String) -> void:
@@ -18,7 +18,7 @@ func _init(file_path: String) -> void:
 
 
 func load_file() -> void:
-	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}, "tournament": {"active": false, "hero": "", "round": 0, "best": 0, "champion": 0}}
+	data = {"version": VERSION, "stars": {}, "coins": 0, "gems": 0, "best_wave": 0, "ad_day": "", "ad_count": 0, "upgrades": {}, "heroes": [], "tactics": {}, "starter_given": false, "chests": {}, "daily_last": "", "daily_streak": 0, "star_milestones": 0, "outfit": "classic", "outfits": ["classic"], "reserves": {}, "no_ads": false, "bought_once": [], "adgem_day": "", "adgem_count": 0, "tutorial_done": false, "slots": [], "active_slot": 0, "stats": {}, "ach_claimed": [], "weekly": {}, "tournament": {"active": false, "hero": "", "round": 0, "best": 0, "champion": 0}, "daily_ch": {}}
 	if not FileAccess.file_exists(path):
 		_ensure_slots()
 		return
@@ -73,6 +73,8 @@ func load_file() -> void:
 	if p.get("ach_claimed") is Array:
 		for a in p.ach_claimed:
 			data.ach_claimed.append(str(a))
+	if p.get("daily_ch") is Dictionary:
+		data.daily_ch = {"day": str(p.daily_ch.get("day", "")), "won": bool(p.daily_ch.get("won", false))}
 	if p.get("tournament") is Dictionary:
 		var tt: Dictionary = p.tournament
 		data.tournament = {"active": bool(tt.get("active", false)), "hero": str(tt.get("hero", "")), "round": maxi(0, int(tt.get("round", 0))), "best": maxi(0, int(tt.get("best", 0))), "champion": maxi(0, int(tt.get("champion", 0)))}
@@ -439,5 +441,15 @@ func tournament_result(def: Dictionary, won: bool) -> Dictionary:
 	var r := Tournament.result(def, data, won)
 	if won:
 		_bump("tournament_wins", 1)
+	save_file()
+	return r
+
+
+# --- Kunlik sinov ------------------------------------------------------------------
+
+func record_daily_challenge(def: Dictionary, date: String, won: bool) -> Dictionary:
+	var r := DailyChallenge.record(def, data, date, won)
+	if bool(r.reward):
+		_bump("daily_ch", 1)
 	save_file()
 	return r

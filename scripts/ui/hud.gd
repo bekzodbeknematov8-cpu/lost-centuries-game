@@ -877,6 +877,13 @@ func show_end(victory: bool, result: Dictionary = {}) -> void:
 		if result.get("record", false):
 			stats.text += "   ★ " + tr("NEW_RECORD")
 		stats.text += "\n" + tr("COINS_EARNED") % int(result.coins)
+	if result.has("daily"):
+		if bool(result.daily.reward):
+			stats.text += "\n" + tr("DC_REWARD_GOT")
+			for r in GameData.daily_challenge.reward:
+				stats.text += "  " + Rewards.short_text(r)
+		elif victory:
+			stats.text += "\n" + tr("DC_ALREADY")
 	if result.has("tournament"):
 		var tr_r: Dictionary = result.tournament
 		var total := Tournament.rounds(GameData.tournament)
@@ -971,6 +978,9 @@ func _on_restart() -> void:
 
 func _on_menu() -> void:
 	get_tree().paused = false
+	if GameState.mode == "daily" and GameState.level_id == "":
+		Transition.go("res://scenes/daily_screen.tscn")
+		return
 	if GameState.mode == "tournament" and GameState.level_id == "":
 		# Jangdan chiqib ketish = mag'lubiyat (aks holda yutqazayotganda chiqib qayta urinish mumkin bo'lardi)
 		if not _end_panel.visible and bool(GameState.progress.tournament.get("active", false)):
