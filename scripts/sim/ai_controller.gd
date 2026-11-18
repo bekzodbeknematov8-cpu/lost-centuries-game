@@ -14,6 +14,8 @@ const COUNTERS := {
 	"swordsman": "archer",
 	"spearman": "archer",
 	"archer": "cavalry",
+	"musketeer": "cavalry",
+	"elephant": "spearman",
 }
 
 

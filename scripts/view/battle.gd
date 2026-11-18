@@ -35,6 +35,8 @@ func _ready() -> void:
 		terrain = terrain_for(GameData.maps, GameState.level_id)
 		var bc := Campaign.battle_config(GameData.campaigns, GameState.level_id, GameData.ai, randi(), GameState.slot_difficulty())
 		bc.cfg.upgrades = [GameState.upgrade_effects(), {}]
+		if not bc.level.has("allowed"):
+			bc.cfg.allowed[0] = Campaign.unlocked_units(GameData.units, GameState.progress.stars)
 		level = bc.level
 		ai_p = bc.ai
 		my_hero = str(bc.cfg.heroes[0])
@@ -45,6 +47,7 @@ func _ready() -> void:
 		my_hero = str(t.hero)
 		var tc := Tournament.battle_config(GameData.tournament, int(t.round), GameData.ai, GameData.heroes, my_hero, randi())
 		tc.cfg.upgrades = [GameState.upgrade_effects(), {}]
+		tc.cfg.allowed = [Campaign.unlocked_units(GameData.units, GameState.progress.stars), _enemy_units(str(tc.round.ai))]
 		ai_p = tc.ai
 		enemy_hero = str(tc.cfg.heroes[1])
 		terrain = str(tc.round.get("terrain", terrain))
@@ -57,6 +60,7 @@ func _ready() -> void:
 			"heroes": [my_hero, ""],
 			"endless": true,
 			"upgrades": [GameState.upgrade_effects(), {}],
+			"allowed": [Campaign.unlocked_units(GameData.units, GameState.progress.stars), Campaign.BASE_UNITS],
 		}, GameData.heroes)
 	else:
 		var others: Array = GameData.heroes.keys().filter(func(h: String) -> bool: return h != my_hero and bool(GameData.heroes[h].get("selectable", true)))
@@ -68,6 +72,7 @@ func _ready() -> void:
 			"start_units": [["worker", "worker"], ["worker", "worker"]],
 			"heroes": [my_hero, enemy_hero],
 			"upgrades": [GameState.upgrade_effects(), {}],
+			"allowed": [Campaign.unlocked_units(GameData.units, GameState.progress.stars), _enemy_units(diff)],
 		}, GameData.heroes)
 	enemy_ai = AIController.new(1, ai_p, randi())
 	cam = Camera2D.new()
@@ -109,6 +114,13 @@ func _ready() -> void:
 
 func _banner(text: String, life: float) -> void:
 	hud.show_banner(text, life)
+
+
+static func _enemy_units(ai_level: String) -> Array:
+	## Erkin jang va turnirda: oson raqib faqat asosiy askarlar, qolganlari miltiqchi va filni ham ishlatadi.
+	if ai_level == "easy":
+		return Campaign.BASE_UNITS.duplicate()
+	return GameData.units.keys()
 
 
 func _process(delta: float) -> void:
@@ -257,7 +269,11 @@ func _on_event(e: Dictionary) -> void:
 			if e.get("controlled", false):
 				hud.on_control_lost()
 		"shoot":
-			Sfx.play("bow", _vol_at(x) * 0.45)
+			if str(e.get("kind", "")) == "bullet":
+				Sfx.play("musket", _vol_at(x) * 0.6)
+				_add_dust(Vector2(x + (40.0 if e.team == 0 else -40.0), GROUND_Y - 30.0), 2)
+			else:
+				Sfx.play("bow", _vol_at(x) * 0.45)
 		"miss":
 			Sfx.play("arrow_ground", _vol_at(x) * 0.3)
 		"castle_hit":
@@ -281,6 +297,8 @@ func _on_event(e: Dictionary) -> void:
 		"trained":
 			if e.team == 0:
 				Sfx.play("ready", 0.5)
+			if str(e.get("unit", "")) == "elephant":
+				Sfx.play("elephant", maxf(0.4, _vol_at(x)), 0.05)
 		"swing":
 			Sfx.play("swing", _vol_at(x) * 0.6)
 		"stance":
@@ -431,7 +449,7 @@ func _draw_scene() -> void:
 		var pos := Vector2(u.x, _unit_y(u.lane))
 		# Soya
 		draw_set_transform(pos, 0.0, Vector2(1.0, 0.3))
-		draw_circle(Vector2.ZERO, 30.0 if u.type == "cavalry" else 16.0, Color(0, 0, 0, 0.18))
+		draw_circle(Vector2.ZERO, 48.0 if u.type == "elephant" else (30.0 if Painter.is_mounted(u) else 16.0), Color(0, 0, 0, 0.18))
 		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 		var sc := 1.2 if u.hero else 1.0
 		if u.is_alive() and sim.teams[u.team].buff_time > 0.0:
@@ -451,7 +469,7 @@ func _draw_scene() -> void:
 			draw_string_outline(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, 4, Color(0, 0, 0, 0.7))
 			draw_string(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, col)
 		if u.is_alive() and (u.hp < u.max_hp or u.hero):
-			var top := (-140.0 if u.hero else (-112.0 if Painter.is_mounted(u) else -98.0))
+			var top := (-140.0 if u.hero else (-158.0 if u.type == "elephant" else (-112.0 if Painter.is_mounted(u) else -98.0)))
 			var w := 54.0 if u.hero else 34.0
 			draw_rect(Rect2(pos.x - w * 0.5, pos.y + top, w, 5), Color(0, 0, 0, 0.5))
 			var col := Color(0.3, 0.85, 0.35) if u.team == 0 else Color(0.95, 0.3, 0.25)
@@ -504,6 +522,9 @@ func _dev_stress(delta: float) -> void:
 		return
 	if sim.time > 3.0 and _stress_frames.is_empty():
 		var kinds := ["swordsman", "spearman", "archer", "cavalry"]
+		for a in OS.get_cmdline_user_args():
+			if a.begins_with("--stress_kinds="):
+				kinds = Array(a.split("=")[1].split(","))
 		for i in _stress_n:
 			var u := sim.spawn_unit(i % 2, kinds[(i / 2) % kinds.size()])
 			u.x += (sim.teams[i % 2].dir) * float(i / 2) * 6.0

@@ -3,9 +3,9 @@ extends SceneTree
 ##   godot --headless --path . -s res://tools/squad_matrix.gd
 func _init():
 	var defs = JSON.parse_string(FileAccess.get_file_as_string("res://data/units.json"))
-	var types = ["swordsman","spearman","archer","cavalry"]
+	var types = ["swordsman","spearman","archer","cavalry","musketeer","elephant"]
 	var budget = 1650.0
-	print("           sword spear arch  cav")
+	print("           sword spear arch  cav   musk  eleph")
 	for a in types:
 		var row = "%-10s" % a
 		for b in types:

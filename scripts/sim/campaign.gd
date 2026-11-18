@@ -9,6 +9,8 @@ extends RefCounted
 ## Saqlash formatidan mustaqil (stars: {level_id: 0..3}), shuning uchun testlash oson.
 
 const DEFAULT_PLAYER_GOLD := 350
+## Har doim mavjud askarlar; qolganlari (miltiqchi, fil) yulduzlar bilan ochiladi (units.json: unlock_stars)
+const BASE_UNITS := ["worker", "swordsman", "spearman", "archer", "cavalry"]
 const STAR_CASTLE_2 := 0.5    ## 2-yulduz: qal'a kamida 50% butun
 const STAR_CASTLE_3 := 0.8    ## 3-yulduz: qal'a kamida 80% butun YOKI par vaqtdan tez
 const DEFAULT_REGION_LEVELS := 10
@@ -78,6 +80,8 @@ static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float, n_l
 		lv.allowed = boss.allowed
 	if boss.has("enemy_allowed"):
 		lv.enemy_allowed = boss.enemy_allowed
+	if boss.has("enemy_extra"):
+		lv.enemy_extra = boss.enemy_extra
 	# Xilma-xillik: ba'zi levellar mudofaa, ba'zilarida dushman oldinroq boshlaydi yoki sizga qo'shimcha oltin
 	match n % 5:
 		4:
@@ -159,7 +163,9 @@ static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dicti
 		# Mudofaa levellarida dushman tajovuzkorroq.
 		ai_p.attack_ratio = 0.9
 		ai_p.min_attack_value = 350
-	var all_units := ["worker", "swordsman", "spearman", "archer", "cavalry"]
+	var all_units := BASE_UNITS.duplicate()
+	var enemy_units: Array = all_units.duplicate()
+	enemy_units.append_array(lv.get("enemy_extra", []))   # tarixan shu yerda bo'lgan qo'shimcha askarlar (masalan fillar)
 	var eh := str(lv.get("enemy_hero", ""))
 	var cfg := {
 		"seed": seed_value,
@@ -167,7 +173,7 @@ static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dicti
 		"castle_hp": [int(lv.get("player_castle", 2000)), int(float(lv.get("enemy_castle", 2000)) * float(dif.castle))],
 		"income_mult": [1.0, float(lv.get("enemy_income", 1.0)) * float(dif.income)],
 		"start_units": [["worker", "worker"], ["worker", "worker"]],
-		"allowed": [lv.get("allowed", all_units), lv.get("enemy_allowed", all_units)],
+		"allowed": [lv.get("allowed", all_units), lv.get("enemy_allowed", enemy_units)],
 		"heroes": [str(data.campaigns[cid].hero), eh if eh != "" else "sardor"],
 		"survive_time": float(lv.get("survive", 0.0)) if lv.get("objective", "destroy") == "survive" else 0.0,
 	}
@@ -247,3 +253,13 @@ static func coins_for(level: Dictionary, stars: int) -> int:
 	if is_boss(str(level.get("id", ""))):
 		base *= 2
 	return base + stars * 15
+
+
+static func unlocked_units(unit_defs: Dictionary, stars: Dictionary) -> Array:
+	## O'yinchi uchun ochiq askarlar: asosiylar + yulduz talabi bajarilganlar.
+	var out: Array = BASE_UNITS.duplicate()
+	var total := total_stars(stars)
+	for k in unit_defs:
+		if unit_defs[k].has("unlock_stars") and total >= int(unit_defs[k].unlock_stars):
+			out.append(k)
+	return out

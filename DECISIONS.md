@@ -54,3 +54,13 @@
   Saljuqiy qo'shinida otliq kamonchilar asosiy kuch bo'lgani manbalarda qayd etilgan.
 - **Hurmat:** raqiblar (Vizantiya, Fotimiylar, Qoraxoniylar va b.) neytral, tarixiy davlatlar sifatida.
 - Narx: ustaxonada 5500 tanga. 2-qism: kampaniya, xarita, faktlar.
+
+## 2026-11-18 — Yangi askarlar: miltiqchi va jangovar fil
+- **Miltiqchi:** uzoqdan kuchli zarba, sekin qayta o'qlash. Kamonchi va filni yengadi; otliq va qilichbozga yutqazadi.
+  O'yinchiga 100 ★ da ochiladi. Bobur qo'shini o'qotar qurollardan foydalangan ("Boburnoma", Bajaur 1519, Panipat 1526).
+- **Jangovar fil:** juda chidamli, bir zarbada 2 ta qo'shni dushmanni ham "bosib o'tadi" (40% zarar).
+  Qilichboz, kamonchi, otliqni yengadi; nayzachi va miltiqchiga yutqazadi. O'yinchiga 250 ★ da ochiladi.
+- **Dushmanda faqat tarixan bo'lgan joyda:** fillar — Dehli (Temur, 1398), Lahor/Panipat/Xanva (Bobur);
+  JSON'da har boss uchun `enemy_extra`. Erkin jang/turnirda oson raqib faqat asosiy askarlar bilan.
+- Cheksiz mudofaada: 8-to'lqindan miltiqchi, 12-dan fil.
+- Kampaniya balansi vositasi bot-o'yinchiga o'sha kampaniya ochilgan paytdagi askarlarni beradi.

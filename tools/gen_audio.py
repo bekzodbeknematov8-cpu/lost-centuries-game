@@ -327,6 +327,23 @@ def sfx_cannon():
     return reverb(out, length=1.0, decay=0.35, wet=0.3)
 
 
+def sfx_musket():
+    # Miltiq: qisqa keskin portlash + o'rta chastotali "puf"
+    crack = band(noise(0.06), 800, 6000) * env_exp(0.06, 0.012, 0.0003) * 1.0
+    body = band(noise(0.35), 120, 1200) * env_exp(0.35, 0.09, 0.001) * 0.8
+    thump = glide(160, 60, 0.25) * env_exp(0.25, 0.07, 0.001) * 0.7
+    return reverb(mix(crack, body, thump), length=0.6, decay=0.25, wet=0.22)
+
+
+def sfx_elephant():
+    # Fil na'rasi: yuqoriga ko'tariluvchi "karnay" ovozi, biroz shovqin bilan
+    f0 = rng.uniform(420, 500)
+    tone = glide(f0, f0 * 1.5, 0.9) * env_exp(0.9, 0.6, 0.06) * 0.6
+    over = glide(f0 * 2, f0 * 3, 0.9) * env_exp(0.9, 0.5, 0.06) * 0.25
+    rasp = band(noise(0.9), 600, 3000) * env_exp(0.9, 0.5, 0.05) * 0.35
+    return reverb(mix(tone, over, rasp), length=0.8, decay=0.3, wet=0.25)
+
+
 def sfx_castle_fall():
     dur = 3.0
     rum = band(noise(dur), 30, 400) * env_exp(dur, 1.0, 0.05) * 1.2
@@ -488,7 +505,7 @@ SFX = {
     "deny": (sfx_deny, 1), "horn_attack": (sfx_horn_attack, 1), "horn_retreat": (sfx_horn_retreat, 1),
     "horn_enemy": (sfx_horn_enemy, 1), "drum": (sfx_drum, 1), "victory": (sfx_victory, 1),
     "defeat": (sfx_defeat, 1), "arrow_rain": (sfx_arrow_rain, 1), "leap": (sfx_leap, 1),
-    "thunder": (sfx_thunder, 1), "cannon": (sfx_cannon, 2), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
+    "thunder": (sfx_thunder, 1), "cannon": (sfx_cannon, 2), "musket": (sfx_musket, 3), "elephant": (sfx_elephant, 2), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
 }
 
 

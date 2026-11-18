@@ -547,6 +547,10 @@ func _update_waves(dt: float) -> void:
 	var pool: Array = ["swordsman", "spearman", "archer"]
 	if wave >= 3:
 		pool.append("cavalry")
+	if wave >= 8 and defs.has("musketeer"):
+		pool.append("musketeer")
+	if wave >= 12 and defs.has("elephant"):
+		pool.append("elephant")
 	var spawned := 0
 	while budget > 0.0 and spawned < 24:
 		var type: String = pool[rng.randi() % pool.size()]
@@ -897,6 +901,16 @@ func _attack_unit(u: UnitState, target: UnitState) -> void:
 		_fire(u.team, u.x, 58.0, target.id, -1, _damage_against(u, target.def.get("tags", [])), u.def.projectile, u.id)
 	else:
 		_pending_hits.append([target, _damage_against(u, target.def.get("tags", [])), str(u.def.weapon), u])
+		if u.def.has("trample"):
+			# Fil: yaqin turgan yana bir nechta dushmanni ham bosib o'tadi (kamroq zarar)
+			var tr: Dictionary = u.def.trample
+			var left := int(tr.targets)
+			for e in _candidates(1 - u.team, u.x - float(u.def.range) - 30.0, u.x + float(u.def.range) + 30.0):
+				if left <= 0:
+					break
+				if e != target and not e.hero and absf(e.x - u.x) <= float(u.def.range) + 20.0 and (e.x - u.x) * u.facing >= -10.0:
+					_pending_hits.append([e, _damage_against(u, e.def.get("tags", [])) * float(tr.mult), str(u.def.weapon), u])
+					left -= 1
 
 
 func _resolve_pending_hits() -> void:
@@ -935,7 +949,7 @@ func _fire(team_idx: int, from_x: float, height: float, target_id: int, castle_t
 	projectiles.append({
 		"team": team_idx, "from_x": from_x, "x": from_x, "h0": height,
 		"target": target_id, "castle": castle_team, "tx": tx,
-		"dmg": dmg, "kind": kind, "t": 0.0, "dur": maxf(0.25, dist / 620.0),
+		"dmg": dmg, "kind": kind, "t": 0.0, "dur": maxf(0.12, dist / 1500.0) if kind == "bullet" else maxf(0.25, dist / 620.0),
 		"shooter": shooter,
 	})
 	events.append({"type": "shoot", "team": team_idx, "x": from_x, "kind": kind})
@@ -959,7 +973,7 @@ func _update_projectiles(dt: float) -> void:
 		else:
 			var tu2 := get_unit(p.target)
 			if tu2 and tu2.is_alive() and absf(tu2.x - p.x) < 40.0:
-				_apply_damage(tu2, p.dmg, "arrow", get_unit(p.shooter))
+				_apply_damage(tu2, p.dmg, "bullet" if str(p.kind) == "bullet" else "arrow", get_unit(p.shooter))
 			else:
 				events.append({"type": "miss", "x": p.x, "kind": p.kind})
 	projectiles = keep
@@ -999,6 +1013,10 @@ static func hit_sound(weapon: String, armor_type: String) -> String:
 				_: return "hit_flesh"
 		"spear":
 			return "sword_shield" if armor_type == "shield" else "spear_hit"
+		"bullet", "musket":
+			return "sword_shield" if armor_type == "shield" else ("arrow_metal" if armor_type == "metal" else "arrow_flesh")
+		"tusk":
+			return "castle_hit" if armor_type == "metal" else "hit_flesh"
 		_:
 			return "hit_flesh"
 

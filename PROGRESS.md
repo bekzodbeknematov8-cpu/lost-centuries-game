@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-18 (25) — 2-navbat (B): yangi askarlar — miltiqchi va jangovar fil (rejali ish)
+- Miltiqchi (100 ★): uzoqdan, sekin, kuchli; o'q va chaqnash, tutun; yangi ovoz.
+- Jangovar fil (250 ★): kajavali fil, yangi "bosib o'tish" mexanikasi (2 qo'shni dushmanga ham zarar); fil na'rasi ovozi.
+- Qarshi turish (teng narxli otryadlar): fil > qilichboz/kamonchi; nayzachi, miltiqchi > fil; otliq > miltiqchi.
+- HUD faqat ochiq askarlarni ko'rsatadi (7 tagacha sig'adi). AI yangi askarlarni ishlatadi va ularga qarshi javob beradi.
+- Dushman fillari faqat tarixan bo'lgan joyda (Dehli, Lahor, Panipat, Xanva). Kampaniyalar qayta o'lchandi: devor yo'q.
+
 ### 2026-11-17 (24) — 2-navbat (A): Alp Arslon kampaniyasi, 2-qism (rejali ish)
 - 6-kampaniya "Malazgirt sari" (1063–1072): Marv, Ray, Ani, Jand, Kirmon, Isfahon, Gurjiston, Halab,
   Malazgirt, Amudaryo — 250 level (jami **1500 level**). 375 ★ va Boburning 2 viloyatidan keyin ochiladi.

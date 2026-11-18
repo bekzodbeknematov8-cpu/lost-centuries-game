@@ -89,6 +89,18 @@
 		"ru": "Лучник",
 		"tr": "Okçu"
 	},
+	"UNIT_MUSKETEER": {
+		"uz": "Miltiqchi",
+		"en": "Musketeer",
+		"ru": "Мушкетёр",
+		"tr": "Tüfekçi"
+	},
+	"UNIT_ELEPHANT": {
+		"uz": "Jangovar fil",
+		"en": "War elephant",
+		"ru": "Боевой слон",
+		"tr": "Savaş fili"
+	},
 	"UNIT_CAVALRY": {
 		"uz": "Otliq",
 		"en": "Cavalry",

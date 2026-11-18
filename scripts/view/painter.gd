@@ -43,7 +43,9 @@ static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float
 	var swing := 0.0
 	if u.attack_anim > 0.0:
 		swing = sin((1.0 - u.attack_anim / 0.35) * PI)
-	if is_mounted(u):
+	if u.type == "elephant":
+		_draw_elephant(ci, u, cols, walk, swing, alpha, flash, t)
+	elif is_mounted(u):
 		_draw_horse(ci, u, walk, alpha, t)
 		ci.draw_set_transform(pos + Vector2(0, -34 * scale_f).rotated(rot * u.facing), rot * u.facing, Vector2(u.facing * scale_f, scale_f))
 		if u.hero:
@@ -53,10 +55,54 @@ static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float
 		_draw_person(ci, u, cols, walk, swing, alpha, flash, t)
 	ci.draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	if u.is_alive() and u.stun > 0.0:
-		var top := pos + Vector2(0, (-118.0 if is_mounted(u) else -95.0) * scale_f)
+		var top := pos + Vector2(0, unit_top(u) * scale_f)
 		for i in 3:
 			var ang := t * 5.0 + i * TAU / 3.0
 			_star(ci, top + Vector2(cos(ang) * 14.0, sin(ang) * 4.0), 4.0, Color(1, 0.9, 0.3))
+
+
+static func unit_top(u: UnitState) -> float:
+	## Askar boshining tepasi (hayrat yulduzchalari va HP chizig'i uchun).
+	if u.type == "elephant":
+		return -150.0
+	return -118.0 if is_mounted(u) else -95.0
+
+
+static func _draw_elephant(ci: CanvasItem, u: UnitState, cols: Array, walk: float, swing: float, a: float, flash: bool, t: float) -> void:
+	## Jangovar fil: kulrang tana, xartumi, oq qoziq tishlari, ustida jamoa rangidagi kajava va fil haydovchi.
+	var skin := Color(0.52, 0.5, 0.5)
+	var dark := skin.darkened(0.25)
+	# Oyoqlar (yurganda navbatma-navbat)
+	for i in 4:
+		var lx := -32.0 + i * 20.0
+		var off := walk * 6.0 * (1.0 if i % 2 == 0 else -1.0)
+		ci.draw_rect(Rect2(Vector2(lx + off - 7, -38), Vector2(15, 38)), _c(dark if i % 2 == 0 else skin, a, flash))
+	# Tana
+	var body := PackedVector2Array()
+	for i in 20:
+		var ang := TAU * i / 20.0
+		body.append(Vector2(-6 + cos(ang) * 48.0, -62 + sin(ang) * 30.0))
+	ci.draw_colored_polygon(body, _c(skin, a, flash))
+	# Bosh va quloq
+	ci.draw_circle(Vector2(40, -74), 20.0, _c(skin, a, flash))
+	ci.draw_colored_polygon(PackedVector2Array([Vector2(30, -88), Vector2(18, -84), Vector2(16, -62), Vector2(28, -58)]), _c(dark, a, flash))
+	ci.draw_circle(Vector2(48, -80), 2.2, _c(DARK, a))
+	# Xartum (hujumda ko'tariladi)
+	var tr_end := Vector2(62, -30).lerp(Vector2(78, -92), swing)
+	ci.draw_polyline(PackedVector2Array([Vector2(54, -70), Vector2(60, -52).lerp(Vector2(70, -80), swing), tr_end]), _c(skin, a, flash), 9.0, true)
+	# Qoziq tishlar
+	ci.draw_line(Vector2(50, -62), Vector2(68, -50), _c(Color(0.97, 0.95, 0.88), a), 4.0, true)
+	# Kajava (jamoa rangida) va haydovchi
+	var tunic: Color = cols[0]
+	var trim: Color = cols[1]
+	ci.draw_rect(Rect2(Vector2(-34, -100), Vector2(46, 14)), _c(trim, a))
+	ci.draw_rect(Rect2(Vector2(-30, -116), Vector2(38, 18)), _c(tunic, a, flash))
+	ci.draw_line(Vector2(-30, -116), Vector2(8, -116), _c(GOLD, a), 3.0)
+	ci.draw_colored_polygon(PackedVector2Array([Vector2(-36, -84), Vector2(14, -84), Vector2(18, -60), Vector2(-40, -60)]), _c(tunic.darkened(0.15), a))
+	ci.draw_line(Vector2(-38, -72), Vector2(16, -72), _c(trim, a), 3.0)
+	var head := Vector2(-11, -126)
+	ci.draw_circle(head, 7.5, _c(SKIN, a, flash))
+	_draw_headgear(ci, "archer", head, cols, a)
 
 
 static func is_mounted(u: UnitState) -> bool:
@@ -165,6 +211,19 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 			ci.draw_line(shoulder, pull, _c(SKIN.darkened(0.1), a, flash), 4.0, true)
 			# O'qdon
 			ci.draw_rect(Rect2(-14, -60, 7, 22), _c(WOOD.darkened(0.2), a))
+		"musketeer":
+			# Uzun miltiq: yog'och qo'ndoq va po'lat stvol; o'q uzganda chaqnash va tutun
+			var recoil := swing * 4.0
+			var hand4 := shoulder + Vector2(10 - recoil, 6)
+			ci.draw_line(shoulder, hand4, _c(SKIN, a, flash), 5.0, true)
+			ci.draw_line(hand4 + Vector2(-16, 4), hand4 + Vector2(8, 0), _c(WOOD, a), 5.0, true)
+			ci.draw_line(hand4 + Vector2(6, 0), hand4 + Vector2(46, -3), _c(STEEL.darkened(0.2), a), 3.0, true)
+			if u.attack_anim > 0.2:
+				var mz := hand4 + Vector2(50, -3)
+				ci.draw_circle(mz, 6.0, _c(Color(1.0, 0.85, 0.4), a))
+				ci.draw_circle(mz + Vector2(8, -4), 9.0, _c(Color(0.75, 0.73, 0.7, 0.6), a))
+			# Porox xaltasi
+			ci.draw_circle(Vector2(-10, -36), 5.0, _c(WOOD.darkened(0.3), a))
 	if u.controlled and u.is_alive():
 		var pulse := 0.6 + 0.4 * sin(t * 6.0)
 		ci.draw_arc(Vector2(0, 2), 22.0, 0, TAU, 24, Color(1, 0.85, 0.2, pulse), 3.0)
@@ -228,6 +287,10 @@ static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Ar
 	match type:
 		"worker":
 			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9, -3), head + Vector2(9, -3), head + Vector2(5, -11), head + Vector2(-6, -11)]), _c(Color(0.55, 0.42, 0.28), a))
+		"musketeer":
+			# Baland kigiz qalpoq
+			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9, -2), head + Vector2(9, -2), head + Vector2(7, -20), head + Vector2(-5, -22)]), _c(trim.darkened(0.15), a))
+			ci.draw_line(head + Vector2(-10, -3), head + Vector2(10, -3), _c(cols[0].darkened(0.3), a), 4.0)
 		"archer":
 			# Mo'ynali qalpoq
 			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-10, -2), head + Vector2(10, -2), head + Vector2(6, -14), head + Vector2(-4, -15)]), _c(cols[0].darkened(0.35), a))
@@ -404,6 +467,13 @@ static func draw_mine(ci: CanvasItem, x: float, ground_y: float, t: float) -> vo
 
 static func draw_projectile(ci: CanvasItem, p: Dictionary, ground_y: float) -> void:
 	var k := clampf(p.t / p.dur, 0.0, 1.0)
+	if str(p.kind) == "bullet":
+		# Miltiq o'qi: deyarli to'g'ri chiziq, qisqa iz
+		var bp := Vector2(p.x, ground_y - lerpf(float(p.h0), 50.0, k))
+		var bd := signf(float(p.tx) - float(p.from_x))
+		ci.draw_line(bp - Vector2(bd * 14.0, 0), bp, Color(1, 0.9, 0.6, 0.5), 2.0)
+		ci.draw_circle(bp, 2.2, DARK)
+		return
 	var arc := 4.0 * k * (1.0 - k) * minf(140.0, absf(p.tx - p.from_x) * 0.3)
 	var h := lerpf(float(p.h0), 40.0, k) + arc
 	var pos := Vector2(p.x, ground_y - h)

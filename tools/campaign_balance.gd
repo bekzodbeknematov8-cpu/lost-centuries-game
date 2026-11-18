@@ -31,6 +31,8 @@ func _init():
 			var tsum := 0.0
 			for g in games:
 				var bc := Campaign.battle_config(camp, lv.id, ai, 700 + g)
+				# O'yinchi shu kampaniya ochilgan paytdagi yulduzlar bilan ochilgan askarlarga ega
+				bc.cfg.allowed[0] = Campaign.unlocked_units(defs, {"_": int(camp.campaigns[cid].require_stars)})
 				var s := BattleSim.new()
 				s.setup(defs, bc.cfg, hd)
 				var pa := AIController.new(0, ai.normal, g * 5 + 1)

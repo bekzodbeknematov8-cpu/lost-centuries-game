@@ -201,3 +201,8 @@ Birinchi o'lchov 100% (juda oson) → dushman iqtisodi oshirildi:
 | alp_10#13 | 100% | 3.0 | 2:40 |
 | alp_10 | 50% | 1.5 | 3:53 |
 | **alp jami** | **90%** | **2.7** | |
+
+## Yangi askarlardan keyin (2026-11-18)
+
+Temur: 76% (avval 75%), Bobur: 95% (avval 82%, endi o'yinchida ham miltiqchi/fil bor), Boyazid: 96%.
+temur_08 (Dehli, dushman fillari) 16 jangda 8/16.

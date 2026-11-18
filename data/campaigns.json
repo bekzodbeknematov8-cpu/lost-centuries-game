@@ -436,7 +436,10 @@
 					"ai": "normal",
 					"enemy_income": 1.15,
 					"par": 340,
-					"enemy_castle": 2300
+					"enemy_castle": 2300,
+					"enemy_extra": [
+						"elephant"
+					]
 				},
 				{
 					"id": "temur_09",
@@ -712,7 +715,10 @@
 					},
 					"ai": "hard",
 					"enemy_income": 0.92,
-					"par": 320
+					"par": 320,
+					"enemy_extra": [
+						"elephant"
+					]
 				},
 				{
 					"id": "bobur_09",
@@ -724,7 +730,10 @@
 					},
 					"ai": "hard",
 					"enemy_income": 0.95,
-					"par": 320
+					"par": 320,
+					"enemy_extra": [
+						"elephant"
+					]
 				},
 				{
 					"id": "bobur_10",
@@ -736,7 +745,10 @@
 					},
 					"ai": "hard",
 					"enemy_income": 0.98,
-					"par": 330
+					"par": 330,
+					"enemy_extra": [
+						"elephant"
+					]
 				}
 			]
 		},

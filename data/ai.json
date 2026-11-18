@@ -25,7 +25,9 @@
 			"swordsman": 4,
 			"spearman": 3,
 			"archer": 3,
-			"cavalry": 1
+			"cavalry": 1,
+			"musketeer": 1,
+			"elephant": 1
 		},
 		"ability_min_targets": 3
 	},
@@ -40,7 +42,9 @@
 			"swordsman": 3,
 			"spearman": 3,
 			"archer": 3,
-			"cavalry": 2
+			"cavalry": 2,
+			"musketeer": 2,
+			"elephant": 1
 		},
 		"ability_min_targets": 3
 	}

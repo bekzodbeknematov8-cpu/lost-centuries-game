@@ -1146,3 +1146,76 @@ func test_fit_text() -> void:
 	var r2 := UITheme.fit_text(font, long, 90.0, 15, 10)
 	check(int(r2[1]) == 10 and str(r2[0]).ends_with("…"), "uzun matn kichrayib, '…' bilan tugashi kerak")
 	check(font.get_string_size(str(r2[0]), HORIZONTAL_ALIGNMENT_LEFT, -1, 10).x <= 90.0, "matn kenglikka sig'ishi kerak")
+
+
+# --- Yangi askarlar: miltiqchi va jangovar fil -------------------------------------
+
+func test_new_units_unlock_by_stars() -> void:
+	var c := camp()
+	var none := Campaign.unlocked_units(defs, {})
+	check(not ("musketeer" in none) and not ("elephant" in none), "boshida yangi askarlar yopiq bo'lishi kerak")
+	var st := {}
+	for lv in Campaign.all_levels(c, "chingiz").slice(0, 40):
+		st[lv.id] = 3
+	var some := Campaign.unlocked_units(defs, st)
+	check("musketeer" in some and not ("elephant" in some), "120 yulduzda faqat miltiqchi ochiladi")
+	for lv in Campaign.all_levels(c, "chingiz").slice(40, 90):
+		st[lv.id] = 3
+	check("elephant" in Campaign.unlocked_units(defs, st), "270 yulduzda fil ham ochiladi")
+	# Kampaniyada dushman: Bobur kampaniyasida fil va miltiqchi, Chingizda yo'q
+	var b := Campaign.battle_config(c, "bobur_09#7", ai_params, 1)
+	check("elephant" in b.cfg.allowed[1], "Panipatda dushman fil ishlatadi")
+	check(not ("elephant" in Campaign.battle_config(c, "bobur_05", ai_params, 1).cfg.allowed[1]), "Qandahorda fil bo'lmasligi kerak")
+	var ch := Campaign.battle_config(c, "chingiz_05", ai_params, 1)
+	check(not ("elephant" in ch.cfg.allowed[1]), "Chingiz kampaniyasida fil bo'lmasligi kerak")
+
+
+func test_elephant_tramples() -> void:
+	var s := new_sim({"start_units": [[], []]})
+	var el := s.spawn_unit(0, "elephant")
+	el.x = 1000.0
+	var es := place_enemies(s, "swordsman", [1040.0, 1045.0, 1050.0, 1055.0])
+	for e in es:
+		e.stun = 5.0
+	s.set_stance(0, TeamState.Stance.ATTACK)
+	for i in int(2.0 / BattleSim.STEP):
+		s.step()
+		s.events.clear()
+	var hurt := 0
+	for e in es:
+		if e.hp < e.max_hp:
+			hurt += 1
+	check(hurt >= 3, "fil bir zarbada bir nechta dushmanga tegishi kerak (%d)" % hurt)
+
+
+func test_counters_new_units() -> void:
+	## Teng narxli otryadlar: nayzachi filni, miltiqchi filni yengadi; otliq miltiqchini yengadi.
+	check(squad_fight("spearman", "elephant") > 0.5, "nayzachi filni yengishi kerak")
+	check(squad_fight("musketeer", "elephant") > 0.5, "miltiqchi filni yengishi kerak")
+	check(squad_fight("cavalry", "musketeer") > 0.5, "otliq miltiqchini yengishi kerak")
+	check(squad_fight("elephant", "swordsman") > 0.5, "fil qilichbozni yengishi kerak")
+
+
+func squad_fight(a: String, b: String) -> float:
+	var wins := 0.0
+	for seed in 2:
+		for side in 2:
+			var s := BattleSim.new()
+			s.setup(defs, {"seed": seed, "start_units": [[], []]})
+			var ta := side
+			var tb := 1 - side
+			for k in int(1650.0 / float(defs[a].cost)):
+				var u := s.spawn_unit(ta, a)
+				u.x = 1600 - s.teams[ta].dir * (300 + k * 12)
+			for k in int(1650.0 / float(defs[b].cost)):
+				var u := s.spawn_unit(tb, b)
+				u.x = 1600 - s.teams[tb].dir * (300 + k * 12)
+			s.teams[0].stance = TeamState.Stance.ATTACK
+			s.teams[1].stance = TeamState.Stance.ATTACK
+			for i in int(120 / BattleSim.STEP):
+				s.step()
+				s.events.clear()
+				if s.alive_units(0).is_empty() or s.alive_units(1).is_empty():
+					break
+			wins += 1.0 if s.army_value(ta) > s.army_value(tb) else 0.0
+	return wins / 4.0

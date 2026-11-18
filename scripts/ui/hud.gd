@@ -133,15 +133,16 @@ class UnitButton:
 		queue_redraw()
 
 	func _draw() -> void:
-		var sc := 0.56 if type == "cavalry" else 0.74
-		Painter.draw_unit(self, _u, Vector2(size.x * 0.5 - 2, 80 if type != "cavalry" else 77), sc, _t)
+		var sc := 0.56 if type == "cavalry" else (0.4 if type == "elephant" else 0.74)
+		Painter.draw_unit(self, _u, Vector2(size.x * 0.5 - (8 if type == "elephant" else 2), 80 if type != "cavalry" else 77), sc, _t)
 		var font := get_theme_default_font()
 		var cost := int(_u.def.cost)
 		var col := Painter.GOLD if not disabled else Color(0.85, 0.4, 0.35)
 		draw_string_outline(font, Vector2(0, 104), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 19, 4, Color(0, 0, 0, 0.8))
 		draw_string(font, Vector2(0, 104), str(cost), HORIZONTAL_ALIGNMENT_CENTER, size.x, 19, col)
-		draw_string_outline(font, Vector2(0, 18), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, 3, Color(0, 0, 0, 0.8))
-		draw_string(font, Vector2(0, 18), tr(str(_u.def.name)), HORIZONTAL_ALIGNMENT_CENTER, size.x, 13, UITheme.PARCHMENT)
+		var nfit := UITheme.fit_text(font, tr(str(_u.def.name)), size.x - 4.0, 13, 10)
+		draw_string_outline(font, Vector2(0, 18), nfit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x, nfit[1], 3, Color(0, 0, 0, 0.8))
+		draw_string(font, Vector2(0, 18), nfit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x, nfit[1], UITheme.PARCHMENT)
 		var team: TeamState = battle.sim.teams[0]
 		var n := team.queue.count(type)
 		if n > 0:
@@ -607,7 +608,9 @@ func _build_bottom() -> void:
 	units.add_theme_constant_override("separation", 6)
 	units.size_flags_vertical = Control.SIZE_SHRINK_END
 	bar.add_child(units)
-	for type in ["worker", "swordsman", "spearman", "archer", "cavalry"]:
+	for type in ["worker", "swordsman", "spearman", "archer", "cavalry", "musketeer", "elephant"]:
+		if not (type in battle.sim.teams[0].allowed):
+			continue
 		var b := UnitButton.new(type, battle)
 		targets["unit:" + type] = b
 		b.pressed.connect(_on_train.bind(type))
