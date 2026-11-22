@@ -203,7 +203,7 @@ class AbilityButton:
 			draw_string(font, Vector2(0, c.y + 12), txt, HORIZONTAL_ALIGNMENT_CENTER, size.x, 34, UITheme.PARCHMENT)
 		elif team.ability_cd > 0.0:
 			var a: Dictionary = _u.def.ability
-			var k := team.ability_cd / float(a.cooldown)
+			var k := team.ability_cd / maxf(0.01, float(a.cooldown) * team.ability_cd_mult * float(BattleSim.tempo().get("ability_cd_mult", 1.0)))
 			if k >= 0.995:
 				# To'liq doira: poligon o'z boshiga qaytib "buziladi", shuning uchun oddiy doira
 				draw_circle(c, size.x * 0.5 - 3, Color(0, 0, 0, 0.55))

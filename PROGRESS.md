@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (27) — Jonlantirish (1): TEZLIK (foydalanuvchi fikri asosida)
+- Foydalanuvchi: "zerikarli — sekin va uzoq, qiladigan ish yo'q, ko'rinishi oddiy". Reja: (1) tezlik, (2) ta'sir, (3) ko'rinish.
+- `data/tempo.json`: maydon qisqa, yurish/tayyorlash/daromad tezroq, qal'a zaifroq, kuchlar tez tiklanadi.
+- Jang o'rtacha 3,1 → 1,6 daqiqa; birinchi to'qnashuv 7 s. `tools/tempo_report.gd` qo'shildi.
+- "Sarkarda yiqildi" yozuvi endi haqiqiy vaqtni ko'rsatadi; kuch tugmasidagi doira yangi tiklanish vaqtiga mos.
+- Kunlik sinov: "Chidab tur" 150 s, "Oltin oqimi" teng daromad. Kampaniya, turnir, kunlik balansi qayta o'lchandi — devor yo'q.
+
 ### 2026-11-18 (26) — 2-navbat (C): Kunlik sinov jangi (rejali ish)
 - Rejim tanlashda 6-karta "Kunlik sinov": har kuni sana bo'yicha 8 ta qoidadan biri (otliqlar kuni, zaif qal'alar,
   oltin oqimi, o'q va nayza, sarkardasiz jang, fillar va miltiqlar, chidab tur, qilichlar to'qnashuvi),

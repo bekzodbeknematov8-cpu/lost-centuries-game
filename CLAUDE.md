@@ -33,6 +33,7 @@ godot --headless --path . -s res://tools/hero_balance.gd -- --games=16     # qah
 godot --headless --path . -s res://tools/stress_test.gd -- --units=150      # performance (150 birlik)
 godot --headless --path . -s res://tools/tournament_balance.gd -- --games=8   # turnir qiyinligi
 godot --headless --path . -s res://tools/daily_balance.gd -- --games=8     # kunlik sinov qoidalari
+godot --headless --path . -s res://tools/tempo_report.gd -- --games=6      # jang tempi (data/tempo.json)
 tools/lang_shots.sh /tmp/lang                               # barcha ekranlar 4 tilda skrinshot
 # Skrinshot (Xvfb bilan):
 xvfb-run -a godot --path . --rendering-driver opengl3 -- --scene=res://scenes/battle.tscn --autoplay --speed=3 --shots=/tmp/s --times=30,90

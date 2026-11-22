@@ -216,10 +216,10 @@
 		"tr": "Geri"
 	},
 	"HERO_DOWN": {
-		"uz": "%s yiqildi! 40 soniyadan so'ng qaytadi",
-		"en": "%s has fallen! Returns in 40 seconds",
-		"ru": "%s пал! Вернётся через 40 секунд",
-		"tr": "%s düştü! 40 saniye sonra dönecek"
+		"uz": "%s yiqildi! %d soniyadan so'ng qaytadi",
+		"en": "%s has fallen! Returns in %d seconds",
+		"ru": "%s пал! Вернётся через %d с",
+		"tr": "%s düştü! %d saniye sonra dönecek"
 	},
 	"HERO_CHINGIZ": {
 		"uz": "Chingizxon",
@@ -690,10 +690,10 @@
 		"tr": "Altın Akını"
 	},
 	"DC_GOLD_DESC": {
-		"uz": "Oltin juda tez qaziladi, raqib esa yanada boy. Katta qo'shinlar jangi!",
-		"en": "Gold flows fast, and the rival is even richer. A battle of huge armies!",
-		"ru": "Золото добывается очень быстро, а соперник ещё богаче. Битва огромных армий!",
-		"tr": "Altın çok hızlı akar, rakip daha da zengin. Dev orduların savaşı!"
+		"uz": "Oltin juda tez qaziladi — katta qo'shinlar jangi!",
+		"en": "Gold flows fast — a battle of huge armies!",
+		"ru": "Золото добывается очень быстро — битва огромных армий!",
+		"tr": "Altın çok hızlı akar — dev orduların savaşı!"
 	},
 	"DC_ARCHERS": {
 		"uz": "O'q va nayza",
@@ -738,10 +738,10 @@
 		"tr": "Hattı Tut"
 	},
 	"DC_HOLD_DESC": {
-		"uz": "Kuchli dushmanga qarshi qal'ani 3,5 daqiqa saqlang.",
-		"en": "Defend your fortress against a stronger enemy for 3.5 minutes.",
-		"ru": "Удержите крепость против сильного врага 3,5 минуты.",
-		"tr": "Güçlü düşmana karşı kaleni 3,5 dakika savun."
+		"uz": "Kuchli dushmanga qarshi qal'ani 2,5 daqiqa saqlang.",
+		"en": "Defend your fortress against a stronger enemy for 2.5 minutes.",
+		"ru": "Удержите крепость против сильного врага 2,5 минуты.",
+		"tr": "Güçlü düşmana karşı kaleni 2,5 dakika savun."
 	},
 	"DC_SWORDS": {
 		"uz": "Qilichlar to'qnashuvi",

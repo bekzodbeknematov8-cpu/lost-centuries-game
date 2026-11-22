@@ -6,11 +6,11 @@
 	"rules": {
 		"cavalry_only":    {"name": "DC_CAVALRY",  "desc": "DC_CAVALRY_DESC",  "cfg": {"allowed": [["worker", "cavalry"], ["worker", "cavalry"]], "start_gold": [600, 600]}},
 		"fragile_castles": {"name": "DC_FRAGILE",  "desc": "DC_FRAGILE_DESC",  "cfg": {"castle_hp": [900, 900]}},
-		"gold_rush":       {"name": "DC_GOLD",     "desc": "DC_GOLD_DESC",     "cfg": {"income_mult": [1.7, 1.8], "start_gold": [700, 700]}},
+		"gold_rush":       {"name": "DC_GOLD",     "desc": "DC_GOLD_DESC",     "cfg": {"income_mult": [1.7, 1.7], "start_gold": [700, 700]}},
 		"archers_duel":    {"name": "DC_ARCHERS",  "desc": "DC_ARCHERS_DESC",  "cfg": {"allowed": [["worker", "archer", "spearman"], ["worker", "archer", "spearman"]]}},
 		"no_heroes":       {"name": "DC_NOHERO",   "desc": "DC_NOHERO_DESC",   "cfg": {"no_heroes": true}},
 		"giants":          {"name": "DC_GIANTS",   "desc": "DC_GIANTS_DESC",   "cfg": {"allowed": [["worker", "spearman", "musketeer", "elephant"], ["worker", "spearman", "musketeer", "elephant"]], "start_gold": [900, 900]}},
-		"hold_the_line":   {"name": "DC_HOLD",     "desc": "DC_HOLD_DESC",     "cfg": {"survive_time": 210.0, "income_mult": [1.0, 1.3]}},
+		"hold_the_line":   {"name": "DC_HOLD",     "desc": "DC_HOLD_DESC",     "cfg": {"survive_time": 150.0, "income_mult": [1.0, 1.3]}},
 		"sword_brothers":  {"name": "DC_SWORDS",   "desc": "DC_SWORDS_DESC",   "cfg": {"allowed": [["worker", "swordsman"], ["worker", "swordsman"]], "start_gold": [500, 500]}}
 	},
 	"ai": "normal"

@@ -66,7 +66,8 @@ func run(sim: BattleSim, seconds: float, ais: Array = []) -> void:
 func test_train_costs_gold_and_spawns() -> void:
 	var s := new_sim({"start_gold": 500})
 	check(s.train(0, "swordsman"), "yollash muvaffaqiyatsiz")
-	check(is_equal_approx(s.teams[0].gold, 375.0), "oltin to'g'ri ayirilmadi: %s" % s.teams[0].gold)
+	var g0 := 500.0 * float(BattleSim.tempo().get("start_gold_mult", 1.0))
+	check(is_equal_approx(s.teams[0].gold, g0 - 125.0), "oltin to'g'ri ayirilmadi: %s" % s.teams[0].gold)
 	run(s, 4.5)
 	check(s.alive_units(0).size() == 1, "askar paydo bo'lmadi")
 	check(s.teams[0].pop == 1, "aholi soni noto'g'ri")
@@ -569,7 +570,7 @@ func test_upgrades_affect_battle() -> void:
 	check(a.max_hp > b.max_hp * 1.4, "HP yaxshilanishi ishlamadi")
 	check(s._damage_against(a, ["infantry"]) > s._damage_against(b, ["infantry"]) * 1.15, "zarar yaxshilanishi ishlamadi")
 	check(s.teams[0].castle_max_hp > s.teams[1].castle_max_hp, "qal'a yaxshilanishi ishlamadi")
-	check(s.teams[0].gold == 400.0, "boshlang'ich oltin yaxshilanishi ishlamadi: %s" % s.teams[0].gold)
+	check(is_equal_approx(s.teams[0].gold, 300.0 * float(BattleSim.tempo().get("start_gold_mult", 1.0)) + 100.0), "boshlang'ich oltin yaxshilanishi ishlamadi: %s" % s.teams[0].gold)
 	check(s.hero_of(0).max_hp > s.hero_of(1).max_hp, "qahramon yaxshilanishi ishlamadi")
 
 
@@ -603,7 +604,8 @@ func tac() -> Dictionary:
 func test_tactics_effects() -> void:
 	var d := tac()
 	var s := new_sim({"start_gold": 100})
-	check(s.use_tactic(0, "caravan", d.tactics.caravan) and s.teams[0].gold == 400.0, "karvon oltin bermadi")
+	var cg := s.teams[0].gold
+	check(s.use_tactic(0, "caravan", d.tactics.caravan) and is_equal_approx(s.teams[0].gold, cg + 300.0), "karvon oltin bermadi")
 	var a := s.spawn_unit(0, "swordsman")
 	a.hp = 20.0
 	s.use_tactic(0, "healing", d.tactics.healing)

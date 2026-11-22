@@ -4,7 +4,8 @@ extends RefCounted
 ## rejimda minglab "bot vs bot" o'yinlarini tez simulyatsiya qilish mumkin.
 ## step() har doim bir xil dt bilan chaqiriladi (deterministik).
 
-const WORLD_LEN := 3200.0
+static var WORLD_LEN := 2400.0   ## data/tempo.json -> world_len
+static var TEMPO: Dictionary = {}
 const MAX_QUEUE := 5
 const STEP := 1.0 / 30.0
 const CASTLE_HALF_W := 70.0
@@ -49,7 +50,17 @@ var _idx_new: Array[UnitState] = []   ## Qadam ichida chiqqan yoki sakragan (ind
 var _pending_hits: Array = []   ## Jang zarbalari qadam oxirida bir vaqtda qo'llanadi (adolat uchun)
 
 
+static func tempo() -> Dictionary:
+	## Jang tempi sozlamalari (data/tempo.json), bir marta o'qiladi.
+	if TEMPO.is_empty():
+		var parsed: Variant = JSON.parse_string(FileAccess.get_file_as_string("res://data/tempo.json"))
+		TEMPO = parsed if parsed is Dictionary else {"world_len": 3200.0}
+		WORLD_LEN = float(TEMPO.get("world_len", 3200.0))
+	return TEMPO
+
+
 func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = {}) -> void:
+	var tp := tempo()
 	defs = unit_defs
 	heroes = hero_defs
 	zones.clear()
@@ -71,10 +82,10 @@ func setup(unit_defs: Dictionary, cfg: Dictionary = {}, hero_defs: Dictionary = 
 		t.dir = 1 if i == 0 else -1
 		t.castle_x = 160.0 if i == 0 else WORLD_LEN - 160.0
 		t.mine_x = t.castle_x + t.dir * 300.0
-		t.gold = float(_pick(cfg, "start_gold", i, 300))
-		t.castle_max_hp = float(_pick(cfg, "castle_hp", i, 2000))
+		t.gold = float(_pick(cfg, "start_gold", i, 300)) * float(tp.get("start_gold_mult", 1.0))
+		t.castle_max_hp = float(_pick(cfg, "castle_hp", i, 2000)) * float(tp.get("castle_mult", 1.0))
 		t.castle_hp = t.castle_max_hp
-		t.income_mult = float(_pick(cfg, "income_mult", i, 1.0))
+		t.income_mult = float(_pick(cfg, "income_mult", i, 1.0)) * float(tp.get("income_mult", 1.0))
 		t.damage_mult = float(_pick(cfg, "damage_mult", i, 1.0))
 		t.pop_cap = int(_pick(cfg, "pop_cap", i, 30))
 		t.allowed = _pick(cfg, "allowed", i, defs.keys())
@@ -253,7 +264,7 @@ func use_ability(team_idx: int) -> bool:
 	var h := hero_of(team_idx)
 	var a := ability_def(team_idx)
 	var dir := float(h.facing if h.controlled else t.dir)
-	t.ability_cd = float(a.cooldown) * t.ability_cd_mult
+	t.ability_cd = float(a.cooldown) * t.ability_cd_mult * float(TEMPO.get("ability_cd_mult", 1.0))
 	var ev := {"type": "ability", "team": team_idx, "id": a.id, "x": h.x, "hero": t.hero_type}
 	match str(a.id):
 		"arrow_rain":
@@ -601,7 +612,7 @@ func _update_team(t: TeamState, dt: float) -> void:
 	var type: String = t.queue[0]
 	if t.pop + int(defs[type].pop) > t.pop_cap:
 		return
-	t.train_progress += dt
+	t.train_progress += dt * float(TEMPO.get("train_rate", 1.0))
 	if t.train_progress >= float(defs[type].train_time):
 		t.queue.pop_front()
 		t.train_progress = 0.0
@@ -642,7 +653,7 @@ func _update_unit(u: UnitState, dt: float) -> void:
 	else:
 		_update_fighter(u, dt)
 	if u.moving:
-		u.walk_phase += dt * float(u.def.speed) * 0.09
+		u.walk_phase += dt * float(u.def.speed) * float(TEMPO.get("speed_mult", 1.0)) * 0.09
 	u.x = clampf(u.x, 20.0, WORLD_LEN - 20.0)
 
 
@@ -652,7 +663,7 @@ func _move_towards(u: UnitState, dest: float, dt: float, speed_mult := 1.0) -> b
 	if absf(dx) < 4.0:
 		return true
 	u.facing = 1 if dx > 0 else -1
-	var stepv := float(u.def.speed) * speed_mult * teams[u.team].buff_speed * dt
+	var stepv := float(u.def.speed) * speed_mult * teams[u.team].buff_speed * float(TEMPO.get("speed_mult", 1.0)) * dt
 	u.x += clampf(dx, -stepv, stepv)
 	u.moving = true
 	return absf(dest - u.x) < 4.0
@@ -1029,7 +1040,7 @@ func _kill(u: UnitState, attacker: UnitState) -> void:
 	t.pop -= int(u.def.pop)
 	t.stats.lost += 1
 	if u.hero:
-		t.hero_respawn = HERO_RESPAWN
+		t.hero_respawn = HERO_RESPAWN * float(TEMPO.get("hero_respawn_mult", 1.0))
 		events.append({"type": "hero_down", "team": u.team, "x": u.x, "hero": u.type})
 	teams[1 - u.team].stats.killed += 1
 	events.append({"type": "death", "x": u.x, "lane": u.lane, "team": u.team, "unit": u.type,

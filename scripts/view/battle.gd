@@ -392,7 +392,7 @@ func _on_event(e: Dictionary) -> void:
 				_effects.append({"kind": "fall_arrow", "pos": Vector2(x + randf_range(-200, 200) - (1.0 if e.team == 0 else -1.0) * 110.0, GROUND_Y - 300.0 - randf() * 80.0), "t": 0.0, "life": 0.42, "dir": 1.0 if e.team == 0 else -1.0})
 		"hero_down":
 			Sfx.play("hero_down", 0.9, 0.0)
-			hud.show_banner(tr("HERO_DOWN") % tr(str(GameData.heroes[e.hero].name)), 2.5)
+			hud.show_banner(tr("HERO_DOWN") % [tr(str(GameData.heroes[e.hero].name)), int(round(sim.teams[e.team].hero_respawn))], 2.5)
 		"hero_spawn":
 			if sim.time > 1.0:
 				Sfx.play("horn_attack" if e.team == 0 else "horn_enemy", 0.6, 0.02)

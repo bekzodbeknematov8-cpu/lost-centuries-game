@@ -64,3 +64,11 @@
   JSON'da har boss uchun `enemy_extra`. Erkin jang/turnirda oson raqib faqat asosiy askarlar bilan.
 - Cheksiz mudofaada: 8-to'lqindan miltiqchi, 12-dan fil.
 - Kampaniya balansi vositasi bot-o'yinchiga o'sha kampaniya ochilgan paytdagi askarlarni beradi.
+
+## 2026-11-23 — Jonlantirish (1): tezlik
+- Foydalanuvchi telefonda: "zerikarli — sekin va uzoq". O'lchov (tools/tempo_report.gd): jang o'rtacha 3,1 daqiqa.
+- Barcha tempo sozlamalari bitta joyda — `data/tempo.json` (BattleSim.setup hamma rejimga qo'llaydi):
+  maydon 3200→2400, yurish ×1.25, tayyorlash ×1.4 tez, daromad ×1.35, boshlang'ich oltin ×1.3, qal'a ×0.8,
+  sarkarda kuchi qayta tiklanishi ×0.6 (15–23 s), sarkarda qaytishi 40→24 s.
+- Natija: jang 3,1 → 1,6 daqiqa, birinchi bosqichlar ~70–85 s. Kampaniyalar: devor yo'q (Chingiz 84%, Temur 82%, qolganlar 91–100%).
+- Kuch tiklanishi ham qisqartirildi, aks holda qisqa jangda sarkarda kuchi kam ishlatilib, kampaniyalar qiyinlashardi (Chingiz 73% bo'lib qolgandi).
