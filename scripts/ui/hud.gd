@@ -330,6 +330,52 @@ class ReserveButton:
 		draw_string(get_theme_default_font(), Vector2(size.x - 23, 14), str(n), HORIZONTAL_ALIGNMENT_CENTER, 28, 12, Color.WHITE)
 
 
+class VolleyButton:
+	## "O'q yog'dir" holati: qayta tayyorlanish doirasi. Bosilsa — maslahat (o'q maydonga bosib yog'diriladi).
+	extends Button
+	var battle: Node
+	var _t := 0.0
+
+	func _init(b: Node) -> void:
+		battle = b
+		custom_minimum_size = Vector2(78, 78)
+		focus_mode = Control.FOCUS_NONE
+		flat = true
+
+	func _process(d: float) -> void:
+		_t += d
+		queue_redraw()
+
+	func _draw() -> void:
+		var c := size * 0.5 + Vector2(0, -6)
+		var team: TeamState = battle.sim.teams[0]
+		var ready: bool = team.volley_cd <= 0.0
+		draw_circle(c, 31.0, Color(0.12, 0.08, 0.05, 0.85))
+		draw_arc(c, 31.0, 0, TAU, 40, Painter.GOLD if ready else Color(0.5, 0.42, 0.3), 3.0)
+		# Uchta qiya o'q
+		for i in 3:
+			var o := Vector2(-10 + i * 10, 0)
+			var a := c + o + Vector2(-9, -12)
+			var b := c + o + Vector2(7, 12)
+			draw_line(a, b, Painter.WOOD.lightened(0.35), 3.0)
+			draw_colored_polygon(PackedVector2Array([b + Vector2(3, 4), b + Vector2(-5, 1), b + Vector2(2, -5)]), Color(0.85, 0.85, 0.85))
+		if not ready:
+			var cd := float(BattleSim.tempo().get("volley", {}).get("cooldown", 7.0))
+			var k := clampf(team.volley_cd / cd, 0.0, 0.995)
+			var pts := PackedVector2Array([c])
+			for i in 33:
+				pts.append(c + Vector2.from_angle(-PI / 2 + TAU * k * i / 32.0) * 29.0)
+			if k > 0.01:
+				draw_colored_polygon(pts, Color(0, 0, 0, 0.55))
+			draw_string(get_theme_default_font(), c + Vector2(-20, 9), "%d" % ceili(team.volley_cd), HORIZONTAL_ALIGNMENT_CENTER, 40, 24, UITheme.PARCHMENT)
+		else:
+			draw_arc(c, 34.0 + sin(_t * 5.0) * 2.0, 0, TAU, 40, Color(1, 0.85, 0.3, 0.5), 2.0)
+		var font := get_theme_default_font()
+		var fit := UITheme.fit_text(font, tr("VOLLEY"), size.x + 20.0, 13, 10)
+		draw_string_outline(font, Vector2(-10, size.y - 2), fit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x + 20.0, fit[1], 3, Color(0, 0, 0, 0.9))
+		draw_string(font, Vector2(-10, size.y - 2), fit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x + 20.0, fit[1], Painter.GOLD)
+
+
 class TutorialOverlay:
 	## Qadamma-qadam ko'rsatma: matn paneli, yoritilgan tugma va o'q.
 	extends Control
@@ -656,6 +702,18 @@ func _build_tactics() -> void:
 		var rb := ReserveButton.new(t, battle)
 		rb.pressed.connect(_on_reserve.bind(t))
 		rcol.add_child(rb)
+	# O'ng tomonda, sarkarda kuchi tugmasi ustida: "O'q yog'dir"
+	var vb := VolleyButton.new(battle)
+	vb.set_anchors_preset(Control.PRESET_BOTTOM_RIGHT)
+	vb.grow_horizontal = Control.GROW_DIRECTION_BEGIN
+	vb.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	vb.offset_right = -22
+	vb.offset_bottom = -BAR_H - 12
+	vb.pressed.connect(func() -> void:
+		Sfx.play("click", 0.6)
+		show_banner(tr("VOLLEY_HINT"), 1.8))
+	_root.add_child(vb)
+	targets["volley"] = vb
 
 
 func _on_reserve(type: String) -> void:

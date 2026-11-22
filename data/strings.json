@@ -360,10 +360,10 @@
 		"tr": "Selçuklu Akını"
 	},
 	"ABIL_RAID_DESC": {
-		"uz": "Sarkarda yoniga 15 soniyaga 4 ta otliq kamonchi chaqiradi; so'ng ular jangdan chiqib ketadi.",
-		"en": "Calls 4 horse archers to the commander's side for 15 seconds; then they ride away.",
-		"ru": "Призывает к полководцу 4 конных лучников на 15 секунд, затем они уходят.",
-		"tr": "Komutanın yanına 15 saniyeliğine 4 atlı okçu çağırır; sonra savaştan ayrılırlar."
+		"uz": "Sarkarda yoniga 11 soniyaga 4 ta otliq kamonchi chaqiradi; so'ng ular jangdan chiqib ketadi.",
+		"en": "Calls 4 horse archers to the commander's side for 11 seconds; then they ride away.",
+		"ru": "Призывает к полководцу 4 конных лучников на 11 секунд, затем они уходят.",
+		"tr": "Komutanın yanına 11 saniyeliğine 4 atlı okçu çağırır; sonra savaştan ayrılırlar."
 	},
 	"CAMPAIGN": {
 		"uz": "Kampaniya",
@@ -1360,6 +1360,36 @@
 		"en": "Use your commander's special power (right button, when ready).",
 		"ru": "Используйте особую силу полководца (кнопка справа, когда готова).",
 		"tr": "Komutanınızın özel gücünü kullanın (sağdaki düğme hazır olunca)."
+	},
+	"VOLLEY": {
+		"uz": "O'q yog'dir",
+		"en": "Volley",
+		"ru": "Залп",
+		"tr": "Ok Yağmuru"
+	},
+	"VOLLEY_HINT": {
+		"uz": "Maydonga bosing — qal'adan o'sha joyga o'q yog'iladi!",
+		"en": "Tap the battlefield — arrows rain down from your fortress!",
+		"ru": "Нажмите на поле — из крепости полетят стрелы!",
+		"tr": "Savaş alanına dokun — kaleden oraya ok yağar!"
+	},
+	"VOLLEY_WAIT": {
+		"uz": "O'qlar tayyorlanmoqda: %d s",
+		"en": "Archers reloading: %d s",
+		"ru": "Лучники готовятся: %d с",
+		"tr": "Okçular hazırlanıyor: %d sn"
+	},
+	"MORALE_UP": {
+		"uz": "Jangovar ruh! Qo'shin kuchaydi",
+		"en": "Battle spirit! Your army surges",
+		"ru": "Боевой дух! Войско воодушевлено",
+		"tr": "Savaş ruhu! Ordun coştu"
+	},
+	"TUT_VOLLEY": {
+		"uz": "Maydondagi dushmanlar ustiga bosing — qal'adan o'q yog'iladi. Har 8 soniyada!",
+		"en": "Tap the enemies on the battlefield — arrows fly from your fortress. Every 8 seconds!",
+		"ru": "Нажмите на врагов на поле — из крепости полетят стрелы. Каждые 8 секунд!",
+		"tr": "Sahadaki düşmanlara dokun — kaleden ok yağar. Her 8 saniyede!"
 	},
 	"TUT_CONTROL": {
 		"uz": "«Boshqarish» bilan qahramonni o'zingiz yurgizing — u 25% kuchliroq uradi!",

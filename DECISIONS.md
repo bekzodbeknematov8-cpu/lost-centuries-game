@@ -72,3 +72,11 @@
   sarkarda kuchi qayta tiklanishi ×0.6 (15–23 s), sarkarda qaytishi 40→24 s.
 - Natija: jang 3,1 → 1,6 daqiqa, birinchi bosqichlar ~70–85 s. Kampaniyalar: devor yo'q (Chingiz 84%, Temur 82%, qolganlar 91–100%).
 - Kuch tiklanishi ham qisqartirildi, aks holda qisqa jangda sarkarda kuchi kam ishlatilib, kampaniyalar qiyinlashardi (Chingiz 73% bo'lib qolgandi).
+
+## 2026-11-23 — Jonlantirish (2): o'yinchi ta'siri
+- **"O'q yog'dir":** maydonga qisqa bosish — qal'adan o'sha joyga o'q yomg'iri (8 s, radius 75, 2×12 zarar).
+  Ikki tomonga bir xil: dushman AI ham ishlatadi (eng zich to'daga, oson AI faqat 5+ askarga).
+  Birinchi variant (17 zarar, 7 s) himoyani juda kuchaytirib jangni 2,3 daqiqaga cho'zdi → pasaytirildi (1,8 daqiqa).
+- **"Jangovar ruh":** 4 s ichida 5 ta dushman yiqitilsa — 6 s davomida +15% zarar va tezlik (ikki tomon uchun).
+- Sarkarda kuchlari tez tiklanishi (×0.6) bilan Alp Arslon chopqini deyarli doimiy bo'lib qoldi → kuch 44 s, otliqlar 11 s.
+- O'rgatuvchi bosqichga "O'q yog'dir" qadami qo'shildi.

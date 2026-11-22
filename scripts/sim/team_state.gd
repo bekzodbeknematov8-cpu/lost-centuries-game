@@ -40,6 +40,10 @@ var shield_reduce: float = 0.0
 var shield_time: float = 0.0
 var tower_rate: float = 1.0
 var tower_time: float = 0.0
+var volley_cd: float = 0.0     ## "O'q yog'dir" qayta tayyor bo'lishigacha
+var streak: int = 0            ## ketma-ket yiqitilgan dushmanlar (jangovar ruh uchun)
+var streak_timer: float = 0.0
+var morale_time: float = 0.0   ## >0: jangovar ruh (zarar va tezlik bonusi)
 var stats: Dictionary = {"trained": 0, "killed": 0, "lost": 0, "gold_mined": 0}
 
 

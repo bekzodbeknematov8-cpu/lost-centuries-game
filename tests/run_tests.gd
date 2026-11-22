@@ -1271,3 +1271,48 @@ func test_daily_challenge_reward_once() -> void:
 	var c1 := int(p.coins)
 	check(not bool(DailyChallenge.record(dc, p, "2026-11-18", true).reward) and int(p.coins) == c1, "bir kunda ikki marta mukofot berilmasin")
 	check(bool(DailyChallenge.record(dc, p, "2026-11-19", true).reward), "ertasi kuni yana mukofot")
+
+
+# --- Jonlantirish: O'q yog'dir va jangovar ruh -----------------------------------------
+
+func test_volley_hits_area_and_cooldown() -> void:
+	var s := new_sim({"start_units": [[], []]})
+	var es := place_enemies(s, "archer", [1200.0, 1230.0, 1600.0])
+	for e in es:
+		e.stun = 3.0   # joyida tursin (aks holda chekinib nishondan chiqib ketadi)
+	check(s.use_volley(0, 1215.0), "o'q yog'dirish ishlamadi")
+	check(not s.use_volley(0, 1215.0), "qayta tayyorlanishsiz ikkinchi marta ishlamasligi kerak")
+	for i in int(1.6 / BattleSim.STEP):
+		s.step()
+		s.events.clear()
+	check(es[0].hp < es[0].max_hp and es[1].hp < es[1].max_hp, "nishondagi dushmanlarga tegmadi")
+	check(es[2].hp == es[2].max_hp, "uzoqdagi dushmanga tegmasligi kerak")
+	var cd := float(BattleSim.tempo().volley.cooldown)
+	for i in int(cd / BattleSim.STEP):
+		s.step()
+		s.events.clear()
+	check(s.volley_ready(0), "qayta tayyorlanish vaqti tugagach yana ishlashi kerak")
+
+
+func test_ai_uses_volley() -> void:
+	var s := new_sim({"start_units": [[], []]})
+	for x in [1500.0, 1520.0, 1540.0, 1560.0]:
+		var u := s.spawn_unit(0, "swordsman")
+		u.x = x
+	s.step()
+	var ai := AIController.new(1, ai_params.normal, 3)
+	ai.update(s, 2.0)
+	check(not s.volley_ready(1), "AI to'daga o'q yog'dirishi kerak")
+
+
+func test_morale_streak() -> void:
+	var s := new_sim({"start_units": [[], []]})
+	var m: Dictionary = BattleSim.tempo().morale
+	var es := place_enemies(s, "worker", [1500.0, 1510.0, 1520.0, 1530.0, 1540.0, 1550.0])
+	for i in int(m.kills):
+		s._kill(es[i], null)
+	check(s.teams[0].morale_time > 0.0, "ketma-ket yiqitishdan keyin jangovar ruh yoqilishi kerak")
+	var a := s.spawn_unit(0, "swordsman")
+	var d1 := s._damage_against(a, ["infantry"])
+	s.teams[0].morale_time = 0.0
+	check(d1 > s._damage_against(a, ["infantry"]), "jangovar ruh zararni oshirishi kerak")

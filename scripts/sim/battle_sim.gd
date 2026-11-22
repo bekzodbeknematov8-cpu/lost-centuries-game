@@ -319,6 +319,43 @@ func use_ability(team_idx: int) -> bool:
 	return true
 
 
+func volley_ready(team_idx: int) -> bool:
+	return teams[team_idx].volley_cd <= 0.0 and winner < 0
+
+
+func use_volley(team_idx: int, x: float) -> bool:
+	## "O'q yog'dir": qal'adagi kamonchilar tanlangan joyga o'q yomg'iri yog'diradi (ikki tomon uchun bir xil).
+	if not volley_ready(team_idx):
+		return false
+	var v: Dictionary = TEMPO.get("volley", {})
+	var t := teams[team_idx]
+	t.volley_cd = float(v.get("cooldown", 7.0))
+	var cx := clampf(x, 40.0, WORLD_LEN - 40.0)
+	zones.append({"kind": "volley", "team": team_idx, "x": cx, "radius": float(v.get("radius", 85.0)),
+		"damage": float(v.get("damage", 17.0)), "ticks": int(v.get("ticks", 2)), "interval": float(v.get("interval", 0.35)),
+		"t": 0.0, "next": float(v.get("delay", 0.7))})
+	events.append({"type": "volley", "team": team_idx, "x": cx, "from": t.castle_x})
+	return true
+
+
+func best_volley_x(team_idx: int) -> Array:
+	## Eng zich dushman to'dasi: [x, nechta dushman tegadi] (AI uchun).
+	var r := float(TEMPO.get("volley", {}).get("radius", 85.0))
+	var best_x := 0.0
+	var best_n := 0
+	for e in units:
+		if e.team == team_idx or not e.is_alive() or e.hero:
+			continue
+		var n := 0
+		for o in _candidates(1 - team_idx, e.x - r, e.x + r):
+			if absf(o.x - e.x) < r and not o.hero:
+				n += 1
+		if n > best_n:
+			best_n = n
+			best_x = e.x
+	return [best_x, best_n]
+
+
 func reserve_room(team_idx: int, type: String) -> int:
 	## Aholi chegarasi doirasida nechta zaxira askar chaqirish mumkin.
 	var t := teams[team_idx]
@@ -585,6 +622,12 @@ func pop_events() -> Array[Dictionary]:
 func _update_team(t: TeamState, dt: float) -> void:
 	t.gold += t.passive_income * t.income_mult * dt
 	t.ability_cd = maxf(0.0, t.ability_cd - dt)
+	t.volley_cd = maxf(0.0, t.volley_cd - dt)
+	t.morale_time = maxf(0.0, t.morale_time - dt)
+	if t.streak_timer > 0.0:
+		t.streak_timer -= dt
+		if t.streak_timer <= 0.0:
+			t.streak = 0
 	if t.mine_time > 0.0:
 		t.mine_time -= dt
 		if t.mine_time <= 0.0:
@@ -664,6 +707,8 @@ func _move_towards(u: UnitState, dest: float, dt: float, speed_mult := 1.0) -> b
 		return true
 	u.facing = 1 if dx > 0 else -1
 	var stepv := float(u.def.speed) * speed_mult * teams[u.team].buff_speed * float(TEMPO.get("speed_mult", 1.0)) * dt
+	if teams[u.team].morale_time > 0.0:
+		stepv *= float(TEMPO.get("morale", {}).get("speed", 1.0))
 	u.x += clampf(dx, -stepv, stepv)
 	u.moving = true
 	return absf(dest - u.x) < 4.0
@@ -894,6 +939,8 @@ func _update_controlled(u: UnitState, dt: float) -> void:
 
 func _damage_against(att: UnitState, target_tags: Array) -> float:
 	var dmg := float(att.def.damage) * teams[att.team].damage_mult * teams[att.team].buff_dmg
+	if teams[att.team].morale_time > 0.0:
+		dmg *= float(TEMPO.get("morale", {}).get("dmg", 1.0))
 	var bonus: Dictionary = att.def.get("bonus", {})
 	for tag in target_tags:
 		if bonus.has(tag):
@@ -1043,6 +1090,7 @@ func _kill(u: UnitState, attacker: UnitState) -> void:
 		t.hero_respawn = HERO_RESPAWN * float(TEMPO.get("hero_respawn_mult", 1.0))
 		events.append({"type": "hero_down", "team": u.team, "x": u.x, "hero": u.type})
 	teams[1 - u.team].stats.killed += 1
+	_note_streak(teams[1 - u.team])
 	events.append({"type": "death", "x": u.x, "lane": u.lane, "team": u.team, "unit": u.type,
 		"controlled": u.controlled})
 	if u.controlled:
@@ -1051,6 +1099,19 @@ func _kill(u: UnitState, attacker: UnitState) -> void:
 		control_attack = false
 	if attacker != null and attacker.controlled:
 		events.append({"type": "control_kill", "x": u.x})
+
+
+func _note_streak(k: TeamState) -> void:
+	## Ketma-ket yiqitish: qisqa vaqt ichida yetarli dushman yiqitilsa — "jangovar ruh".
+	var m: Dictionary = TEMPO.get("morale", {})
+	if m.is_empty():
+		return
+	k.streak += 1
+	k.streak_timer = float(m.window)
+	if k.streak >= int(m.kills) and k.morale_time <= 0.0:
+		k.streak = 0
+		k.morale_time = float(m.duration)
+		events.append({"type": "morale", "team": k.index, "x": k.castle_x})
 
 
 func _hit_castle(t: TeamState, dmg: float, x: float, weapon := "melee") -> void:

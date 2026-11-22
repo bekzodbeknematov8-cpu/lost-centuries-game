@@ -7,5 +7,20 @@
 	"start_gold_mult": 1.3,
 	"castle_mult": 0.8,
 	"ability_cd_mult": 0.6,
-	"hero_respawn_mult": 0.6
+	"hero_respawn_mult": 0.6,
+	"volley": {
+		"cooldown": 8.0,
+		"radius": 75.0,
+		"damage": 12.0,
+		"ticks": 2,
+		"interval": 0.35,
+		"delay": 0.7
+	},
+	"morale": {
+		"kills": 5,
+		"window": 4.0,
+		"duration": 6.0,
+		"dmg": 1.15,
+		"speed": 1.15
+	}
 }

@@ -12,7 +12,8 @@
 			"archer": 2,
 			"cavalry": 0
 		},
-		"ability_min_targets": 5
+		"ability_min_targets": 5,
+		"volley_min": 5
 	},
 	"normal": {
 		"think_interval": 1.2,
@@ -29,7 +30,8 @@
 			"musketeer": 1,
 			"elephant": 1
 		},
-		"ability_min_targets": 3
+		"ability_min_targets": 3,
+		"volley_min": 3
 	},
 	"hard": {
 		"think_interval": 0.6,
@@ -46,6 +48,7 @@
 			"musketeer": 2,
 			"elephant": 1
 		},
-		"ability_min_targets": 3
+		"ability_min_targets": 3,
+		"volley_min": 3
 	}
 }

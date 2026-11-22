@@ -6,6 +6,12 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (28) — Jonlantirish (2): TA'SIR — "O'q yog'dir" va "Jangovar ruh"
+- Maydonga bosib qal'adan o'q yog'dirish (har 8 s), nishon belgisi, qal'adan uchgan o'qlar, o'ngda tayyorlik tugmasi.
+- Ketma-ket 5 yiqitish — "Jangovar ruh!" (+15% zarar/tezlik, 6 s). Ikkalasi ham AI'da bor (adolatli).
+- O'rgatuvchi bosqichga yangi qadam. Alp Arslon kuchi muvozanatlandi.
+- O'lchov: jang 1,8 daqiqa; kampaniyalar 90–99% (devor yo'q, keyingi qadamda biroz qiyinlashtiriladi), turnir va kunlik sinov joyida.
+
 ### 2026-11-23 (27) — Jonlantirish (1): TEZLIK (foydalanuvchi fikri asosida)
 - Foydalanuvchi: "zerikarli — sekin va uzoq, qiladigan ish yo'q, ko'rinishi oddiy". Reja: (1) tezlik, (2) ta'sir, (3) ko'rinish.
 - `data/tempo.json`: maydon qisqa, yurish/tayyorlash/daromad tezroq, qal'a zaifroq, kuchlar tez tiklanadi.

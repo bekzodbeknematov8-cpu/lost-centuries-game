@@ -9,6 +9,7 @@ const STEPS := [
 	{"text": "TUT_ARMY", "target": ""},
 	{"text": "TUT_ATTACK", "target": "stance:attack"},
 	{"text": "TUT_ABILITY", "target": "ability"},
+	{"text": "TUT_VOLLEY", "target": "volley"},
 	{"text": "TUT_CONTROL", "target": "control"},
 	{"text": "TUT_FINISH", "target": ""},
 ]
@@ -31,8 +32,10 @@ static func step_done(step: int, sim: BattleSim, ctx: Dictionary) -> bool:
 		4:
 			return t.ability_cd > 0.0 and float(ctx.get("step_time", 0.0)) > 0.5 or sim.hero_of(0) == null
 		5:
-			return sim.controlled_unit() != null or float(ctx.get("step_time", 0.0)) > 12.0
+			return t.volley_cd > 0.0 or float(ctx.get("step_time", 0.0)) > 15.0
 		6:
+			return sim.controlled_unit() != null or float(ctx.get("step_time", 0.0)) > 12.0
+		7:
 			return float(ctx.get("step_time", 0.0)) > 5.0
 	return true
 

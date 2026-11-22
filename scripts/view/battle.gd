@@ -229,8 +229,22 @@ func _update_camera(delta: float) -> void:
 	cam.offset = Vector2(randf_range(-1, 1), randf_range(-1, 1)) * _shake * 10.0
 
 
+var _touch_pos := Vector2.ZERO
+var _touch_t := 0.0
+var _touch_moved := 0.0
+
+
 func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventScreenTouch:
+		if event.pressed:
+			_touch_pos = event.position
+			_touch_t = t
+			_touch_moved = 0.0
+		elif _touch_moved < 16.0 and t - _touch_t < 0.4:
+			_tap_battlefield(event.position)
+		return
 	if event is InputEventScreenDrag:
+		_touch_moved += event.relative.length()
 		_cam_target_x -= event.relative.x * 1.3
 		cam.position.x = _cam_target_x
 	elif event is InputEventMouseButton and event.pressed:
@@ -247,6 +261,19 @@ func _unhandled_input(event: InputEvent) -> void:
 		match event.keycode:
 			KEY_A, KEY_LEFT, KEY_D, KEY_RIGHT: sim.control_dir = 0
 			KEY_SPACE: sim.control_attack = false
+
+
+func _tap_battlefield(screen_pos: Vector2) -> void:
+	## Maydonga qisqa bosish: "O'q yog'dir" (HUD paneli ustidagi bosishlar hisobga olinmaydi).
+	var vh := get_viewport_rect().size.y
+	if screen_pos.y < 70.0 or screen_pos.y > vh - 140.0 or _ended:
+		return
+	var world := get_canvas_transform().affine_inverse() * screen_pos
+	if sim.use_volley(0, world.x):
+		Sfx.play("bow", 0.9, 0.05)
+	elif sim.teams[0].volley_cd > 0.0:
+		Sfx.play("deny", 0.4)
+		hud.show_banner(tr("VOLLEY_WAIT") % ceili(sim.teams[0].volley_cd), 0.9)
 
 
 func focus_x(x: float) -> void:
@@ -386,6 +413,18 @@ func _on_event(e: Dictionary) -> void:
 			_effects.append({"kind": "ring", "pos": gp, "t": 0.0, "life": 0.5, "color": Color(1.0, 0.7, 0.3)})
 			_add_dust(gp, 12)
 			_add_debris(gp)
+		"volley":
+			# Nishon belgisi va qal'adan uchgan o'qlar
+			var gp := Vector2(x, _unit_y(0.55))
+			_effects.append({"kind": "target", "pos": gp, "t": 0.0, "life": 0.9, "team": e.team})
+			if e.team == 1:
+				Sfx.play("bow", _vol_at(x) * 0.7)
+			for i in 6:
+				_effects.append({"kind": "volley_arrow", "from": Vector2(float(e.from), GROUND_Y - 200.0), "to": gp + Vector2(randf_range(-70, 70), 0), "t": -0.05 * i, "life": 0.7})
+		"morale":
+			Sfx.play("horn_attack" if e.team == 0 else "horn_enemy", 0.8, 0.0)
+			if e.team == 0:
+				hud.show_banner(tr("MORALE_UP"), 1.6)
 		"rain_tick":
 			Sfx.play("arrow_flesh", _vol_at(x) * 0.5)
 			for i in 9:
@@ -661,6 +700,21 @@ func _draw_effects() -> void:
 				for j in 5:
 					var ang := TAU * j / 5.0 + 0.4
 					draw_circle(bp + Vector2(cos(ang) * 40.0, -30.0 + sin(ang) * 18.0) * (0.5 + k), 14.0 + k * 16.0, Color(0.45, 0.42, 0.4, 0.5 * (1.0 - k)))
+			"target":
+				var tc := Color(1, 0.85, 0.3) if fx.team == 0 else Color(1, 0.35, 0.3)
+				tc.a = 1.0 - k
+				draw_set_transform(fx.pos, 0.0, Vector2(1.0, 0.35))
+				draw_arc(Vector2.ZERO, 85.0, 0, TAU, 36, tc, 4.0)
+				draw_arc(Vector2.ZERO, 85.0 * (1.0 - k * 0.6), 0, TAU, 36, tc, 2.0)
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			"volley_arrow":
+				if fx.t >= 0.0:
+					var a0: Vector2 = fx.from
+					var a1: Vector2 = fx.to
+					var p := a0.lerp(a1, k) + Vector2(0, -sin(k * PI) * 220.0)
+					var p2 := a0.lerp(a1, minf(1.0, k + 0.05)) + Vector2(0, -sin(minf(1.0, k + 0.05) * PI) * 220.0)
+					var dd := (p2 - p).normalized()
+					draw_line(p - dd * 18.0, p + dd * 4.0, Painter.WOOD.lightened(0.2), 2.0)
 			"ring":
 				var rc: Color = fx.color
 				rc.a = 1.0 - k

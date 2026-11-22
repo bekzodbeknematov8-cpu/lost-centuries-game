@@ -34,6 +34,7 @@ func update(sim: BattleSim, dt: float) -> void:
 	_think_economy_and_army(sim)
 	_think_stance(sim)
 	_think_ability(sim)
+	_think_volley(sim)
 
 
 func _think_ability(sim: BattleSim) -> void:
@@ -46,6 +47,16 @@ func _think_ability(sim: BattleSim) -> void:
 	var need := int(params.get("ability_min_targets", 3))
 	if sim.ability_targets(team_idx) >= need:
 		sim.use_ability(team_idx)
+
+
+func _think_volley(sim: BattleSim) -> void:
+	## "O'q yog'dir": dushmanning eng zich to'dasiga (kamida volley_min ta askar).
+	if not sim.volley_ready(team_idx):
+		return
+	var need := int(params.get("volley_min", 3))
+	var r := sim.best_volley_x(team_idx)
+	if int(r[1]) >= need:
+		sim.use_volley(team_idx, float(r[0]))
 
 
 func _think_economy_and_army(sim: BattleSim) -> void:

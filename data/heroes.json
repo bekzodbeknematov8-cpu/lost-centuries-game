@@ -282,12 +282,12 @@
 			"id": "raid",
 			"name": "ABIL_RAID",
 			"desc": "ABIL_RAID_DESC",
-			"cooldown": 34,
+			"cooldown": 44,
 			"unit": "archer",
 			"count": 4,
 			"hp": 120,
 			"speed": 150,
-			"duration": 15
+			"duration": 11
 		}
 	},
 	"sardor": {
