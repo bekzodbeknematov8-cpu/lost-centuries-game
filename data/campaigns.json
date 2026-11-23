@@ -186,7 +186,7 @@
 					"enemy_castle": 2200
 				}
 			],
-			"enemy_scale": 1.03
+			"enemy_scale": 0.96
 		},
 		"jaloliddin": {
 			"name": {
@@ -328,7 +328,7 @@
 					"enemy_castle": 2400
 				}
 			],
-			"enemy_scale": 1.05
+			"enemy_scale": 0.96
 		},
 		"temur": {
 			"name": {
@@ -464,7 +464,7 @@
 						"tr": "Ankara Savaşı"
 					},
 					"ai": "normal",
-					"enemy_income": 1.0,
+					"enemy_income": 0.92,
 					"enemy_hero": "boyazid",
 					"par": 380,
 					"enemy_castle": 2500
@@ -755,7 +755,7 @@
 					]
 				}
 			],
-			"enemy_scale": 1.08
+			"enemy_scale": 1.03
 		},
 		"alp": {
 			"name": {

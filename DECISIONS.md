@@ -86,3 +86,11 @@
   qazilgan oltin tanga bo'lib hisobga uchadi, qal'a qulashida 1,3 s sekin harakat + portlashlar, g'alabada konfetti.
 - Taranglik: har kampaniyaga `enemy_scale` (campaigns.json) — bot g'alabasi 90–99% dan 87–94% ga.
   boyazid_10 (yakuniy boss) 16 jangda 11/16.
+
+## 2026-11-23 — "Dushmanlar orasidagi masofa uzoq" (foydalanuvchi)
+- Sinab ko'rildi: maydon 2400→1900 — jang **uzoqlashdi** (74→131 s): himoya chizig'i (qal'adan 520) va himoya zonasi (430)
+  qisqa maydonni deyarli butunlay qoplab, ikki qo'shin o'rtada to'xtab qoladi. Bekor qilindi.
+- Tanlangan yechim: maydon 2400 qoladi, yurish tezligi ×1.25→×1.4 (qal'adan qal'agacha ~20 s → ~16 s).
+  ×1.6 ham sinaldi — birinchi kampaniyalar juda qiyinlashdi (Chingiz 64%).
+- Qayta muvozanat: Chingiz/Jaloliddin enemy_scale 0.96, Bobur 1.03, temur_10 daromadi 0.92 (16 jangda 8/16),
+  turnir raundlari daromadi ×1.12 (juda oson bo'lib qolgandi), "Chidab tur" dushman daromadi 1.2.

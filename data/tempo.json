@@ -1,7 +1,7 @@
 {
 	"_comment": "Jang tempi: hamma rejimlarga birdaniga ta'sir qiladi (BattleSim.setup). 1.0 = 1.0 versiyadagi tezlik.",
 	"world_len": 2400,
-	"speed_mult": 1.25,
+	"speed_mult": 1.4,
 	"train_rate": 1.4,
 	"income_mult": 1.35,
 	"start_gold_mult": 1.3,

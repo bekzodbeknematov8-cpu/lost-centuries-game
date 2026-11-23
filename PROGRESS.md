@@ -6,6 +6,11 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (31) — Masofa: askarlar tezroq yuradi
+- Foydalanuvchi: "dushmanlar orasidagi masofa juda uzoq". Maydonni qisqartirish jangni cho'zdi (sinab ko'rildi, bekor qilindi),
+  o'rniga yurish tezligi ×1.4 (qal'adan qal'agacha ~16 s). Jang o'rtacha 1,7 daqiqa.
+- Kampaniyalar 83–95%, turnir har raund 62–100%, kunlik sinov 41–62% — devor yo'q.
+
 ### 2026-11-23 (30) — Grafika: "realga yaqinroq"
 - Foydalanuvchi: "yana jonliroq, realga yaqinroq bo'lsin". Kodda chizilgan batafsil uslub namunasi ko'rsatildi
   (`docs/prototypes/art_v2_preview.png`, patch saqlab qo'yildi), foydalanuvchi **haqiqiy rassom grafikasini** tanladi.
