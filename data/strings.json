@@ -738,10 +738,10 @@
 		"tr": "Hattı Tut"
 	},
 	"DC_HOLD_DESC": {
-		"uz": "Kuchli dushmanga qarshi qal'ani 2,5 daqiqa saqlang.",
-		"en": "Defend your fortress against a stronger enemy for 2.5 minutes.",
-		"ru": "Удержите крепость против сильного врага 2,5 минуты.",
-		"tr": "Güçlü düşmana karşı kaleni 2,5 dakika savun."
+		"uz": "Kuchli dushmanga qarshi qal'ani 2 daqiqadan ko'proq saqlang.",
+		"en": "Defend your fortress against a stronger enemy for over 2 minutes.",
+		"ru": "Удержите крепость против сильного врага более 2 минут.",
+		"tr": "Güçlü düşmana karşı kaleni 2 dakikadan fazla savun."
 	},
 	"DC_SWORDS": {
 		"uz": "Qilichlar to'qnashuvi",

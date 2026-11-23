@@ -889,7 +889,10 @@ func _engage(u: UnitState, target: UnitState, dt: float) -> void:
 	var dx := target.x - u.x
 	var reach := float(u.def.range)
 	if absf(dx) > reach:
-		_move_towards(u, target.x - signf(dx) * reach * 0.9, dt)
+		# Muhim: to'xtash nuqtasi zarba masofasidan yetarlicha ichkarida bo'lsin. Aks holda _move_towards
+		# "yetib keldim" (4 px aniqlik) deb to'xtaydi, lekin masofa hali qisqa qurollar (otliq 34, sarkarda 36)
+		# uchun biroz uzoq qoladi — askar dushman oldida hech narsa qilmay turib qolardi.
+		_move_towards(u, target.x - signf(dx) * maxf(0.0, reach * 0.9 - 6.0), dt)
 	else:
 		u.facing = 1 if dx >= 0 else -1
 		if u.cooldown <= 0.0:
@@ -901,7 +904,9 @@ func _engage_castle(u: UnitState, enemy: TeamState, dt: float) -> void:
 	var dx := front - u.x
 	var reach := float(u.def.range)
 	if absf(dx) > reach:
-		_move_towards(u, front - signf(dx) * reach * 0.9 + u.slot * 0.2, dt)
+		# Safdagi siljish (slot) to'xtash nuqtasini zarba masofasidan tashqariga chiqarib yubormasin
+		var stand := clampf(reach * 0.9 - 6.0 - absf(u.slot) * 0.2, 0.0, reach)
+		_move_towards(u, front - signf(dx) * stand, dt)
 	else:
 		u.facing = 1 if dx >= 0 else -1
 		if u.cooldown <= 0.0:

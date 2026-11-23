@@ -37,7 +37,7 @@
 		"weapon": "sword",
 		"armor_type": "metal",
 		"bonus": {
-			"ranged": 1.3,
+			"ranged": 1.0,
 			"shield": 1.7
 		}
 	},
@@ -61,18 +61,18 @@
 		"armor_type": "shield",
 		"bonus": {
 			"cavalry": 2.6,
-			"elephant": 3.2
+			"elephant": 4.5
 		}
 	},
 	"archer": {
 		"name": "UNIT_ARCHER",
-		"cost": 160,
+		"cost": 140,
 		"train_time": 5.0,
 		"pop": 1,
 		"hp": 100,
 		"damage": 23,
 		"range": 330,
-		"cooldown": 1.5,
+		"cooldown": 1.35,
 		"speed": 76,
 		"armor": 0,
 		"class": "ranged",
@@ -83,7 +83,7 @@
 		"armor_type": "cloth",
 		"projectile": "arrow",
 		"bonus": {
-			"infantry": 1.25
+			"infantry": 2.1
 		}
 	},
 	"cavalry": {
@@ -106,7 +106,8 @@
 		"bonus": {
 			"ranged": 2.0,
 			"worker": 1.5,
-			"infantry": 1.3
+			"infantry": 1.9,
+			"shield": 0.6
 		}
 	},
 	"musketeer": {
@@ -128,7 +129,7 @@
 		"armor_type": "cloth",
 		"projectile": "bullet",
 		"bonus": {
-			"cavalry": 1.8,
+			"cavalry": 1.3,
 			"elephant": 2.2
 		},
 		"unlock_stars": 100
@@ -151,13 +152,14 @@
 		"weapon": "tusk",
 		"armor_type": "hide",
 		"bonus": {
-			"infantry": 1.5,
+			"infantry": 2.0,
 			"worker": 1.5,
-			"cavalry": 1.3
+			"cavalry": 1.3,
+			"shield": 0.5
 		},
 		"trample": {
 			"targets": 2,
-			"mult": 0.4
+			"mult": 0.5
 		},
 		"unlock_stars": 250
 	}

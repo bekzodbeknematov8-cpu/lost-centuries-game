@@ -51,13 +51,13 @@ static func region_levels(data: Dictionary, cid: String, ri: int) -> Array:
 	var prev_income := float(regs[ri - 1].get("enemy_income", 1.0)) if ri > 0 else float(boss.get("enemy_income", 1.0)) * 0.85
 	var out: Array = []
 	for n in range(1, n_levels):
-		out.append(_generate(boss, ri, n, prev_income, n_levels))
+		out.append(_generate(boss, ri, n, prev_income, n_levels, data.get("variant_gold", {})))
 	out.append(boss)
 	_cache[key] = out
 	return out
 
 
-static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float, n_levels: int) -> Dictionary:
+static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float, n_levels: int, vg: Dictionary = {}) -> Dictionary:
 	## Viloyat shablonidan oddiy level: qiyinlik oldingi bossdan shu bossgacha silliq oshadi.
 	var k := float(n) / n_levels
 	var boss_income := float(boss.get("enemy_income", 1.0))
@@ -89,9 +89,9 @@ static func _generate(boss: Dictionary, ri: int, n: int, prev_income: float, n_l
 			lv.survive = 120 + int(60.0 * k) + 6 * ri
 			lv.par = lv.survive
 		2:
-			lv.enemy_gold = 480
+			lv.enemy_gold = int(vg.get("enemy", 480))
 		3:
-			lv.player_gold = 480
+			lv.player_gold = int(vg.get("player", 480))
 	return lv
 
 

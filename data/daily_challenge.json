@@ -10,7 +10,7 @@
 		"archers_duel":    {"name": "DC_ARCHERS",  "desc": "DC_ARCHERS_DESC",  "cfg": {"allowed": [["worker", "archer", "spearman"], ["worker", "archer", "spearman"]]}},
 		"no_heroes":       {"name": "DC_NOHERO",   "desc": "DC_NOHERO_DESC",   "cfg": {"no_heroes": true}},
 		"giants":          {"name": "DC_GIANTS",   "desc": "DC_GIANTS_DESC",   "cfg": {"allowed": [["worker", "spearman", "musketeer", "elephant"], ["worker", "spearman", "musketeer", "elephant"]], "start_gold": [900, 900]}},
-		"hold_the_line":   {"name": "DC_HOLD",     "desc": "DC_HOLD_DESC",     "cfg": {"survive_time": 150.0, "income_mult": [1.0, 1.2]}},
+		"hold_the_line":   {"name": "DC_HOLD",     "desc": "DC_HOLD_DESC",     "cfg": {"survive_time": 130.0, "income_mult": [1.0, 1.05]}},
 		"sword_brothers":  {"name": "DC_SWORDS",   "desc": "DC_SWORDS_DESC",   "cfg": {"allowed": [["worker", "swordsman"], ["worker", "swordsman"]], "start_gold": [500, 500]}}
 	},
 	"ai": "normal"

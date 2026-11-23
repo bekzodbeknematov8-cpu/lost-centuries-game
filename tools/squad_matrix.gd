@@ -16,9 +16,9 @@ func _init():
 					var s := BattleSim.new(); s.setup(defs, {"seed": seed, "start_units": [[],[]]})
 					var ta = side; var tb = 1 - side
 					for k in int(budget / defs[a].cost):
-						var u = s.spawn_unit(ta, a); u.x = 1600 - s.teams[ta].dir * (300 + k * 12)
+						var u = s.spawn_unit(ta, a); u.x = BattleSim.WORLD_LEN * 0.5 - s.teams[ta].dir * (300 + k * 12)
 					for k in int(budget / defs[b].cost):
-						var u = s.spawn_unit(tb, b); u.x = 1600 - s.teams[tb].dir * (300 + k * 12)
+						var u = s.spawn_unit(tb, b); u.x = BattleSim.WORLD_LEN * 0.5 - s.teams[tb].dir * (300 + k * 12)
 					s.teams[0].stance = TeamState.Stance.ATTACK; s.teams[1].stance = TeamState.Stance.ATTACK
 					for i in int(120 / BattleSim.STEP):
 						s.step(); s.events.clear()

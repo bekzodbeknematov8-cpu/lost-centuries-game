@@ -94,3 +94,14 @@
   ×1.6 ham sinaldi — birinchi kampaniyalar juda qiyinlashdi (Chingiz 64%).
 - Qayta muvozanat: Chingiz/Jaloliddin enemy_scale 0.96, Bobur 1.03, temur_10 daromadi 0.92 (16 jangda 8/16),
   turnir raundlari daromadi ×1.12 (juda oson bo'lib qolgandi), "Chidab tur" dushman daromadi 1.2.
+
+## 2026-11-23 — Jiddiy xato: qisqa qurolli askarlar dushman oldida turib qolardi
+- `_engage`: to'xtash nuqtasi `reach*0.9` edi, `_move_towards` esa 4 px aniqlikda "yetib keldim" deydi.
+  Qisqa qurollarda (ishchi 26, qilichboz 30, otliq 34, sarkarda 36) zaxira <4 px bo'lib, askar dushmandan biroz uzoqda
+  hujum qilmay turib qolardi (o'q yeb). Qal'aga hujumda ham saf siljishi (slot) tufayli shunday. Tuzatildi + regressiya testi.
+- Butun askar balansi shu xato ustida sozlangan ekan → qayta qurildi (squad_matrix):
+  otliq bonusi piyodaga 1.9 (qalqonliga ×0.6), kamonchi piyodaga 2.1 (narx 140, 1.35 s), qilichboz kamonchiga bonussiz,
+  nayzachi filga 4.5, fil piyodaga 2.0 (qalqonliga ×0.5), bosib o'tish 0.5, miltiqchi otliqqa 1.3.
+- Qayta muvozanat: Chingiz 0.92 / Jaloliddin 0.86 enemy_scale, "boy dushman" bosqichlari oltini 480→330
+  (campaigns.json: variant_gold), "Chidab tur" 130 s va dushman daromadi 1.05.
+- Saboq: `tools/run_tests.sh` natijasining faqat oxirgi qatoriga qarab commit qilmaslik — "HAMMASI O'TDI" ni aniq tekshirish.

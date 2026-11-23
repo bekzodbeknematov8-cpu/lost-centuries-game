@@ -6,6 +6,11 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (32) — Jiddiy xato tuzatildi: otliq va sarkardalar dushman oldida turib qolardi
+- Qisqa qurolli askarlar (qilichboz, otliq, sarkarda) dushmandan 1 qadam uzoqda to'xtab, hujum qilmay qolardi. Tuzatildi.
+- Askarlar balansi qayta qurildi ("tosh-qaychi-qog'oz" jadvali), kampaniyalar/turnir/kunlik sinov qayta o'lchandi — devor yo'q.
+- Oldingi commit (cbe41d7) yiqilgan test bilan push qilingan edi (CI qizil) — shu commit bilan tuzatildi.
+
 ### 2026-11-23 (31) — Masofa: askarlar tezroq yuradi
 - Foydalanuvchi: "dushmanlar orasidagi masofa juda uzoq". Maydonni qisqartirish jangni cho'zdi (sinab ko'rildi, bekor qilindi),
   o'rniga yurish tezligi ×1.4 (qal'adan qal'agacha ~16 s). Jang o'rtacha 1,7 daqiqa.

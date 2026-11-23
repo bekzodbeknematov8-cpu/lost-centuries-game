@@ -1200,7 +1200,7 @@ func test_counters_new_units() -> void:
 
 func squad_fight(a: String, b: String) -> float:
 	var wins := 0.0
-	for seed in 2:
+	for seed in 4:
 		for side in 2:
 			var s := BattleSim.new()
 			s.setup(defs, {"seed": seed, "start_units": [[], []]})
@@ -1208,10 +1208,10 @@ func squad_fight(a: String, b: String) -> float:
 			var tb := 1 - side
 			for k in int(1650.0 / float(defs[a].cost)):
 				var u := s.spawn_unit(ta, a)
-				u.x = 1600 - s.teams[ta].dir * (300 + k * 12)
+				u.x = BattleSim.WORLD_LEN * 0.5 - s.teams[ta].dir * (300 + k * 12)
 			for k in int(1650.0 / float(defs[b].cost)):
 				var u := s.spawn_unit(tb, b)
-				u.x = 1600 - s.teams[tb].dir * (300 + k * 12)
+				u.x = BattleSim.WORLD_LEN * 0.5 - s.teams[tb].dir * (300 + k * 12)
 			s.teams[0].stance = TeamState.Stance.ATTACK
 			s.teams[1].stance = TeamState.Stance.ATTACK
 			for i in int(120 / BattleSim.STEP):
@@ -1220,7 +1220,7 @@ func squad_fight(a: String, b: String) -> float:
 				if s.alive_units(0).is_empty() or s.alive_units(1).is_empty():
 					break
 			wins += 1.0 if s.army_value(ta) > s.army_value(tb) else 0.0
-	return wins / 4.0
+	return wins / 8.0
 
 
 # --- Kunlik sinov --------------------------------------------------------------------
@@ -1316,3 +1316,30 @@ func test_morale_streak() -> void:
 	var d1 := s._damage_against(a, ["infantry"])
 	s.teams[0].morale_time = 0.0
 	check(d1 > s._damage_against(a, ["infantry"]), "jangovar ruh zararni oshirishi kerak")
+
+
+func test_short_reach_units_close_in() -> void:
+	## Regressiya: qisqa qurolli askar (otliq, sarkarda) dushmandan biroz uzoqda "yetib keldim" deb turib qolmasin.
+	for gap in [34.3, 35.0, 37.0, 38.5, 60.0]:
+		var s := new_sim({"start_units": [[], []]})
+		var c := s.spawn_unit(0, "cavalry")
+		c.x = 1000.0
+		var e := s.spawn_unit(1, "musketeer")
+		e.x = 1000.0 + gap
+		e.stun = 10.0
+		s.set_stance(0, TeamState.Stance.ATTACK)
+		for i in int(3.0 / BattleSim.STEP):
+			s.step()
+			s.events.clear()
+		check(e.hp < e.max_hp, "otliq %.1f px masofadan hujum qilmadi" % gap)
+	# Qal'aga hujum: safning chetidagi otliq ham qal'aga yetishi kerak
+	var s2 := new_sim({"start_units": [[], []]})
+	var c2 := s2.spawn_unit(0, "cavalry")
+	c2.slot = 40.0
+	c2.x = s2.teams[1].castle_x - 600.0
+	s2.set_stance(0, TeamState.Stance.ATTACK)
+	var hp0 := s2.teams[1].castle_hp
+	for i in int(12.0 / BattleSim.STEP):
+		s2.step()
+		s2.events.clear()
+	check(s2.teams[1].castle_hp < hp0, "chetdagi otliq qal'aga zarba bermadi")
