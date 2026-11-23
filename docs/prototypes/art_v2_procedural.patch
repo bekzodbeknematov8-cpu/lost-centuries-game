@@ -1,0 +1,200 @@
+diff --git a/scripts/view/painter.gd b/scripts/view/painter.gd
+index 8bfc877..c8257f9 100644
+--- a/scripts/view/painter.gd
++++ b/scripts/view/painter.gd
+@@ -10,6 +10,7 @@ const GOLD := Color(1.0, 0.8, 0.25)
+ 
+ ## O'yinchi libosi (Libos bo'limi): bo'sh bo'lsa standart ranglar ishlatiladi.
+ static var player_outfit: Array = []
++static var style_v2 := true   ## Batafsilroq (realga yaqin) piyoda askar chizmasi
+ 
+ ## Tomon ranglari: [ko'ylak, plash/bezak, shim, dubulg'a]
+ const TEAM_COLORS := [
+@@ -133,6 +134,69 @@ static func _draw_cape(ci: CanvasItem, u: UnitState, a: float, t: float) -> void
+ 	ci.draw_colored_polygon(pts, _c(c, a))
+ 
+ 
++static func _limb(ci: CanvasItem, a0: Vector2, a1: Vector2, a2: Vector2, w: float, col: Color, a: float, flash: bool) -> void:
++	## Ikki bo'g'imli a'zo (son-boldir yoki yelka-bilak) va bo'g'imdagi yumaloqlik, qora chegara bilan.
++	ci.draw_line(a0, a1, _c(DARK, a * 0.55), w + 2.5, true)
++	ci.draw_line(a1, a2, _c(DARK, a * 0.55), w + 2.5, true)
++	ci.draw_line(a0, a1, _c(col, a, flash), w, true)
++	ci.draw_line(a1, a2, _c(col.darkened(0.08), a, flash), w * 0.9, true)
++	ci.draw_circle(a1, w * 0.5, _c(col, a, flash))
++
++
++static func _draw_body_v2(ci: CanvasItem, u: UnitState, cols: Array, walk: float, a: float, flash: bool) -> void:
++	## Batafsilroq piyoda: tizzalari bukiladigan oyoqlar, soyali to'n, kamar, sovut (askarlarda), yuz va soqol.
++	var tunic: Color = cols[0]
++	var trim: Color = cols[1]
++	var pants: Color = cols[2]
++	var boot := Color(0.24, 0.16, 0.1)
++	var hip := Vector2(0, -31)
++	# Oyoqlar: qadam fazasiga qarab tizza bukiladi (orqa oyoq qoraroq)
++	for side: float in [-1.0, 1.0]:
++		var ph: float = walk * side
++		var foot := Vector2(ph * 12.0, 0)
++		var knee := Vector2(ph * 5.0 + 3.0, -15.0 - absf(ph) * 2.5)
++		var pc: Color = pants if side > 0 else pants.darkened(0.25)
++		_limb(ci, hip, knee, foot + Vector2(0, -5), 6.5, pc, a, flash)
++		# Etik
++		ci.draw_colored_polygon(PackedVector2Array([foot + Vector2(-3, -9), foot + Vector2(4, -9), foot + Vector2(9, 0), foot + Vector2(-4, 0)]), _c(boot if side > 0 else boot.darkened(0.2), a))
++	# Orqa qo'l (soyada)
++	var shoulder := Vector2(0, -54)
++	_limb(ci, shoulder + Vector2(-4, 1), shoulder + Vector2(-9, 13), shoulder + Vector2(-6, 24), 5.0, tunic.darkened(0.35), a, flash)
++	# To'n: old (yorug') va orqa (soya) qismlar, etak kengroq
++	var back := PackedVector2Array([Vector2(-11, -59), Vector2(2, -59), Vector2(0, -22), Vector2(-15, -24)])
++	var front := PackedVector2Array([Vector2(1, -59), Vector2(11, -58), Vector2(15, -23), Vector2(-1, -22)])
++	ci.draw_colored_polygon(back, _c(tunic.darkened(0.22), a, flash))
++	ci.draw_colored_polygon(front, _c(tunic, a, flash))
++	var outline := PackedVector2Array([Vector2(-11, -59), Vector2(11, -58), Vector2(15, -23), Vector2(-15, -24), Vector2(-11, -59)])
++	ci.draw_polyline(outline, _c(DARK, a * 0.6), 1.5, true)
++	# Yoqa va old hoshiya
++	ci.draw_line(Vector2(-6, -59), Vector2(4, -46), _c(trim, a), 2.5)
++	ci.draw_line(Vector2(4, -46), Vector2(3, -24), _c(trim.darkened(0.1), a), 2.0)
++	# Sovut plastinkalari (jangchilarda)
++	if u.type in ["swordsman", "spearman"]:
++		for r in 3:
++			var y := -55.0 + r * 6.0
++			for c in 4:
++				var x := -9.0 + c * 5.0 + (2.5 if r % 2 == 1 else 0.0)
++				ci.draw_rect(Rect2(Vector2(x, y), Vector2(4.2, 5.0)), _c(STEEL.darkened(0.15 + 0.05 * (c % 2)), a, flash))
++		ci.draw_line(Vector2(-11, -38), Vector2(12, -38), _c(DARK, a * 0.4), 1.0)
++	# Kamar va to'qa
++	ci.draw_line(Vector2(-13, -33), Vector2(13, -32), _c(Color(0.35, 0.22, 0.12), a), 4.0)
++	ci.draw_rect(Rect2(Vector2(1, -35), Vector2(4, 5)), _c(GOLD.darkened(0.15), a))
++	# Bo'yin va bosh: soyali yuz, burun, ko'z, mo'ylov/soqol
++	var head := Vector2(1, -67)
++	ci.draw_rect(Rect2(head + Vector2(-2.5, 5), Vector2(5, 5)), _c(SKIN.darkened(0.15), a, flash))
++	ci.draw_circle(head, 8.8, _c(DARK, a * 0.5))
++	ci.draw_circle(head, 8.2, _c(SKIN, a, flash))
++	ci.draw_circle(head + Vector2(-2.5, 1.5), 6.0, _c(SKIN.darkened(0.08), a * 0.6, flash))
++	ci.draw_colored_polygon(PackedVector2Array([head + Vector2(7.5, -1), head + Vector2(10.5, 2.5), head + Vector2(7.5, 3)]), _c(SKIN.darkened(0.12), a, flash))
++	ci.draw_circle(head + Vector2(4.5, -1.5), 1.3, _c(DARK, a))
++	ci.draw_line(head + Vector2(3, -4), head + Vector2(6.5, -4.3), _c(DARK, a * 0.8), 1.2)
++	if u.type != "worker" or u.id % 2 == 0:
++		ci.draw_colored_polygon(PackedVector2Array([head + Vector2(1, 4), head + Vector2(8, 4.5), head + Vector2(5, 10), head + Vector2(1, 8)]), _c(Color(0.22, 0.15, 0.1), a))
++	ci.draw_line(head + Vector2(4, 4), head + Vector2(9, 5.5), _c(Color(0.2, 0.13, 0.08), a), 1.6)
++
++
+ static func _c(c: Color, a: float, flash := false) -> Color:
+ 	var out := c.lerp(Color.WHITE, 0.6) if flash else c
+ 	out.a *= a
+@@ -143,24 +207,27 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
+ 	var tunic: Color = cols[0]
+ 	var trim: Color = cols[1]
+ 	var pants: Color = cols[2]
+-	# Oyoqlar
+-	var hip := Vector2(0, -30)
+-	ci.draw_line(hip, Vector2(walk * 11.0, 0), _c(pants, a), 6.0, true)
+-	ci.draw_line(hip, Vector2(-walk * 11.0, 0), _c(pants.darkened(0.25), a), 6.0, true)
+-	ci.draw_circle(Vector2(walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
+-	ci.draw_circle(Vector2(-walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
+-	# Orqa qo'l
+ 	var shoulder := Vector2(0, -54)
+-	ci.draw_line(shoulder, shoulder + Vector2(-8, 18), _c(tunic.darkened(0.3), a, flash), 5.0, true)
+-	# Gavda (to'n)
+-	var body := PackedVector2Array([Vector2(-10, -58), Vector2(10, -58), Vector2(13, -26), Vector2(-13, -26)])
+-	ci.draw_colored_polygon(body, _c(tunic, a, flash))
+-	ci.draw_line(Vector2(-12, -34), Vector2(12, -34), _c(trim, a), 3.0)
+-	ci.draw_line(Vector2(0, -58), Vector2(0, -34), _c(trim.darkened(0.1), a), 2.0)
+-	# Bosh
+ 	var head := Vector2(1, -67)
+-	ci.draw_circle(head, 8.5, _c(SKIN, a, flash))
+-	ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
++	if style_v2:
++		_draw_body_v2(ci, u, cols, walk, a, flash)
++	else:
++		# Oyoqlar
++		var hip := Vector2(0, -30)
++		ci.draw_line(hip, Vector2(walk * 11.0, 0), _c(pants, a), 6.0, true)
++		ci.draw_line(hip, Vector2(-walk * 11.0, 0), _c(pants.darkened(0.25), a), 6.0, true)
++		ci.draw_circle(Vector2(walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
++		ci.draw_circle(Vector2(-walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
++		# Orqa qo'l
++		ci.draw_line(shoulder, shoulder + Vector2(-8, 18), _c(tunic.darkened(0.3), a, flash), 5.0, true)
++		# Gavda (to'n)
++		var body := PackedVector2Array([Vector2(-10, -58), Vector2(10, -58), Vector2(13, -26), Vector2(-13, -26)])
++		ci.draw_colored_polygon(body, _c(tunic, a, flash))
++		ci.draw_line(Vector2(-12, -34), Vector2(12, -34), _c(trim, a), 3.0)
++		ci.draw_line(Vector2(0, -58), Vector2(0, -34), _c(trim.darkened(0.1), a), 2.0)
++		# Bosh
++		ci.draw_circle(head, 8.5, _c(SKIN, a, flash))
++		ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
+ 	_draw_headgear(ci, u.type, head, cols, a)
+ 	# Qurol va old qo'l
+ 	match u.type:
+@@ -300,6 +367,10 @@ static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Ar
+ 			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(9.5, -1), head + Vector2(5, -10), head + Vector2(0, -19), head + Vector2(-5, -10)]), _c(cols[3] if cols.size() > 3 else STEEL.darkened(0.15), a))
+ 			ci.draw_line(head + Vector2(0, -19), head + Vector2(-4, -26), _c(trim, a), 3.0)
+ 			ci.draw_line(head + Vector2(-9, 0), head + Vector2(-10, 7), _c(STEEL.darkened(0.3), a), 3.0)
++			if style_v2:
++				# Dubulg'a yaltirashi va bo'yinni yopuvchi to'r (kolchuga)
++				ci.draw_line(head + Vector2(-5, -6), head + Vector2(-1, -15), _c(Color(1, 1, 1, 0.55), a), 2.0)
++				ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(-3, -1), head + Vector2(-4, 8), head + Vector2(-10, 6)]), _c(STEEL.darkened(0.35), a))
+ 
+ 
+ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: float) -> void:
+diff --git a/tools/art_preview.gd b/tools/art_preview.gd
+new file mode 100644
+index 0000000..509f97c
+--- /dev/null
++++ b/tools/art_preview.gd
+@@ -0,0 +1,57 @@
++extends SceneTree
++## Grafika uslublarini yonma-yon solishtirish: chapda eski, o'ngda yangi (Painter.style_v2).
++##   xvfb-run -a godot --path . --rendering-driver opengl3 -s res://tools/art_preview.gd -- --out=/tmp/art.png
++class Board:
++	extends Node2D
++	var t := 0.0
++	var defs: Dictionary = JSON.parse_string(FileAccess.get_file_as_string("res://data/units.json"))
++	func _draw() -> void:
++		draw_rect(Rect2(0, 0, 1280, 720), Color(0.62, 0.78, 0.9))
++		draw_rect(Rect2(0, 430, 1280, 290), Color(0.5, 0.58, 0.32))
++		draw_line(Vector2(640, 20), Vector2(640, 700), Color(0, 0, 0, 0.3), 3.0)
++		var font := ThemeDB.fallback_font
++		draw_string(font, Vector2(0, 50), "ESKI", HORIZONTAL_ALIGNMENT_CENTER, 640, 34, Color(0.1, 0.1, 0.1))
++		draw_string(font, Vector2(640, 50), "YANGI", HORIZONTAL_ALIGNMENT_CENTER, 640, 34, Color(0.1, 0.1, 0.1))
++		var types := ["worker", "swordsman", "spearman", "archer"]
++		for side in 2:
++			Painter.style_v2 = side == 1
++			for i in types.size():
++				for team in 2:
++					var u := UnitState.new()
++					u.type = types[i]
++					u.def = defs[types[i]]
++					u.team = team
++					u.facing = 1 if team == 0 else -1
++					u.hp = 1.0
++					u.max_hp = 1.0
++					u.moving = true
++					u.walk_phase = 0.9 + i
++					u.id = i
++					var x := 90.0 + side * 640.0 + i * 140.0 + team * 40.0
++					var y := 400.0 if team == 0 else 640.0
++					draw_set_transform(Vector2(x, y + 6), 0.0, Vector2(1.0, 0.3))
++					draw_circle(Vector2.ZERO, 22.0, Color(0, 0, 0, 0.2))
++					draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
++					Painter.draw_unit(self, u, Vector2(x, y), 2.0, t)
++		Painter.style_v2 = true
++
++
++var _frames := 0
++var _out := "/tmp/art.png"
++
++
++func _initialize() -> void:
++	for a in OS.get_cmdline_user_args():
++		if a.begins_with("--out="):
++			_out = a.split("=")[1]
++	var b := Board.new()
++	root.add_child(b)
++
++
++func _process(_d: float) -> bool:
++	_frames += 1
++	if _frames == 5:
++		root.get_texture().get_image().save_png(_out)
++		print("SAVED ", _out)
++		return true
++	return false

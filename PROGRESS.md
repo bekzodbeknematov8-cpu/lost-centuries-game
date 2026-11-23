@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (30) — Grafika: "realga yaqinroq"
+- Foydalanuvchi: "yana jonliroq, realga yaqinroq bo'lsin". Kodda chizilgan batafsil uslub namunasi ko'rsatildi
+  (`docs/prototypes/art_v2_preview.png`, patch saqlab qo'yildi), foydalanuvchi **haqiqiy rassom grafikasini** tanladi.
+- `docs/art-brief.md` — rassom uchun texnik topshiriq (o'zbekcha + inglizcha): 7 askar, 7 sarkarda, qal'a, 4 fon,
+  animatsiyalar, o'lchamlar, rang niqobi, nomlash, huquqlar. Keyingi qadam: rassom fayllari kelgach o'yinga ulash
+  (rasm bo'lmagan joyda hozirgi chizma qoladi).
+
 ### 2026-11-23 (29) — Jonlantirish (3): KO'RINISH va TARANGLIK — reja tugadi
 - Kamera yaqinroq (askarlar ~20% kattaroq), zarar raqamlari, kuchli zarbada silkinish va chaqnash.
 - Oltin tangalari hisobga uchadi; qal'a qulashida sekin harakat va katta portlash; g'alabada konfetti.

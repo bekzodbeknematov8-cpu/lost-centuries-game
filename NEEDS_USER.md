@@ -12,3 +12,4 @@
 | ⏳ | Aloqa uchun email (maxfiylik siyosatidagi `[CONTACT_EMAIL]` o'rniga, Play Console'da ham kerak) | 8-bosqich |
 | ⏳ | Maxfiylik siyosati uchun ochiq sahifa (masalan, GitHub Pages yoki Google Sites) | 8-bosqich |
 | ⏳ | Release keystore: GitHub Secrets'ga `RELEASE_KEYSTORE_BASE64`, `RELEASE_KEYSTORE_PASSWORD`, `RELEASE_KEY_ALIAS` (kalitni hech kimga bermang, faylni yo'qotmang) | 8-bosqich |
+| ⏳ | Rassom grafikasi: `docs/art-brief.md` dagi topshiriq bo'yicha rassom topish (avval 1 ta askar — qilichboz), tayyor fayllarni yuborish | Grafika yangilanishi |
