@@ -80,3 +80,9 @@
 - **"Jangovar ruh":** 4 s ichida 5 ta dushman yiqitilsa — 6 s davomida +15% zarar va tezlik (ikki tomon uchun).
 - Sarkarda kuchlari tez tiklanishi (×0.6) bilan Alp Arslon chopqini deyarli doimiy bo'lib qoldi → kuch 44 s, otliqlar 11 s.
 - O'rgatuvchi bosqichga "O'q yog'dir" qadami qo'shildi.
+
+## 2026-11-23 — Jonlantirish (3): ko'rinish va taranglik
+- Kamera ×1.2 yaqinroq (tempo.json: camera_zoom), zarar raqamlari (kuchli zarba ≥40 — oltin rang, silkinish, chaqnash),
+  qazilgan oltin tanga bo'lib hisobga uchadi, qal'a qulashida 1,3 s sekin harakat + portlashlar, g'alabada konfetti.
+- Taranglik: har kampaniyaga `enemy_scale` (campaigns.json) — bot g'alabasi 90–99% dan 87–94% ga.
+  boyazid_10 (yakuniy boss) 16 jangda 11/16.

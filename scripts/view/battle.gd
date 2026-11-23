@@ -91,6 +91,10 @@ func _ready() -> void:
 	add_child(cam)
 	cam.make_current()
 	cam.position = Vector2(sim.teams[0].castle_x + 500.0, VIEW_H * 0.5)
+	# Yaqinroq kamera: askarlar kattaroq ko'rinadi (data/tempo.json -> camera_zoom)
+	var cz := float(BattleSim.tempo().get("camera_zoom", 1.0))
+	cam.zoom = Vector2.ONE * cz
+	cam.position.y = VIEW_H * 0.5 + 60.0 * (cz - 1.0) / 0.2
 	_cam_target_x = cam.position.x
 	hud = preload("res://scripts/ui/hud.gd").new()
 	hud.battle = self
@@ -197,9 +201,17 @@ func _process(delta: float) -> void:
 		if GameState.mode == "tournament" and level.is_empty() and not sim.endless:
 			result.tournament = GameState.tournament_result(won)
 			result.coins = int(result.tournament.coins)
-		hud.show_end(won, result)
-		if OS.get_cmdline_user_args().has("--press_ad"):
-			get_tree().create_timer(1.0).timeout.connect(func() -> void: hud._on_ad())
+		# Sekin harakat: qal'a qulashini ko'rsatib, keyin natija oynasi
+		var sm: Dictionary = BattleSim.tempo().get("slowmo", {})
+		var base_scale := Engine.time_scale
+		Engine.time_scale = base_scale * float(sm.get("scale", 1.0))
+		get_tree().create_timer(float(sm.get("seconds", 0.0)), true, false, true).timeout.connect(func() -> void:
+			Engine.time_scale = base_scale
+			hud.show_end(won, result)
+			if won:
+				hud.confetti()
+			if OS.get_cmdline_user_args().has("--press_ad"):
+				get_tree().create_timer(1.0).timeout.connect(func() -> void: hud._on_ad()))
 	queue_redraw()
 
 
@@ -221,7 +233,7 @@ func _update_camera(delta: float) -> void:
 				front[u.team] = maxf(front[0], u.x) if u.team == 0 else minf(front[1], u.x)
 		if front[0] > -INF and front[1] < INF:
 			_cam_target_x = (front[0] + front[1]) * 0.5
-	var half := view_width() * 0.5
+	var half := view_width() * 0.5 / cam.zoom.x
 	_cam_target_x = clampf(_cam_target_x, half, BattleSim.WORLD_LEN - half)
 	cam.position.x = lerpf(cam.position.x, _cam_target_x, minf(1.0, delta * 8.0))
 	cam.position.x = clampf(cam.position.x, half, BattleSim.WORLD_LEN - half)
@@ -302,6 +314,16 @@ func _on_event(e: Dictionary) -> void:
 				_add_sparks(Vector2(x, y), 6 if snd == "sword_clash" else 4)
 			else:
 				_add_dust(Vector2(x, y + 20.0), 2)
+			# Zarar raqamlari (ekranda ko'rinadiganlari, juda ko'p bo'lib ketmasin)
+			var dmg := float(e.get("dmg", 0.0))
+			if dmg >= 6.0 and absf(x - cam.position.x) < view_width() * 0.5 and _text_count() < 22:
+				var big := dmg >= 40.0
+				var col := Color(1, 1, 1) if e.team == 1 else Color(1, 0.55, 0.5)
+				if big:
+					col = Color(1, 0.85, 0.3)
+					_shake = minf(1.0, _shake + 0.12)
+					_add_sparks(Vector2(x, y), 8)
+				_effects.append({"kind": "text", "pos": Vector2(x + randf_range(-12, 12), y - 20.0), "t": 0.0, "life": 0.7, "text": "%d" % int(round(dmg)), "color": col, "size": 26 if big else 18})
 		"death":
 			Sfx.play("death", _vol_at(x) * 0.7)
 			if e.unit == "cavalry":
@@ -324,14 +346,20 @@ func _on_event(e: Dictionary) -> void:
 			_add_debris(Vector2(x, GROUND_Y - randf_range(40.0, 160.0)))
 		"castle_destroyed":
 			Sfx.play("castle_fall", 1.0, 0.0)
-			_shake = 1.5
-			for i in 12:
-				_add_debris(Vector2(x + randf_range(-80, 80), GROUND_Y - randf_range(20.0, 200.0)))
+			Sfx.play("cannon", 0.8, 0.1)
+			_shake = 1.8
+			for i in 24:
+				_add_debris(Vector2(x + randf_range(-90, 90), GROUND_Y - randf_range(20.0, 220.0)))
+			for i in 4:
+				_effects.append({"kind": "blast", "pos": Vector2(x + randf_range(-70, 70), GROUND_Y - randf_range(0.0, 120.0)), "t": -0.15 * i, "life": 0.6})
+			_add_dust(Vector2(x, GROUND_Y), 20)
 			focus_x(x)
 		"gold":
 			if e.team == 0:
 				Sfx.play("coin", _vol_at(x) * 0.35)
 				_effects.append({"kind": "text", "pos": Vector2(x, GROUND_Y - 30.0), "t": 0.0, "life": 1.0, "text": "+%d" % e.amount, "color": Painter.GOLD})
+				# Tanga hisobga uchib boradi
+				hud.coin_fly(get_canvas_transform() * Vector2(x, GROUND_Y - 30.0))
 		"pick":
 			if absf(x - cam.position.x) < view_width() * 0.6:
 				Sfx.play("pick", _vol_at(x) * 0.22)
@@ -435,6 +463,14 @@ func _on_event(e: Dictionary) -> void:
 		"hero_spawn":
 			if sim.time > 1.0:
 				Sfx.play("horn_attack" if e.team == 0 else "horn_enemy", 0.6, 0.02)
+
+
+func _text_count() -> int:
+	var n := 0
+	for fx in _effects:
+		if fx.kind == "text":
+			n += 1
+	return n
 
 
 func _add_sparks(p: Vector2, n: int) -> void:
@@ -694,6 +730,9 @@ func _draw_effects() -> void:
 				draw_line(fx.pos - d * 22.0, fx.pos - d * 16.0 + d.orthogonal() * 4.0, Color(0.95, 0.95, 0.9), 1.5)
 			"blast":
 				# Portlash chaqnashi (qonsiz): sariq-to'q sariq yorug'lik va tutun
+				k = maxf(k, 0.0)
+				if fx.t < 0.0:
+					continue
 				var bp: Vector2 = fx.pos
 				draw_circle(bp + Vector2(0, -30), 20.0 + k * 70.0, Color(1.0, 0.85, 0.4, 0.75 * (1.0 - k)))
 				draw_circle(bp + Vector2(0, -30), 10.0 + k * 40.0, Color(1.0, 0.98, 0.85, 0.9 * (1.0 - k)))
@@ -737,5 +776,6 @@ func _draw_effects() -> void:
 			"text":
 				var c: Color = fx.color
 				c.a = 1.0 - k
-				draw_string_outline(font, fx.pos, fx.text, HORIZONTAL_ALIGNMENT_CENTER, -1, 22, 4, Color(0, 0, 0, 0.6 * (1.0 - k)))
-				draw_string(font, fx.pos, fx.text, HORIZONTAL_ALIGNMENT_CENTER, -1, 22, c)
+				var tsz := int(fx.get("size", 22))
+				draw_string_outline(font, fx.pos, fx.text, HORIZONTAL_ALIGNMENT_CENTER, -1, tsz, 4, Color(0, 0, 0, 0.6 * (1.0 - k)))
+				draw_string(font, fx.pos, fx.text, HORIZONTAL_ALIGNMENT_CENTER, -1, tsz, c)

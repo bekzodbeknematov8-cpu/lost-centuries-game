@@ -20,6 +20,7 @@ var _hint_time := 7.0
 var _banner: Label
 var _banner_time := 0.0
 var _root: Control
+var _fx: FxLayer
 var _objective: Label
 var _end_result: Dictionary = {}
 var _next_btn: Button
@@ -376,6 +377,44 @@ class VolleyButton:
 		draw_string(font, Vector2(-10, size.y - 2), fit[0], HORIZONTAL_ALIGNMENT_CENTER, size.x + 20.0, fit[1], Painter.GOLD)
 
 
+class FxLayer:
+	## Ekran ustidagi effektlar: hisobga uchuvchi tangalar va g'alaba konfettisi.
+	extends Control
+	var coins: Array = []      ## [{from, to, t}]
+	var confetti: Array = []   ## [{pos, vel, col, rot, t}]
+
+	func _process(d: float) -> void:
+		var keep: Array = []
+		for c in coins:
+			c.t += d / 0.6
+			if c.t < 1.0:
+				keep.append(c)
+		coins = keep
+		var keep2: Array = []
+		for p in confetti:
+			p.t += d
+			p.vel.y += 260.0 * d
+			p.pos += p.vel * d
+			p.rot += d * 6.0
+			if p.t < 3.2 and p.pos.y < size.y + 20.0:
+				keep2.append(p)
+		confetti = keep2
+		if not coins.is_empty() or not confetti.is_empty():
+			queue_redraw()
+
+	func _draw() -> void:
+		for c in coins:
+			var k: float = c.t
+			var e := k * k * (3.0 - 2.0 * k)
+			var p: Vector2 = (c.from as Vector2).lerp(c.to, e) + Vector2(0, -sin(k * PI) * 90.0)
+			draw_circle(p, 9.0, Color(0.75, 0.55, 0.1))
+			draw_circle(p, 7.0, Painter.GOLD)
+		for p in confetti:
+			draw_set_transform(p.pos, p.rot, Vector2.ONE)
+			draw_rect(Rect2(-5, -3, 10, 6), p.col)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+
 class TutorialOverlay:
 	## Qadamma-qadam ko'rsatma: matn paneli, yoritilgan tugma va o'q.
 	extends Control
@@ -496,7 +535,7 @@ class MiniMap:
 				draw_circle(Vector2(u.x * k, size.y * 0.5), 3.0, c)
 			else:
 				draw_rect(Rect2(u.x * k - 1.5, y, 3, 4 if u.is_worker() else 6), c)
-		var vw: float = battle.view_width()
+		var vw: float = battle.view_width() / battle.cam.zoom.x
 		var cx: float = battle.cam.position.x
 		draw_rect(Rect2((cx - vw * 0.5) * k, 1, vw * k, size.y - 2), Color(1, 0.9, 0.5, 0.9), false, 2.0)
 
@@ -509,13 +548,17 @@ func _ready() -> void:
 	_root.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	_root.theme = UITheme.make()
 	add_child(_root)
+	_fx = FxLayer.new()
+	_fx.set_anchors_preset(Control.PRESET_FULL_RECT)
+	_fx.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	_fx.z_index = 10
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	_build_top()
 	_build_bottom()
 	_build_tactics()
 	_build_end_panel()
 	_build_pause_panel()
-	_hint = _center_label(24, 96)
+	_hint = _center_label(22, 108)
 	_hint.text = tr("HINT_START")
 	_objective = _center_label(20, 70)
 	_objective.visible = false
@@ -523,6 +566,7 @@ func _ready() -> void:
 	_banner.add_theme_color_override("font_color", Painter.GOLD)
 	_banner.add_theme_constant_override("outline_size", 8)
 	_banner.visible = false
+	_root.add_child(_fx)   # eng ustida: uchuvchi tangalar va konfetti
 
 
 func _center_label(font_size: int, y: float) -> Label:
@@ -866,6 +910,22 @@ func _process(delta: float) -> void:
 		_banner_time -= delta
 		_banner.modulate.a = clampf(_banner_time * 2.0, 0.0, 1.0)
 		_banner.visible = _banner_time > 0.0
+
+
+func coin_fly(screen_from: Vector2) -> void:
+	## Qazilgan oltin: tanga ekrandagi oltin hisobiga uchib boradi.
+	if _fx.coins.size() > 12:
+		return
+	_fx.coins.append({"from": screen_from, "to": _gold_label.get_global_rect().get_center(), "t": 0.0})
+
+
+func confetti() -> void:
+	## G'alaba: rang-barang qog'oz parchalari yuqoridan sochiladi.
+	var cols := [Painter.GOLD, Color(0.9, 0.25, 0.2), Color(0.2, 0.6, 0.95), Color(0.3, 0.8, 0.4), Color(0.95, 0.95, 0.9)]
+	var w := _fx.size.x
+	for i in 90:
+		_fx.confetti.append({"pos": Vector2(randf() * w, randf_range(-120.0, -10.0)), "vel": Vector2(randf_range(-80, 80), randf_range(40, 160)),
+			"col": cols[i % cols.size()], "rot": randf() * TAU, "t": 0.0})
 
 
 func show_banner(text: String, life: float) -> void:

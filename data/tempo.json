@@ -22,5 +22,10 @@
 		"duration": 6.0,
 		"dmg": 1.15,
 		"speed": 1.15
+	},
+	"camera_zoom": 1.2,
+	"slowmo": {
+		"scale": 0.3,
+		"seconds": 1.3
 	}
 }

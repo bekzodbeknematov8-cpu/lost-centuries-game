@@ -6,6 +6,12 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (29) — Jonlantirish (3): KO'RINISH va TARANGLIK — reja tugadi
+- Kamera yaqinroq (askarlar ~20% kattaroq), zarar raqamlari, kuchli zarbada silkinish va chaqnash.
+- Oltin tangalari hisobga uchadi; qal'a qulashida sekin harakat va katta portlash; g'alabada konfetti.
+- Kampaniyalar biroz qiyinlashtirildi (bot 87–94%), devor yo'q. Boshlanishdagi maslahat matni "Maqsad" bilan ustma-ust tushmaydi.
+- Jonlantirish (1)–(3) tugadi: jang 3,1 → 1,8 daqiqa, "O'q yog'dir", "Jangovar ruh", jonli effektlar.
+
 ### 2026-11-23 (28) — Jonlantirish (2): TA'SIR — "O'q yog'dir" va "Jangovar ruh"
 - Maydonga bosib qal'adan o'q yog'dirish (har 8 s), nishon belgisi, qal'adan uchgan o'qlar, o'ngda tayyorlik tugmasi.
 - Ketma-ket 5 yiqitish — "Jangovar ruh!" (+15% zarar/tezlik, 6 s). Ikkalasi ham AI'da bor (adolatli).

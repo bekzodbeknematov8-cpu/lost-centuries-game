@@ -185,7 +185,8 @@
 					"par": 340,
 					"enemy_castle": 2200
 				}
-			]
+			],
+			"enemy_scale": 1.03
 		},
 		"jaloliddin": {
 			"name": {
@@ -326,7 +327,8 @@
 					"par": 360,
 					"enemy_castle": 2400
 				}
-			]
+			],
+			"enemy_scale": 1.05
 		},
 		"temur": {
 			"name": {
@@ -467,7 +469,8 @@
 					"par": 380,
 					"enemy_castle": 2500
 				}
-			]
+			],
+			"enemy_scale": 1.02
 		},
 		"boyazid": {
 			"name": {
@@ -608,7 +611,8 @@
 					"par": 400,
 					"enemy_castle": 2600
 				}
-			]
+			],
+			"enemy_scale": 1.1
 		},
 		"bobur": {
 			"name": {
@@ -750,7 +754,8 @@
 						"elephant"
 					]
 				}
-			]
+			],
+			"enemy_scale": 1.08
 		},
 		"alp": {
 			"name": {
@@ -883,7 +888,8 @@
 					"enemy_income": 1.2,
 					"par": 330
 				}
-			]
+			],
+			"enemy_scale": 1.06
 		}
 	}
 }

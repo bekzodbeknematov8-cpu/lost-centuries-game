@@ -171,7 +171,7 @@ static func battle_config(data: Dictionary, level_id: String, ai_profiles: Dicti
 		"seed": seed_value,
 		"start_gold": [int(lv.get("player_gold", DEFAULT_PLAYER_GOLD)), int(lv.get("enemy_gold", 300))],
 		"castle_hp": [int(lv.get("player_castle", 2000)), int(float(lv.get("enemy_castle", 2000)) * float(dif.castle))],
-		"income_mult": [1.0, float(lv.get("enemy_income", 1.0)) * float(dif.income)],
+		"income_mult": [1.0, float(lv.get("enemy_income", 1.0)) * float(dif.income) * float(data.campaigns[cid].get("enemy_scale", 1.0))],
 		"start_units": [["worker", "worker"], ["worker", "worker"]],
 		"allowed": [lv.get("allowed", all_units), lv.get("enemy_allowed", enemy_units)],
 		"heroes": [str(data.campaigns[cid].hero), eh if eh != "" else "sardor"],
