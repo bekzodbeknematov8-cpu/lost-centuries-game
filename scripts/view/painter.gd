@@ -10,6 +10,7 @@ const GOLD := Color(1.0, 0.8, 0.25)
 
 ## O'yinchi libosi (Libos bo'limi): bo'sh bo'lsa standart ranglar ishlatiladi.
 static var player_outfit: Array = []
+static var style_v2 := true   ## Batafsilroq (realga yaqin) piyoda askar chizmasi
 
 ## Tomon ranglari: [ko'ylak, plash/bezak, shim, dubulg'a]
 const TEAM_COLORS := [
@@ -133,6 +134,69 @@ static func _draw_cape(ci: CanvasItem, u: UnitState, a: float, t: float) -> void
 	ci.draw_colored_polygon(pts, _c(c, a))
 
 
+static func _limb(ci: CanvasItem, a0: Vector2, a1: Vector2, a2: Vector2, w: float, col: Color, a: float, flash: bool) -> void:
+	## Ikki bo'g'imli a'zo (son-boldir yoki yelka-bilak) va bo'g'imdagi yumaloqlik, qora chegara bilan.
+	ci.draw_line(a0, a1, _c(DARK, a * 0.55), w + 2.5, true)
+	ci.draw_line(a1, a2, _c(DARK, a * 0.55), w + 2.5, true)
+	ci.draw_line(a0, a1, _c(col, a, flash), w, true)
+	ci.draw_line(a1, a2, _c(col.darkened(0.08), a, flash), w * 0.9, true)
+	ci.draw_circle(a1, w * 0.5, _c(col, a, flash))
+
+
+static func _draw_body_v2(ci: CanvasItem, u: UnitState, cols: Array, walk: float, a: float, flash: bool) -> void:
+	## Batafsilroq piyoda: tizzalari bukiladigan oyoqlar, soyali to'n, kamar, sovut (askarlarda), yuz va soqol.
+	var tunic: Color = cols[0]
+	var trim: Color = cols[1]
+	var pants: Color = cols[2]
+	var boot := Color(0.24, 0.16, 0.1)
+	var hip := Vector2(0, -31)
+	# Oyoqlar: qadam fazasiga qarab tizza bukiladi (orqa oyoq qoraroq)
+	for side: float in [-1.0, 1.0]:
+		var ph: float = walk * side
+		var foot := Vector2(ph * 12.0, 0)
+		var knee := Vector2(ph * 5.0 + 3.0, -15.0 - absf(ph) * 2.5)
+		var pc: Color = pants if side > 0 else pants.darkened(0.25)
+		_limb(ci, hip, knee, foot + Vector2(0, -5), 6.5, pc, a, flash)
+		# Etik
+		ci.draw_colored_polygon(PackedVector2Array([foot + Vector2(-3, -9), foot + Vector2(4, -9), foot + Vector2(9, 0), foot + Vector2(-4, 0)]), _c(boot if side > 0 else boot.darkened(0.2), a))
+	# Orqa qo'l (soyada)
+	var shoulder := Vector2(0, -54)
+	_limb(ci, shoulder + Vector2(-4, 1), shoulder + Vector2(-9, 13), shoulder + Vector2(-6, 24), 5.0, tunic.darkened(0.35), a, flash)
+	# To'n: old (yorug') va orqa (soya) qismlar, etak kengroq
+	var back := PackedVector2Array([Vector2(-11, -59), Vector2(2, -59), Vector2(0, -22), Vector2(-15, -24)])
+	var front := PackedVector2Array([Vector2(1, -59), Vector2(11, -58), Vector2(15, -23), Vector2(-1, -22)])
+	ci.draw_colored_polygon(back, _c(tunic.darkened(0.22), a, flash))
+	ci.draw_colored_polygon(front, _c(tunic, a, flash))
+	var outline := PackedVector2Array([Vector2(-11, -59), Vector2(11, -58), Vector2(15, -23), Vector2(-15, -24), Vector2(-11, -59)])
+	ci.draw_polyline(outline, _c(DARK, a * 0.6), 1.5, true)
+	# Yoqa va old hoshiya
+	ci.draw_line(Vector2(-6, -59), Vector2(4, -46), _c(trim, a), 2.5)
+	ci.draw_line(Vector2(4, -46), Vector2(3, -24), _c(trim.darkened(0.1), a), 2.0)
+	# Sovut plastinkalari (jangchilarda)
+	if u.type in ["swordsman", "spearman"]:
+		for r in 3:
+			var y := -55.0 + r * 6.0
+			for c in 4:
+				var x := -9.0 + c * 5.0 + (2.5 if r % 2 == 1 else 0.0)
+				ci.draw_rect(Rect2(Vector2(x, y), Vector2(4.2, 5.0)), _c(STEEL.darkened(0.15 + 0.05 * (c % 2)), a, flash))
+		ci.draw_line(Vector2(-11, -38), Vector2(12, -38), _c(DARK, a * 0.4), 1.0)
+	# Kamar va to'qa
+	ci.draw_line(Vector2(-13, -33), Vector2(13, -32), _c(Color(0.35, 0.22, 0.12), a), 4.0)
+	ci.draw_rect(Rect2(Vector2(1, -35), Vector2(4, 5)), _c(GOLD.darkened(0.15), a))
+	# Bo'yin va bosh: soyali yuz, burun, ko'z, mo'ylov/soqol
+	var head := Vector2(1, -67)
+	ci.draw_rect(Rect2(head + Vector2(-2.5, 5), Vector2(5, 5)), _c(SKIN.darkened(0.15), a, flash))
+	ci.draw_circle(head, 8.8, _c(DARK, a * 0.5))
+	ci.draw_circle(head, 8.2, _c(SKIN, a, flash))
+	ci.draw_circle(head + Vector2(-2.5, 1.5), 6.0, _c(SKIN.darkened(0.08), a * 0.6, flash))
+	ci.draw_colored_polygon(PackedVector2Array([head + Vector2(7.5, -1), head + Vector2(10.5, 2.5), head + Vector2(7.5, 3)]), _c(SKIN.darkened(0.12), a, flash))
+	ci.draw_circle(head + Vector2(4.5, -1.5), 1.3, _c(DARK, a))
+	ci.draw_line(head + Vector2(3, -4), head + Vector2(6.5, -4.3), _c(DARK, a * 0.8), 1.2)
+	if u.type != "worker" or u.id % 2 == 0:
+		ci.draw_colored_polygon(PackedVector2Array([head + Vector2(1, 4), head + Vector2(8, 4.5), head + Vector2(5, 10), head + Vector2(1, 8)]), _c(Color(0.22, 0.15, 0.1), a))
+	ci.draw_line(head + Vector2(4, 4), head + Vector2(9, 5.5), _c(Color(0.2, 0.13, 0.08), a), 1.6)
+
+
 static func _c(c: Color, a: float, flash := false) -> Color:
 	var out := c.lerp(Color.WHITE, 0.6) if flash else c
 	out.a *= a
@@ -143,24 +207,27 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 	var tunic: Color = cols[0]
 	var trim: Color = cols[1]
 	var pants: Color = cols[2]
-	# Oyoqlar
-	var hip := Vector2(0, -30)
-	ci.draw_line(hip, Vector2(walk * 11.0, 0), _c(pants, a), 6.0, true)
-	ci.draw_line(hip, Vector2(-walk * 11.0, 0), _c(pants.darkened(0.25), a), 6.0, true)
-	ci.draw_circle(Vector2(walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
-	ci.draw_circle(Vector2(-walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
-	# Orqa qo'l
 	var shoulder := Vector2(0, -54)
-	ci.draw_line(shoulder, shoulder + Vector2(-8, 18), _c(tunic.darkened(0.3), a, flash), 5.0, true)
-	# Gavda (to'n)
-	var body := PackedVector2Array([Vector2(-10, -58), Vector2(10, -58), Vector2(13, -26), Vector2(-13, -26)])
-	ci.draw_colored_polygon(body, _c(tunic, a, flash))
-	ci.draw_line(Vector2(-12, -34), Vector2(12, -34), _c(trim, a), 3.0)
-	ci.draw_line(Vector2(0, -58), Vector2(0, -34), _c(trim.darkened(0.1), a), 2.0)
-	# Bosh
 	var head := Vector2(1, -67)
-	ci.draw_circle(head, 8.5, _c(SKIN, a, flash))
-	ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
+	if style_v2:
+		_draw_body_v2(ci, u, cols, walk, a, flash)
+	else:
+		# Oyoqlar
+		var hip := Vector2(0, -30)
+		ci.draw_line(hip, Vector2(walk * 11.0, 0), _c(pants, a), 6.0, true)
+		ci.draw_line(hip, Vector2(-walk * 11.0, 0), _c(pants.darkened(0.25), a), 6.0, true)
+		ci.draw_circle(Vector2(walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
+		ci.draw_circle(Vector2(-walk * 11.0 + 2, -1), 3.5, _c(DARK, a))
+		# Orqa qo'l
+		ci.draw_line(shoulder, shoulder + Vector2(-8, 18), _c(tunic.darkened(0.3), a, flash), 5.0, true)
+		# Gavda (to'n)
+		var body := PackedVector2Array([Vector2(-10, -58), Vector2(10, -58), Vector2(13, -26), Vector2(-13, -26)])
+		ci.draw_colored_polygon(body, _c(tunic, a, flash))
+		ci.draw_line(Vector2(-12, -34), Vector2(12, -34), _c(trim, a), 3.0)
+		ci.draw_line(Vector2(0, -58), Vector2(0, -34), _c(trim.darkened(0.1), a), 2.0)
+		# Bosh
+		ci.draw_circle(head, 8.5, _c(SKIN, a, flash))
+		ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
 	_draw_headgear(ci, u.type, head, cols, a)
 	# Qurol va old qo'l
 	match u.type:
@@ -300,6 +367,10 @@ static func _draw_headgear(ci: CanvasItem, type: String, head: Vector2, cols: Ar
 			ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(9.5, -1), head + Vector2(5, -10), head + Vector2(0, -19), head + Vector2(-5, -10)]), _c(cols[3] if cols.size() > 3 else STEEL.darkened(0.15), a))
 			ci.draw_line(head + Vector2(0, -19), head + Vector2(-4, -26), _c(trim, a), 3.0)
 			ci.draw_line(head + Vector2(-9, 0), head + Vector2(-10, 7), _c(STEEL.darkened(0.3), a), 3.0)
+			if style_v2:
+				# Dubulg'a yaltirashi va bo'yinni yopuvchi to'r (kolchuga)
+				ci.draw_line(head + Vector2(-5, -6), head + Vector2(-1, -15), _c(Color(1, 1, 1, 0.55), a), 2.0)
+				ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-9.5, -1), head + Vector2(-3, -1), head + Vector2(-4, 8), head + Vector2(-10, 6)]), _c(STEEL.darkened(0.35), a))
 
 
 static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: float) -> void:
@@ -309,6 +380,8 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 		"jaloliddin": coat = Color(0.15, 0.12, 0.12)
 		"temur": coat = Color(0.55, 0.3, 0.15)
 		"boyazid": coat = Color(0.92, 0.9, 0.86)
+		"bobur": coat = Color(0.4, 0.22, 0.12)
+		"alp": coat = Color(0.62, 0.52, 0.4)
 	var gallop := u.walk_phase * 1.3 if u.moving else 0.0
 	var legs: Array[Vector2] = [Vector2(-22, -26), Vector2(-15, -26), Vector2(15, -26), Vector2(22, -26)]
 	for i in 4:
@@ -317,9 +390,13 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 		var knee := legs[i] + Vector2(swingx * 0.5, 13)
 		var hoof := legs[i] + Vector2(swingx, 26)
 		var col := coat.darkened(0.25 if i % 2 == 0 else 0.0)
-		ci.draw_line(legs[i], knee, _c(col, a), 5.0, true)
-		ci.draw_line(knee, hoof, _c(col, a), 4.0, true)
-		ci.draw_circle(hoof, 2.5, _c(DARK, a))
+		if style_v2:
+			_limb(ci, legs[i], knee, hoof + Vector2(0, -3), 5.0, col, a, u.hurt_flash > 0.0)
+			ci.draw_colored_polygon(PackedVector2Array([hoof + Vector2(-3, -4), hoof + Vector2(4, -4), hoof + Vector2(5, 1), hoof + Vector2(-3, 1)]), _c(DARK, a))
+		else:
+			ci.draw_line(legs[i], knee, _c(col, a), 5.0, true)
+			ci.draw_line(knee, hoof, _c(col, a), 4.0, true)
+			ci.draw_circle(hoof, 2.5, _c(DARK, a))
 	var bob := sin(gallop * 2.0) * 2.0 if u.moving else 0.0
 	var body := PackedVector2Array()
 	for i in 20:
@@ -331,9 +408,36 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 	ci.draw_colored_polygon(neck, _c(coat, a, u.hurt_flash > 0.0))
 	var headp := PackedVector2Array([Vector2(30, -68 + bob), Vector2(50, -58 + bob), Vector2(48, -52 + bob), Vector2(32, -58 + bob)])
 	ci.draw_colored_polygon(headp, _c(coat.darkened(0.1), a))
-	ci.draw_line(Vector2(22, -48 + bob), Vector2(30, -70 + bob), _c(DARK, a), 4.0)
-	# Dum
-	ci.draw_line(Vector2(-29, -40 + bob), Vector2(-40, -22 + bob + sin(t * 8.0) * 3.0), _c(DARK, a), 5.0, true)
+	if style_v2:
+		# Kontur, qorin soyasi, orqa yaltirashi
+		var outl := body.duplicate()
+		outl.append(body[0])
+		ci.draw_polyline(outl, _c(DARK, a * 0.55), 1.6, true)
+		var belly := PackedVector2Array()
+		for i in 11:
+			var ang := PI * i / 10.0
+			belly.append(Vector2(cos(ang) * 28.0, -36 + bob + sin(ang) * 11.0))
+		ci.draw_colored_polygon(belly, _c(coat.darkened(0.18), a * 0.7))
+		ci.draw_arc(Vector2(-4, -36 + bob), 24.0, PI * 1.15, PI * 1.6, 8, _c(coat.lightened(0.25), a * 0.7), 2.5)
+		var hp2 := headp.duplicate()
+		hp2.append(headp[0])
+		ci.draw_polyline(hp2, _c(DARK, a * 0.55), 1.4, true)
+		# Ko'z, burun teshigi, quloq, jilov
+		ci.draw_circle(Vector2(38, -63 + bob), 1.6, _c(DARK, a))
+		ci.draw_circle(Vector2(48, -56 + bob), 1.2, _c(DARK, a * 0.8))
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(31, -67 + bob), Vector2(33, -75 + bob), Vector2(36, -67 + bob)]), _c(coat.darkened(0.2), a))
+		ci.draw_line(Vector2(44, -57 + bob), Vector2(12, -50 + bob), _c(Color(0.3, 0.18, 0.1), a), 1.5)
+		# Yol (bo'yindagi qora tuklar)
+		for k in 5:
+			var mp := Vector2(22, -48 + bob).lerp(Vector2(31, -70 + bob), k / 4.0)
+			ci.draw_line(mp, mp + Vector2(-6, 3 + sin(t * 6.0 + k) * 1.5), _c(DARK, a), 3.0, true)
+		# Dum: shamolda tebranuvchi to'liq dum
+		var sw := sin(t * 7.0) * 3.0
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(-28, -44 + bob), Vector2(-24, -38 + bob), Vector2(-36, -16 + bob + sw), Vector2(-44, -20 + bob + sw)]), _c(DARK.lightened(0.05), a))
+	else:
+		ci.draw_line(Vector2(22, -48 + bob), Vector2(30, -70 + bob), _c(DARK, a), 4.0)
+		# Dum
+		ci.draw_line(Vector2(-29, -40 + bob), Vector2(-40, -22 + bob + sin(t * 8.0) * 3.0), _c(DARK, a), 5.0, true)
 	# Egar yopqichi
 	var cols: Array = team_colors(u.team)
 	ci.draw_rect(Rect2(-12, -48 + bob, 24, 12), _c(cols[1], a))
@@ -348,12 +452,33 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 
 static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float, a: float, flash: bool) -> void:
 	var tunic: Color = cols[0]
-	var body := PackedVector2Array([Vector2(-8, -42), Vector2(8, -42), Vector2(10, -12), Vector2(-10, -12)])
-	ci.draw_colored_polygon(body, _c(tunic, a, flash))
-	ci.draw_line(Vector2(-4, -14), Vector2(6, 2), _c(cols[2], a), 6.0, true)
 	var head := Vector2(1, -50)
-	ci.draw_circle(head, 8.0, _c(SKIN, a, flash))
-	ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
+	if style_v2:
+		# Oyoq uzangida, etik bilan
+		_limb(ci, Vector2(-2, -14), Vector2(8, -2), Vector2(4, 10), 6.0, cols[2], a, flash)
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(1, 6), Vector2(8, 6), Vector2(11, 13), Vector2(0, 13)]), _c(Color(0.24, 0.16, 0.1), a))
+		# Soyali gavda va kontur
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(-9, -43), Vector2(1, -43), Vector2(0, -12), Vector2(-11, -12)]), _c(tunic.darkened(0.22), a, flash))
+		ci.draw_colored_polygon(PackedVector2Array([Vector2(0, -43), Vector2(9, -42), Vector2(11, -12), Vector2(-1, -12)]), _c(tunic, a, flash))
+		ci.draw_polyline(PackedVector2Array([Vector2(-9, -43), Vector2(9, -42), Vector2(11, -12), Vector2(-11, -12), Vector2(-9, -43)]), _c(DARK, a * 0.6), 1.5, true)
+		ci.draw_line(Vector2(-10, -24), Vector2(10, -23), _c(Color(0.35, 0.22, 0.12), a), 3.5)
+		ci.draw_line(Vector2(-4, -43), Vector2(4, -30), _c(cols[1], a), 2.5)
+		# Yuz
+		ci.draw_rect(Rect2(head + Vector2(-2.5, 5), Vector2(5, 5)), _c(SKIN.darkened(0.15), a, flash))
+		ci.draw_circle(head, 8.6, _c(DARK, a * 0.5))
+		ci.draw_circle(head, 8.0, _c(SKIN, a, flash))
+		ci.draw_circle(head + Vector2(-2.5, 1.5), 5.8, _c(SKIN.darkened(0.08), a * 0.6, flash))
+		ci.draw_colored_polygon(PackedVector2Array([head + Vector2(7.2, -1), head + Vector2(10.2, 2.5), head + Vector2(7.2, 3)]), _c(SKIN.darkened(0.12), a, flash))
+		ci.draw_circle(head + Vector2(4.5, -1.5), 1.3, _c(DARK, a))
+		ci.draw_line(head + Vector2(3, -4), head + Vector2(6.5, -4.3), _c(DARK, a * 0.8), 1.2)
+		if not u.hero:
+			ci.draw_line(head + Vector2(4, 4), head + Vector2(9, 5.5), _c(Color(0.2, 0.13, 0.08), a), 1.6)
+	else:
+		var body := PackedVector2Array([Vector2(-8, -42), Vector2(8, -42), Vector2(10, -12), Vector2(-10, -12)])
+		ci.draw_colored_polygon(body, _c(tunic, a, flash))
+		ci.draw_line(Vector2(-4, -14), Vector2(6, 2), _c(cols[2], a), 6.0, true)
+		ci.draw_circle(head, 8.0, _c(SKIN, a, flash))
+		ci.draw_circle(head + Vector2(4, -1), 1.3, _c(DARK, a))
 	if u.hero:
 		# Soqol va hero bosh kiyimi
 		ci.draw_colored_polygon(PackedVector2Array([head + Vector2(-2, 3), head + Vector2(8, 3), head + Vector2(4, 13), head + Vector2(-1, 9)]), _c(Color(0.22, 0.15, 0.1), a))

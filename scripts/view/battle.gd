@@ -530,6 +530,12 @@ func _draw_scene() -> void:
 	for u in sim.units:
 		if u.x > left - 80.0 and u.x < right + 80.0:
 			visible.append(u)
+	# Batafsillik darajasi (LOD): ekranda juda ko'p askar bo'lsa, soddaroq chizma (telefonda tezlik uchun).
+	# Gisterezis: 55 dan oshsa o'chadi, 45 dan kamaysa qayta yoqiladi — chizma tez-tez almashib turmasin.
+	if visible.size() > 55:
+		Painter.style_v2 = false
+	elif visible.size() < 45:
+		Painter.style_v2 = true
 	visible.sort_custom(func(a: UnitState, b: UnitState) -> bool:
 		if a.is_alive() != b.is_alive():
 			return not a.is_alive()

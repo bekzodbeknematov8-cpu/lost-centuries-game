@@ -6,6 +6,13 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (33) — Jonli grafika (1): askarlar va otlar
+- Foydalanuvchi: "masofa yaxshi, endi yana jonliroq, realroq". Rassom grafikasi kelguncha kod chizmasi boyitildi:
+  piyodalar (tizza bukiladigan oyoqlar, etik, soyali to'n, kamar, sovut plastinkalari, yuz/soqol, dubulg'a yaltirashi, kontur),
+  otlar (kontur, qorin soyasi, ikki bo'g'imli oyoqlar, yol, ko'z/quloq, jilov, to'liq dum), chavandozlar (etik, soyali gavda, yuz).
+- LOD: ekranda 55+ askar bo'lsa soddaroq chizma (telefonda tezlik). 150 birlik: chizish ~7,5 ms/kadr.
+- `tools/art_preview.gd` — eski/yangi uslubni yonma-yon solishtirish.
+
 ### 2026-11-23 (32) — Jiddiy xato tuzatildi: otliq va sarkardalar dushman oldida turib qolardi
 - Qisqa qurolli askarlar (qilichboz, otliq, sarkarda) dushmandan 1 qadam uzoqda to'xtab, hujum qilmay qolardi. Tuzatildi.
 - Askarlar balansi qayta qurildi ("tosh-qaychi-qog'oz" jadvali), kampaniyalar/turnir/kunlik sinov qayta o'lchandi — devor yo'q.
