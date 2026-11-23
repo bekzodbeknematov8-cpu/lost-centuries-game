@@ -6,6 +6,12 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (34) — Jonli grafika (2): muhit
+- Havo pardasi (uzoq tog'lar osmon rangiga yaqinroq), suzuvchi bulutlar, uchayotgan qushlar, quyosh nuri halqasi.
+- Shamolda tebranuvchi o't, yer dog'lari (tekstura), ufq yaqinida yorug'lik.
+- Qal'a: g'isht terimi, och/to'q toshlar, hajm soyasi, o'q tirqishlari, devordagi jamoa bayrog'i, shikastlanganda tutun.
+- 150 birlik: chizish ~7,1 ms/kadr (chegara 10 ms).
+
 ### 2026-11-23 (33) — Jonli grafika (1): askarlar va otlar
 - Foydalanuvchi: "masofa yaxshi, endi yana jonliroq, realroq". Rassom grafikasi kelguncha kod chizmasi boyitildi:
   piyodalar (tizza bukiladigan oyoqlar, etik, soyali to'n, kamar, sovut plastinkalari, yuz/soqol, dubulg'a yaltirashi, kontur),

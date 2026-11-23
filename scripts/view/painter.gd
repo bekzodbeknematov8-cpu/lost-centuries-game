@@ -526,10 +526,27 @@ static func draw_castle(ci: CanvasItem, team: TeamState, ground_y: float, t: flo
 		return
 	var base := Rect2(x - w * 0.5, ground_y - h, w, h)
 	ci.draw_rect(base, stone)
-	# Toshlar chizig'i
+	# Toshlar: qatorlar va qatma-qat tikuvlar (g'isht terimi), ba'zi toshlar och/to'q
 	for row in 9:
 		var yy := ground_y - h + 20.0 * row + 10.0
 		ci.draw_line(Vector2(x - w * 0.5, yy), Vector2(x + w * 0.5, yy), stone.darkened(0.12), 1.5)
+		var off := 0.0 if row % 2 == 0 else 14.0
+		var bx := x - w * 0.5 + off
+		var n := 0
+		while bx < x + w * 0.5 - 4.0:
+			ci.draw_line(Vector2(bx, yy), Vector2(bx, yy + 20.0), stone.darkened(0.1), 1.2)
+			if (row * 7 + n * 3) % 5 == 0:
+				ci.draw_rect(Rect2(bx + 1.5, yy + 1.5, 25.0, 17.0), stone.lightened(0.06))
+			elif (row * 5 + n * 11) % 7 == 0:
+				ci.draw_rect(Rect2(bx + 1.5, yy + 1.5, 25.0, 17.0), stone.darkened(0.06))
+			bx += 28.0
+			n += 1
+	# Hajm: o'ng chet soyali, chap chet yorug'
+	ci.draw_rect(Rect2(x + w * 0.5 - 18.0, ground_y - h, 18.0, h), Color(0, 0, 0, 0.12))
+	ci.draw_rect(Rect2(x - w * 0.5, ground_y - h, 10.0, h), Color(1, 1, 1, 0.08))
+	# Shinaklar (o'q otish tirqishlari)
+	for sx in [-42.0, 42.0]:
+		ci.draw_rect(Rect2(x + sx - 3.0, ground_y - h + 40.0, 6.0, 20.0), DARK)
 	# Minoralar
 	for side in [-1, 1]:
 		var tx: float = x + side * (w * 0.5 + 6.0)
@@ -564,6 +581,12 @@ static func draw_castle(ci: CanvasItem, team: TeamState, ground_y: float, t: flo
 		flag.append(pole_top + Vector2(fx2 * fdir, 34.0 + sin(t * 4.0 + i * 0.7) * 3.0 * (i / 6.0)))
 	ci.draw_colored_polygon(flag, cols[0])
 	ci.draw_circle(pole_top + Vector2(30.0 * fdir, 17.0), 7.0, cols[1])
+	# Devorga osilgan jamoa bayrog'i (shamolda biroz tebranadi)
+	var bw := sin(t * 2.0) * 2.0
+	ci.draw_colored_polygon(PackedVector2Array([Vector2(x - 18, ground_y - h + 6), Vector2(x + 18, ground_y - h + 6),
+		Vector2(x + 18 + bw, ground_y - h + 62), Vector2(x + bw, ground_y - h + 52), Vector2(x - 18 + bw, ground_y - h + 62)]), cols[0])
+	ci.draw_circle(Vector2(x + bw * 0.5, ground_y - h + 30), 7.0, cols[1])
+	ci.draw_line(Vector2(x - 20, ground_y - h + 6), Vector2(x + 20, ground_y - h + 6), WOOD, 3.0)
 	# Shikastlanish yoriqlari
 	if k < 0.75:
 		ci.draw_polyline(PackedVector2Array([Vector2(x - 40, ground_y - 160), Vector2(x - 30, ground_y - 130), Vector2(x - 42, ground_y - 100)]), DARK, 3.0)
@@ -571,6 +594,13 @@ static func draw_castle(ci: CanvasItem, team: TeamState, ground_y: float, t: flo
 		ci.draw_polyline(PackedVector2Array([Vector2(x + 30, ground_y - 180), Vector2(x + 44, ground_y - 140), Vector2(x + 32, ground_y - 110), Vector2(x + 40, ground_y - 80)]), DARK, 3.0)
 	if k < 0.25:
 		ci.draw_polyline(PackedVector2Array([Vector2(x - 10, ground_y - 190), Vector2(x + 5, ground_y - 150), Vector2(x - 8, ground_y - 120)]), DARK, 4.0)
+	# Shikastlangan qal'adan tutun ko'tariladi (qancha ko'p shikast — shuncha quyuq)
+	if k < 0.6:
+		var dens := 1.0 - k / 0.6
+		for i in 6:
+			var ph := fposmod(t * 0.35 + i / 6.0, 1.0)
+			var p := Vector2(x - 30.0 + float((i * 23) % 60) + sin(t + i) * 6.0, ground_y - h - 10.0 - ph * 140.0)
+			ci.draw_circle(p, 10.0 + ph * 22.0, Color(0.3, 0.28, 0.27, 0.45 * (1.0 - ph) * (0.4 + 0.6 * dens)))
 
 
 static func draw_mine(ci: CanvasItem, x: float, ground_y: float, t: float) -> void:

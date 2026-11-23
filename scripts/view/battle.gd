@@ -649,17 +649,35 @@ func _draw_background(left: float, right: float) -> void:
 		PackedColorArray([sky[0], sky[0], sky[1], sky[1]]))
 	var sun := Vector2(cx + 260.0 - cx * 0.08, 170.0)
 	var sc: Color = P.sun
+	draw_circle(sun, 95.0, Color(sc, 0.18))
 	draw_circle(sun, 70.0, Color(sc, 0.5))
 	draw_circle(sun, 52.0, sc)
-	# Uzoq tog'lar (parallaks)
-	_draw_hills(left, right, 0.85, GROUND_Y - 170.0, amp[0], hills[0], 0.0, bool(P.get("snow", false)))
-	_draw_hills(left, right, 0.65, GROUND_Y - 80.0, amp[1], hills[1], 500.0)
+	# Bulutlar (sekin suzadi, parallaks)
+	_draw_clouds(left, right, Color(1, 1, 1, 0.75) if terrain != "desert" else Color(1, 0.96, 0.9, 0.55))
+	# Uzoq tog'lar: havo pardasi — uzoqdagilar osmon rangiga yaqinroq (xiraroq)
+	var haze: Color = sky[1]
+	_draw_hills(left, right, 0.85, GROUND_Y - 170.0, amp[0], (hills[0] as Color).lerp(haze, 0.35), 0.0, bool(P.get("snow", false)))
+	_draw_birds(left, right)
+	_draw_hills(left, right, 0.65, GROUND_Y - 80.0, amp[1], (hills[1] as Color).lerp(haze, 0.15), 500.0)
 	if P.get("trees", false):
 		_draw_trees(left, right, 0.65, hills[2].darkened(0.15))
 	_draw_hills(left, right, 0.4, GROUND_Y - 20.0, amp[2], hills[2], 1300.0)
 	# Yer
 	draw_rect(Rect2(left, GROUND_Y - 5.0, right - left, VIEW_H - GROUND_Y + 60.0), gr[0])
 	draw_rect(Rect2(left, GROUND_Y + 95.0, right - left, VIEW_H), gr[1])
+	# Yer teksturasi: katta-kichik dog'lar (relyefga mos ranglar), uzoq chiziq yaqinida yorug'lik
+	draw_polygon(PackedVector2Array([Vector2(left, GROUND_Y - 5.0), Vector2(right, GROUND_Y - 5.0), Vector2(right, GROUND_Y + 25.0), Vector2(left, GROUND_Y + 25.0)]),
+		PackedColorArray([Color(1, 1, 0.9, 0.18), Color(1, 1, 0.9, 0.18), Color(1, 1, 0.9, 0.0), Color(1, 1, 0.9, 0.0)]))
+	var ps := int(floor(left / 160.0))
+	var pe := int(ceil(right / 160.0))
+	for i in range(ps, pe):
+		var hh := absi(i * 4271) % 97
+		var px := i * 160.0 + float(hh)
+		var py := GROUND_Y + 20.0 + float(hh % 5) * 26.0
+		var pc: Color = (gr[0] as Color).darkened(0.07) if hh % 2 == 0 else (gr[0] as Color).lightened(0.05)
+		draw_set_transform(Vector2(px, py), 0.0, Vector2(1.0, 0.25))
+		draw_circle(Vector2.ZERO, 40.0 + float(hh % 30), pc)
+		draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
 	var gc: Color = P.grass
 	var stc: Color = P.stone
 	var start := int(floor(left / 37.0))
@@ -675,12 +693,39 @@ func _draw_background(left: float, right: float) -> void:
 				draw_line(Vector2(gx, gy), Vector2(gx - 5, gy - 7), gc, 1.5)
 				draw_line(Vector2(gx, gy), Vector2(gx + 5, gy - 6), gc, 1.5)
 		elif h % 3 == 0:
-			draw_line(Vector2(gx, gy), Vector2(gx - 4, gy - 10), gc.darkened(0.08), 2.0)
-			draw_line(Vector2(gx, gy), Vector2(gx + 3, gy - 12), gc, 2.0)
+			# O't shamolda tebranadi (har tup o'z fazasida)
+			var wind := sin(t * 2.2 + gx * 0.05) * 3.0
+			draw_line(Vector2(gx, gy), Vector2(gx - 4 + wind, gy - 10), gc.darkened(0.08), 2.0)
+			draw_line(Vector2(gx, gy), Vector2(gx + 3 + wind * 1.2, gy - 12), gc, 2.0)
+			draw_line(Vector2(gx + 2, gy), Vector2(gx + 6 + wind, gy - 8), gc.lightened(0.08), 1.5)
 			if terrain == "green" and h % 9 == 0:
 				draw_circle(Vector2(gx + 3, gy - 13), 2.5, Color(0.95, 0.85, 0.3))
 		elif h % 7 == 0:
 			draw_circle(Vector2(gx, gy), 4.0 if terrain != "mountain" else 6.0, stc)
+
+
+func _draw_clouds(left: float, right: float, col: Color) -> void:
+	## Bulutlar: sekin suzadi va kameradan sekinroq siljiydi (uzoqlik hissi).
+	var cx := cam.position.x
+	for i in 7:
+		var base := float(i) * 520.0 + t * (8.0 + i * 1.5)
+		var x := left + fposmod(base - cx * 0.9 - left, (right - left) + 400.0) - 200.0
+		var y := 150.0 + float((i * 37) % 80)
+		var s := 0.7 + float(i % 3) * 0.25
+		for k in 4:
+			draw_circle(Vector2(x + (k - 1.5) * 26.0 * s, y - (12.0 if k % 3 != 0 else 0.0) * s), (20.0 + (k % 2) * 9.0) * s, col)
+
+
+func _draw_birds(left: float, right: float) -> void:
+	## Uzoqda uchayotgan qushlar galasi (qanot qoqadi).
+	var cx := cam.position.x
+	var span := (right - left) + 600.0
+	for i in 5:
+		var x := left + fposmod(float(i) * 37.0 + t * 45.0 - cx * 0.8 + 300.0, span) - 300.0
+		var y := 215.0 + float(i % 3) * 14.0 + sin(t * 1.5 + i) * 6.0
+		var fl := sin(t * 9.0 + i * 1.3) * 4.0
+		draw_line(Vector2(x - 7, y - fl), Vector2(x, y), Color(0.2, 0.2, 0.25, 0.7), 1.5)
+		draw_line(Vector2(x, y), Vector2(x + 7, y - fl), Color(0.2, 0.2, 0.25, 0.7), 1.5)
 
 
 func _draw_trees(left: float, right: float, factor: float, col: Color) -> void:
