@@ -13,12 +13,14 @@ const GAIN := {
 	"deny": 0.45, "click": 0.75, "coin": 0.8, "arrow_flesh": 0.8, "hit_flesh": 0.8,
 	"castle_hit": 0.85, "horn_attack": 0.85, "horn_enemy": 0.85, "drum": 0.85,
 	"arrow_metal": 1.2, "horse": 1.25, "pick": 1.25, "sword_clash": 1.2, "thunder": 1.25,
-	"defeat": 1.15, "spear_hit": 1.1,
+	"defeat": 1.15, "spear_hit": 1.1, "shout": 0.8,
 }
 
 var _streams: Dictionary = {}       ## nom -> [AudioStream]
 var _pool: Array[AudioStreamPlayer] = []
 var _music: AudioStreamPlayer
+var _amb: AudioStreamPlayer        ## Fon shovqini (masalan, uzoqdagi jang), takrorlanadi
+var _amb_level := 0.0
 var _music_name := ""
 var _played_this_frame: Dictionary = {}
 var _rng := RandomNumberGenerator.new()
@@ -34,6 +36,8 @@ func _ready() -> void:
 		_pool.append(p)
 	_music = AudioStreamPlayer.new()
 	add_child(_music)
+	_amb = AudioStreamPlayer.new()
+	add_child(_amb)
 
 
 func _process(_delta: float) -> void:
@@ -86,6 +90,33 @@ func _free_player() -> AudioStreamPlayer:
 		if p.get_playback_position() > oldest.get_playback_position():
 			oldest = p
 	return oldest
+
+
+func play_ambient(name: String) -> void:
+	var path := "%s%s.wav" % [SFX_DIR, name]
+	if not ResourceLoader.exists(path):
+		return
+	var stream: AudioStream = load(path)
+	if stream is AudioStreamWAV:
+		var w := stream as AudioStreamWAV
+		w.loop_mode = AudioStreamWAV.LOOP_FORWARD
+		w.loop_begin = 0
+		w.loop_end = int(w.get_length() * w.mix_rate)
+	_amb.stream = stream
+	_amb_level = 0.0
+	_amb.volume_db = -80.0
+	_amb.play()
+
+
+func set_ambient_level(level: float) -> void:
+	## 0..1 — jang qizg'inligi; keskin sakramasligi uchun silliqlanadi.
+	_amb_level = lerpf(_amb_level, clampf(level, 0.0, 1.0), 0.05)
+	var v := _amb_level * 0.6 * float(GameState.settings.get("sfx_volume", 1.0))
+	_amb.volume_db = linear_to_db(maxf(v, 0.0001))
+
+
+func stop_ambient() -> void:
+	_amb.stop()
 
 
 func play_music(name: String) -> void:

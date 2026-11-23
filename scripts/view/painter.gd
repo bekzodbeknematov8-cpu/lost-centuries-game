@@ -33,13 +33,31 @@ static func outfit_colors(o: Dictionary) -> Array:
 static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float, t: float) -> void:
 	var alpha := 1.0
 	var rot := 0.0
+	var sy := 1.0
 	if not u.is_alive():
+		# Tabiiyroq yiqilish: orqaga biroz uchib, yerga tushib, bir marta sakraydi (qonsiz)
 		var k := clampf(u.dead_time / 0.45, 0.0, 1.0)
-		rot = -k * PI * 0.5
+		var ease := 1.0 - pow(1.0 - k, 3.0)
+		rot = -ease * PI * 0.5
+		pos += Vector2(-u.facing * 14.0 * ease, 0.0) * scale_f
+		if u.dead_time > 0.45 and u.dead_time < 0.65:
+			pos.y -= sin((u.dead_time - 0.45) / 0.2 * PI) * 4.0 * scale_f
 		alpha = clampf(1.0 - (u.dead_time - 1.6) / 1.2, 0.0, 1.0)
+	elif style_v2:
+		if u.hurt_flash > 0.0:
+			# Zarba yeganda chayqalish: orqaga og'ish va siljish
+			var hk := u.hurt_flash / 0.15
+			rot = -0.12 * hk
+			pos.x -= u.facing * 4.0 * hk * scale_f
+		elif not u.moving and u.attack_anim <= 0.0:
+			# Nafas olish: turgan askar biroz ko'tarilib-tushadi
+			sy = 1.0 + sin(t * 2.4 + float(u.id) * 1.7) * 0.015
+			if u.cooldown > 0.0 and u.cooldown < 0.25 and not u.is_ranged() and not u.is_worker():
+				# Zarbadan oldin shaylanish: orqaga tortilish
+				rot = -0.07
 	var cols: Array = team_colors(u.team)
 	var flash := u.hurt_flash > 0.0
-	ci.draw_set_transform(pos, rot * u.facing, Vector2(u.facing * scale_f, scale_f))
+	ci.draw_set_transform(pos, rot * u.facing, Vector2(u.facing * scale_f, scale_f * sy))
 	var walk := sin(u.walk_phase) if u.moving else 0.0
 	var swing := 0.0
 	if u.attack_anim > 0.0:
@@ -84,6 +102,18 @@ static func _draw_elephant(ci: CanvasItem, u: UnitState, cols: Array, walk: floa
 		var ang := TAU * i / 20.0
 		body.append(Vector2(-6 + cos(ang) * 48.0, -62 + sin(ang) * 30.0))
 	ci.draw_colored_polygon(body, _c(skin, a, flash))
+	if style_v2:
+		# Qorin soyasi, terining burmalari, kontur
+		var belly := PackedVector2Array()
+		for i in 11:
+			var ang2 := PI * i / 10.0
+			belly.append(Vector2(-6 + cos(ang2) * 46.0, -62 + sin(ang2) * 28.0))
+		ci.draw_colored_polygon(belly, _c(dark, a * 0.6))
+		for w in 3:
+			ci.draw_arc(Vector2(-22 + w * 16, -60), 12.0, PI * 0.2, PI * 0.8, 6, _c(dark.darkened(0.1), a * 0.6), 1.5)
+		var ob := body.duplicate()
+		ob.append(body[0])
+		ci.draw_polyline(ob, _c(DARK, a * 0.55), 1.8, true)
 	# Bosh va quloq
 	ci.draw_circle(Vector2(40, -74), 20.0, _c(skin, a, flash))
 	ci.draw_colored_polygon(PackedVector2Array([Vector2(30, -88), Vector2(18, -84), Vector2(16, -62), Vector2(28, -58)]), _c(dark, a, flash))

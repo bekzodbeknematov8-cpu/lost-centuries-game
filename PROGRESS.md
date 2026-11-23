@@ -6,6 +6,14 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-23 (35) — Jonli grafika (3): harakat va ovoz
+- Askarlar turganda nafas oladi, zarbadan oldin oldinga engashadi, zarba yeganda chayqaladi.
+- Yiqilish tabiiyroq: sekinlashib yerga tushadi, biroz sakraydi, so'ng asta yo'qoladi (qonsiz).
+- Fillarga kontur, qorin soyasi va teri burmalari.
+- Fonda jang shovqini (davomiy, ekrandagi to'qnashuvlar soniga qarab balandlashadi) va hayqiriqlar
+  (jangovar ruh va "Hujum" buyrug'ida). Ovozlar gen_audio.py'da sintez qilingan.
+- 150 birlik stress: draw_cpu 8.97 ms (chegara 10 ms). Testlar 75/75, smoke 44/44.
+
 ### 2026-11-23 (34) — Jonli grafika (2): muhit
 - Havo pardasi (uzoq tog'lar osmon rangiga yaqinroq), suzuvchi bulutlar, uchayotgan qushlar, quyosh nuri halqasi.
 - Shamolda tebranuvchi o't, yer dog'lari (tekstura), ufq yaqinida yorug'lik.

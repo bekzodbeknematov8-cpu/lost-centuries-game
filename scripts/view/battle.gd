@@ -106,6 +106,7 @@ func _ready() -> void:
 			cam.zoom = Vector2.ONE * float(a.split("=")[1])
 			cam.position.y = 395.0
 	Sfx.play_music("battle")
+	Sfx.play_ambient("battle_loop")
 	if OS.get_cmdline_user_args().has("--autoplay"):
 		auto_player = AIController.new(0, GameData.ai.normal, 3)
 	if GameState.tutorial_active():
@@ -171,6 +172,7 @@ func _process(delta: float) -> void:
 		sim.teams[1].castle_hp = 0.0
 	_update_effects(delta)
 	_update_camera(delta)
+	_update_ambient()
 	if sim.winner >= 0 and not _ended:
 		_ended = true
 		Sfx.stop_music()
@@ -275,6 +277,23 @@ func _unhandled_input(event: InputEvent) -> void:
 			KEY_SPACE: sim.control_attack = false
 
 
+func _update_ambient() -> void:
+	## Fon jang shovqini: ekrandagi jang qilayotgan askarlar soniga qarab balandlashadi.
+	if _ended:
+		Sfx.set_ambient_level(0.0)
+		return
+	var n := 0
+	var half := view_width() * 0.5 / cam.zoom.x
+	for u in sim.units:
+		if u.is_alive() and (u.attack_anim > 0.0 or u.hurt_flash > 0.0) and absf(u.x - cam.position.x) < half:
+			n += 1
+	Sfx.set_ambient_level(float(n) / 10.0)
+
+
+func _exit_tree() -> void:
+	Sfx.stop_ambient()
+
+
 func _tap_battlefield(screen_pos: Vector2) -> void:
 	## Maydonga qisqa bosish: "O'q yog'dir" (HUD paneli ustidagi bosishlar hisobga olinmaydi).
 	var vh := get_viewport_rect().size.y
@@ -373,7 +392,9 @@ func _on_event(e: Dictionary) -> void:
 		"stance":
 			if e.team == 0:
 				match e.stance:
-					TeamState.Stance.ATTACK: Sfx.play("horn_attack", 0.8, 0.02)
+					TeamState.Stance.ATTACK:
+						Sfx.play("horn_attack", 0.8, 0.02)
+						Sfx.play("shout", 0.6, 0.12)
 					TeamState.Stance.RETREAT: Sfx.play("horn_retreat", 0.7, 0.02)
 					_: Sfx.play("drum", 0.7, 0.02)
 			elif e.stance == TeamState.Stance.ATTACK:
@@ -451,6 +472,7 @@ func _on_event(e: Dictionary) -> void:
 				_effects.append({"kind": "volley_arrow", "from": Vector2(float(e.from), GROUND_Y - 200.0), "to": gp + Vector2(randf_range(-70, 70), 0), "t": -0.05 * i, "life": 0.7})
 		"morale":
 			Sfx.play("horn_attack" if e.team == 0 else "horn_enemy", 0.8, 0.0)
+			Sfx.play("shout", 0.7, 0.1)
 			if e.team == 0:
 				hud.show_banner(tr("MORALE_UP"), 1.6)
 		"rain_tick":

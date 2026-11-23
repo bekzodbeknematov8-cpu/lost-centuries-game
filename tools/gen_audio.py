@@ -344,6 +344,41 @@ def sfx_elephant():
     return reverb(mix(tone, over, rasp), length=0.8, decay=0.3, wet=0.25)
 
 
+def sfx_battle_loop():
+    # Uzoqdagi jang shovqini (8 s, uzluksiz takrorlanadi): olomon g'ovuri, po'lat jaranglari, past gumburlash
+    dur = 9.0
+    out = np.zeros(int(SR * dur))
+    t = t_axis(dur)
+    for v in range(7):
+        vowel = [(rng.uniform(500, 800), 120, 1.0), (rng.uniform(1000, 1300), 150, 0.6), (rng.uniform(2300, 2700), 200, 0.3)]
+        voice = formants(noise(dur), vowel)
+        am = 0.5 + 0.5 * np.sin(2 * np.pi * rng.uniform(0.2, 0.7) * t + rng.uniform(0, 6.28))
+        out += voice * am * 0.25
+    out += band(noise(dur), 40, 200) * 0.35
+    for i in range(26):
+        place(out, band(noise(0.06), 2000, 7000) * env_exp(0.06, 0.015) * rng.uniform(0.15, 0.35), rng.uniform(0.1, dur - 0.2))
+    # Uzluksiz takrorlash uchun oxirgi 1 s boshiga aralashtiriladi
+    n1 = SR
+    head = out[:n1].copy()
+    tail = out[-n1:].copy()
+    fade = np.linspace(0, 1, n1)
+    out = out[:-n1]
+    out[:n1] = head * fade + tail * (1 - fade)
+    return reverb(out, length=1.0, decay=0.35, wet=0.3, circular=True)
+
+
+def sfx_shout():
+    # Qisqa jangovar hayqiriq ("ha!"): ko'tarilib tushuvchi ovoz, a-unli formantlari
+    dur = 0.55
+    f0 = rng.uniform(150, 210)
+    ph = np.cumsum(np.linspace(f0, f0 * 1.35, int(SR * dur))) / SR
+    saw = 2 * (ph % 1.0) - 1
+    voice = formants(saw, [(750, 90, 1.0), (1150, 110, 0.7), (2500, 160, 0.35)])
+    voice = voice * env_exp(dur, 0.25, 0.03)
+    crowd = mix(voice, band(noise(dur), 300, 3000) * env_exp(dur, 0.2, 0.02) * 0.15)
+    return reverb(crowd, length=0.7, decay=0.3, wet=0.25)
+
+
 def sfx_castle_fall():
     dur = 3.0
     rum = band(noise(dur), 30, 400) * env_exp(dur, 1.0, 0.05) * 1.2
@@ -505,7 +540,7 @@ SFX = {
     "deny": (sfx_deny, 1), "horn_attack": (sfx_horn_attack, 1), "horn_retreat": (sfx_horn_retreat, 1),
     "horn_enemy": (sfx_horn_enemy, 1), "drum": (sfx_drum, 1), "victory": (sfx_victory, 1),
     "defeat": (sfx_defeat, 1), "arrow_rain": (sfx_arrow_rain, 1), "leap": (sfx_leap, 1),
-    "thunder": (sfx_thunder, 1), "cannon": (sfx_cannon, 2), "musket": (sfx_musket, 3), "elephant": (sfx_elephant, 2), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
+    "thunder": (sfx_thunder, 1), "cannon": (sfx_cannon, 2), "battle_loop": (sfx_battle_loop, 1), "shout": (sfx_shout, 3), "musket": (sfx_musket, 3), "elephant": (sfx_elephant, 2), "rally": (sfx_rally, 1), "hero_down": (sfx_hero_down, 1),
 }
 
 
