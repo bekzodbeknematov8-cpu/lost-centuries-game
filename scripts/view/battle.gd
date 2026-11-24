@@ -578,7 +578,7 @@ func _draw_scene() -> void:
 			var font := ThemeDB.fallback_font
 			var name := tr(str(u.def.name))
 			var col := Color(0.75, 0.88, 1.0) if u.team == 0 else Color(1.0, 0.7, 0.65)
-			var lp := pos + Vector2(-110, -150)
+			var lp := pos + Vector2(-110, -170)
 			# Ikki sarkarda yonma-yon bo'lsa, dushman nomi biroz yuqoriga suriladi (ustma-ust tushmasin)
 			var other := sim.hero_of(1 - u.team)
 			if u.team == 1 and other and other.is_alive() and absf(other.x - u.x) < 200.0:
@@ -586,7 +586,7 @@ func _draw_scene() -> void:
 			draw_string_outline(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, 4, Color(0, 0, 0, 0.7))
 			draw_string(font, lp, name, HORIZONTAL_ALIGNMENT_CENTER, 220, 16, col)
 		if u.is_alive() and (u.hp < u.max_hp or u.hero):
-			var top := (-140.0 if u.hero else (-158.0 if u.type == "elephant" else (-112.0 if Painter.is_mounted(u) else -98.0)))
+			var top := (-160.0 if u.hero else (-158.0 if u.type == "elephant" else (-112.0 if Painter.is_mounted(u) else -98.0)))
 			var w := 54.0 if u.hero else 34.0
 			draw_rect(Rect2(pos.x - w * 0.5, pos.y + top, w, 5), Color(0, 0, 0, 0.5))
 			var col := Color(0.3, 0.85, 0.35) if u.team == 0 else Color(0.95, 0.3, 0.25)
@@ -594,6 +594,7 @@ func _draw_scene() -> void:
 	for p in sim.projectiles:
 		Painter.draw_projectile(self, p, GROUND_Y + 50.0)
 	_draw_effects()
+	_draw_weather(left, right)
 
 
 ## Viloyat relyefiga mos ranglar (data/maps.json -> regions[].terrain).
@@ -724,6 +725,38 @@ func _draw_background(left: float, right: float) -> void:
 				draw_circle(Vector2(gx + 3, gy - 13), 2.5, Color(0.95, 0.85, 0.3))
 		elif h % 7 == 0:
 			draw_circle(Vector2(gx, gy), 4.0 if terrain != "mountain" else 6.0, stc)
+
+
+func _draw_weather(left: float, right: float) -> void:
+	## Relyefga mos havo zarralari (old planda): tog'da qor, cho'lda qum to'zoni, dashtda uchar urug'lar,
+	## yashil vodiyda barglar. Deterministik (t va indeksdan), ko'p askar bo'lsa kamroq (LOD).
+	var n := 26 if Painter.style_v2 else 12
+	var span := (right - left) + 200.0
+	for i in n:
+		var h := float((i * 7919) % 997) / 997.0
+		var h2 := float((i * 104729) % 991) / 991.0
+		match terrain:
+			"mountain":
+				var y := fposmod(h2 * 700.0 + t * (28.0 + h * 22.0), 760.0) - 40.0
+				var x := left + fposmod(h * span + sin(t * 0.8 + i) * 18.0 - t * 10.0, span) - 100.0
+				draw_circle(Vector2(x, y), 1.6 + h * 2.0, Color(1, 1, 1, 0.75))
+			"desert":
+				var y2 := GROUND_Y - 40.0 + h2 * 200.0
+				var x2 := left + fposmod(h * span + t * (160.0 + h2 * 120.0), span) - 100.0
+				draw_line(Vector2(x2, y2), Vector2(x2 - 14.0 - h * 16.0, y2 + 1.5), Color(0.95, 0.82, 0.55, 0.35), 1.5)
+			"green":
+				var y3 := fposmod(h2 * 700.0 + t * (18.0 + h * 12.0), 760.0) - 40.0
+				var x3 := left + fposmod(h * span + t * 30.0 + sin(t * 1.3 + i * 2.0) * 25.0, span) - 100.0
+				var ang := t * 2.0 + i
+				draw_set_transform(Vector2(x3, y3), ang, Vector2(1.0, 0.45 + 0.35 * sin(t * 3.0 + i)))
+				draw_circle(Vector2.ZERO, 3.2, Color(0.55, 0.7, 0.25, 0.8) if i % 3 else Color(0.9, 0.75, 0.3, 0.8))
+				draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+			_:
+				if i % 2 == 0:
+					continue
+				var y4 := GROUND_Y - 160.0 + h2 * 320.0 + sin(t * 0.9 + i * 1.7) * 14.0
+				var x4 := left + fposmod(h * span + t * 22.0, span) - 100.0
+				draw_circle(Vector2(x4, y4), 1.8, Color(1, 0.95, 0.75, 0.55 + 0.3 * sin(t * 2.0 + i)))
 
 
 func _draw_clouds(left: float, right: float, col: Color) -> void:

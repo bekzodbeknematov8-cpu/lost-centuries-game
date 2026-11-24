@@ -150,9 +150,13 @@ def write_wav(path, x, sr=SR):
 
 
 def pluck(freq, dur, sr=SR, bright=0.6, decay=0.996):
-    """Karplus-Strong: do'mbira/dutor torining tovushi."""
+    """Karplus-Strong: do'mbira/dutor torining tovushi.
+    Butun sonli kechikish notani 30 sentgacha "fals" qiladi, shuning uchun aniq chastotali
+    ichki namuna tezligida sintez qilinib, so'ng sr ga qayta namunalanadi (toza sozlangan)."""
+    out_sr = sr
+    p = max(2, int(sr / freq - 0.5))
+    sr = freq * (p + 0.5)
     n = int(dur * sr)
-    p = max(2, int(round(sr / freq)))
     buf = band(rng.standard_normal(p * 4), 60, 1500 + 6000 * bright, sr)[:p]
     out = np.zeros(n)
     out[:p] = buf
@@ -167,7 +171,9 @@ def pluck(freq, dur, sr=SR, bright=0.6, decay=0.996):
         i = j
     # Tana rezonansi
     body = band(out, 90, 3500, sr)
-    return fade(body, 0.001, 0.05, sr)
+    m = int(dur * out_sr)
+    body = np.interp(np.arange(m) * (sr / out_sr), np.arange(len(body)), body)
+    return fade(body, 0.001, 0.05, out_sr)
 
 
 def brass(freq, dur, sr=SR, vib=5.0, bright=1.0):
@@ -625,6 +631,163 @@ def render_music(bpm, bars, seed, battle=True):
     return normalize(out, 0.8)
 
 
+# ---------------------------------------------------------------- musiqa v2
+# Oldindan tuzilgan kuy (tasodifiy emas): re minor, akkordlar ketma-ketligi, bo'limlar (kirish, A, B, tanaffus),
+# yumshoq cholg'ular (dutor, nay, torli "pad", bass, doira). Halqa uzilishsiz: dumlar boshiga o'raladi.
+
+D4 = 293.66
+
+
+def semi(s, root=D4):
+    return root * 2 ** (s / 12)
+
+
+def place_wrap(buf, x, at, sr, gain=1.0):
+    n = len(buf)
+    i = int(at * sr) % n
+    k = 0
+    while k < len(x):
+        j = min(n - i, len(x) - k)
+        buf[i:i + j] += x[k:k + j] * gain
+        k += j
+        i = 0
+
+
+def ney(freq, dur, sr=MSR, breath=0.07):
+    """Nay: yumshoq puflama, sekin kiradi, kechikkan vibrato, nafas shovqini."""
+    t = t_axis(dur, sr)
+    vib = 1 + 0.005 * np.sin(2 * np.pi * 5.2 * t) * np.clip((t - 0.25) / 0.4, 0, 1)
+    ph = 2 * np.pi * np.cumsum(freq * vib) / sr
+    tone = np.sin(ph) + 0.18 * np.sin(2 * ph) + 0.06 * np.sin(3 * ph)
+    air = band(noise(dur, sr), freq * 0.9, freq * 3.0, sr) * breath
+    env = np.clip(t / 0.07, 0, 1) * np.clip((dur - t) / 0.12, 0, 1)
+    return (tone + air) * env
+
+
+def strings(freqs, dur, sr=MSR):
+    """Torli 'pad': har ton uchun 3 ta biroz farqli sozlangan arra to'lqin, yumshoq filtr, sekin kirish/chiqish."""
+    t = t_axis(dur, sr)
+    out = np.zeros_like(t)
+    for f in freqs:
+        for det in (-0.003, 0.0, 0.0031):
+            ph = 2 * np.pi * f * (1 + det) * t + rng.random() * 6.28
+            for h in range(1, 7):
+                out += np.sin(h * ph) / (h * 1.3)
+    out = band(out, 70, 1600, sr)
+    env = np.clip(t / 0.45, 0, 1) * np.clip((dur - t) / 0.5, 0, 1)
+    return out * env / max(1, len(freqs))
+
+
+def bass(freq, dur, sr=MSR):
+    t = t_axis(dur, sr)
+    ph = 2 * np.pi * freq * t
+    tone = np.sin(ph) + 0.35 * np.sin(2 * ph) + 0.1 * np.sin(3 * ph)
+    return tone * np.clip(t / 0.02, 0, 1) * np.exp(-t / (dur * 0.7)) * np.clip((dur - t) / 0.05, 0, 1)
+
+
+# Akkordlar: (ildiz yarimtoni D ga nisbatan, minor?)
+CH = {"Dm": (0, True), "Bb": (-4, False), "F": (3, False), "C": (-2, False), "Gm": (-7, True), "A": (-5, False)}
+
+
+def chord_tones(name):
+    r, minor = CH[name]
+    return [r, r + (3 if minor else 4), r + 7]
+
+
+# Kuylar: har takt uchun (yarimton, boshlanish_zarb, davomiylik_zarb)
+MEL_A = [
+    [(7, 0, 1.5), (5, 1.5, .5), (3, 2, 1), (2, 3, .5), (3, 3.5, .5)],
+    [(0, 0, 1.5), (3, 1.5, .5), (8, 2, 2)],
+    [(10, 0, 1.5), (7, 1.5, .5), (3, 2, 1), (7, 3, 1)],
+    [(5, 0, 3), (2, 3, 1)],
+    [(7, 0, 1.5), (5, 1.5, .5), (3, 2, 1), (5, 3, .5), (7, 3.5, .5)],
+    [(8, 0, 1), (7, 1, .5), (5, 1.5, .5), (3, 2, 2)],
+    [(2, 0, 1), (5, 1, 1), (10, 2, 1), (8, 3, .5), (7, 3.5, .5)],
+    [(7, 0, 1), (5, 1, .5), (3, 1.5, .5), (2, 2, 1), (1, 3, 1)],
+]
+MEL_B = [
+    [(12, 0, 2), (10, 2, 1), (10, 3, .5), (12, 3.5, .5)],
+    [(15, 0, 1.5), (14, 1.5, .5), (12, 2, 2)],
+    [(15, 0, 1), (12, 1, 1), (8, 2, 1.5), (10, 3.5, .5)],
+    [(13, 0, 2), (14, 2, 1), (7, 3, 1)],
+    [(10, 0, 1), (14, 1, 1), (17, 2, 2)],
+    [(15, 0, 1), (14, 1, .5), (12, 1.5, .5), (7, 2, 2)],
+    [(8, 0, 1), (10, 1, 1), (12, 2, 1), (14, 3, 1)],
+    [(12, 0, 4)],
+]
+PROG_A = ["Dm", "Bb", "F", "C", "Dm", "Bb", "C", "A"]
+PROG_B = ["Gm", "Dm", "Bb", "A", "Gm", "Dm", "C", "Dm"]
+
+
+def compose(bpm, plan, sr=MSR, energy=1.0):
+    """plan: [(bo'lim, akkordlar, kuy yoki None, cholg'u, baraban_kuchi)]"""
+    beat = 60.0 / bpm
+    bar = beat * 4
+    bars = sum(len(p[1]) for p in plan)
+    n = int(bars * bar * sr)
+    lead = np.zeros(n); padb = np.zeros(n); low = np.zeros(n); perc = np.zeros(n); horn = np.zeros(n)
+    b = 0
+    for name, prog, mel, inst, drums in plan:
+        for i, ch in enumerate(prog):
+            t0 = b * bar
+            tones = chord_tones(ch)
+            place_wrap(padb, strings([semi(x - 12) for x in tones], bar + 0.4, sr), t0, sr, 0.5)
+            root = semi(tones[0] - 24)
+            if drums > 0:
+                place_wrap(low, bass(root, beat * 1.8, sr), t0, sr, 0.55)
+                place_wrap(low, bass(root, beat * 1.4, sr), t0 + beat * 2, sr, 0.4 * drums)
+            # Dutor arpedjiosi: akkord tonlari yumshoq chertiladi
+            if inst != "none":
+                arp = [tones[0], tones[1], tones[2], tones[1] + 12 if drums < 0.5 else tones[2]]
+                for k, st in enumerate(arp):
+                    place_wrap(low, pluck(semi(st - 12), beat * 1.6, sr, bright=0.3, decay=0.995), t0 + k * beat, sr, 0.22)
+            if mel is not None:
+                for st, at, du in mel[i % len(mel)]:
+                    f = semi(st)
+                    if inst in ("dutor", "both"):
+                        place_wrap(lead, pluck(f, beat * du + 0.6, sr, bright=0.5, decay=0.996), t0 + at * beat, sr, 0.5)
+                    if inst in ("ney", "both"):
+                        place_wrap(lead, ney(f, beat * du * 0.97 + 0.05, sr), t0 + at * beat, sr, 0.33 if inst == "both" else 0.42)
+            # Baraban: past chastotali, kam "tak" (asabga tegmasligi uchun)
+            if drums > 0:
+                pat = [("dum", 0, 0.8), ("dum", 2, 0.6)]
+                if drums >= 0.6:
+                    pat += [("tak", 1, 0.22), ("tak", 3, 0.25), ("tak", 3.5, 0.15)]
+                if drums >= 0.9 and i % 2 == 1:
+                    pat += [("dum", 2.5, 0.45)]
+                for kind, pos, g in pat:
+                    snd = doira_dum(sr) if kind == "dum" else band(doira_tak(sr), 600, 3500, sr)
+                    place_wrap(perc, snd, t0 + pos * beat, sr, g * drums)
+                if drums >= 0.6 and i % 4 == 0:
+                    place_wrap(perc, nogora(sr), t0, sr, 0.7 * drums)
+            if inst == "both" and i % 4 == 0 and energy > 0.8:
+                place_wrap(horn, brass(semi(tones[0] - 12), bar * 0.85, sr, bright=0.55), t0, sr, 0.12)
+            b += 1
+    out = lead + padb * 0.55 + low * 0.9 + perc * 0.75 * energy + horn
+    out = reverb(out, sr, length=1.6, decay=0.45, wet=0.2, circular=True)
+    return normalize(out, 0.75)
+
+
+def battle_music():
+    return compose(100, [
+        ("kirish", ["Dm", "Dm", "Bb", "C"], None, "dutor", 0.5),
+        ("A", PROG_A, MEL_A, "dutor", 0.8),
+        ("B", PROG_B, MEL_B, "both", 1.0),
+        ("A2", PROG_A, MEL_A, "both", 1.0),
+        ("tanaffus", ["Bb", "C", "Dm", "Dm"], None, "dutor", 0.4),
+        ("B2", PROG_B, MEL_B, "ney", 0.9),
+    ])
+
+
+def menu_music():
+    return compose(72, [
+        ("kirish", ["Dm", "Bb", "F", "C"], None, "dutor", 0.0),
+        ("A", PROG_A, MEL_A, "ney", 0.3),
+        ("B", PROG_B, MEL_B, "dutor", 0.3),
+        ("oxiri", ["Bb", "C", "Dm", "Dm"], None, "dutor", 0.0),
+    ], energy=0.6)
+
+
 def write_ogg(path, x):
     tmp = path[:-4] + ".tmp.wav"
     write_wav(tmp, x, MSR)
@@ -645,9 +808,9 @@ def main():
             write_wav(os.path.join(SFX_DIR, fname), x)
         print("sfx", name, count)
     if not only or "music" in only:
-        write_ogg(os.path.join(MUSIC_DIR, "battle.ogg"), render_music(126, 24, seed=11, battle=True))
+        write_ogg(os.path.join(MUSIC_DIR, "battle.ogg"), battle_music())
         print("music battle")
-        write_ogg(os.path.join(MUSIC_DIR, "menu.ogg"), render_music(84, 16, seed=5, battle=False))
+        write_ogg(os.path.join(MUSIC_DIR, "menu.ogg"), menu_music())
         print("music menu")
 
 

@@ -68,6 +68,7 @@ static func draw_unit(ci: CanvasItem, u: UnitState, pos: Vector2, scale_f: float
 		_draw_horse(ci, u, walk, alpha, t)
 		ci.draw_set_transform(pos + Vector2(0, -34 * scale_f).rotated(rot * u.facing), rot * u.facing, Vector2(u.facing * scale_f, scale_f))
 		if u.hero:
+			_draw_tug(ci, u, cols, alpha, t)
 			_draw_cape(ci, u, alpha, t)
 		_draw_rider(ci, u, cols, swing, alpha, flash)
 	else:
@@ -156,6 +157,31 @@ static func _look_color(u: UnitState, key: String, fallback: Color) -> Color:
 	return fallback
 
 
+static func _draw_tug(ci: CanvasItem, u: UnitState, cols: Array, a: float, t: float) -> void:
+	## Sarkarda tug'i: egar ortidagi baland xoda, tepasida oltin bezak, ot qili shokilasi va jamoa rangidagi bayroqcha.
+	## Yurganda shamolda ortga hilpiraydi.
+	var base := Vector2(-12, -6)
+	var top := Vector2(-16, -92)
+	ci.draw_line(base, top, _c(WOOD.darkened(0.2), a), 2.5, true)
+	ci.draw_colored_polygon(PackedVector2Array([top + Vector2(0, -9), top + Vector2(3, -2), top + Vector2(-3, -2)]), _c(GOLD, a))
+	var flow := 1.0 if u.moving else 0.35
+	var tassel := Color(0.12, 0.1, 0.09) if u.team == 1 else Color(0.95, 0.93, 0.88)
+	for k in 5:
+		var w := sin(t * 7.0 + k * 0.9) * 2.5
+		var p0 := top + Vector2(-1 + k * 0.6, 1)
+		var p1 := p0 + Vector2(-6.0 * flow - 2.0 + w * 0.5, 9.0)
+		var p2 := p1 + Vector2(-9.0 * flow + w, 10.0 - 4.0 * flow)
+		ci.draw_polyline(PackedVector2Array([p0, p1, p2]), _c(tassel.darkened(k * 0.04), a), 2.0, true)
+	var pen := PackedVector2Array()
+	for i in 5:
+		var fx := -float(i) * 6.0 * (0.5 + 0.5 * flow)
+		pen.append(top + Vector2(fx, 22.0 + sin(t * 6.0 + i * 0.8) * 2.0 * (i / 4.0)))
+	for i in range(4, -1, -1):
+		var fx2 := -float(i) * 6.0 * (0.5 + 0.5 * flow)
+		pen.append(top + Vector2(fx2, 34.0 - i * 1.5 + sin(t * 6.0 + i * 0.8) * 2.0 * (i / 4.0)))
+	ci.draw_colored_polygon(pen, _c(cols[0], a))
+
+
 static func _draw_cape(ci: CanvasItem, u: UnitState, a: float, t: float) -> void:
 	var c := _look_color(u, "cape", Color(0.5, 0.1, 0.1))
 	var wave := sin(t * 6.0) * 4.0
@@ -171,6 +197,37 @@ static func _limb(ci: CanvasItem, a0: Vector2, a1: Vector2, a2: Vector2, w: floa
 	ci.draw_line(a0, a1, _c(col, a, flash), w, true)
 	ci.draw_line(a1, a2, _c(col.darkened(0.08), a, flash), w * 0.9, true)
 	ci.draw_circle(a1, w * 0.5, _c(col, a, flash))
+
+
+static func _strike_pose(u: UnitState, rest_h: Vector2, up_h: Vector2, hit_h: Vector2, rest_a: float, up_a: float, hit_a: float) -> Array:
+	## Zarba fazalari: tinch -> ko'tarish (40%) -> urish (22%) -> qaytish. [qo'l siljishi, qurol burchagi]
+	if u.attack_anim <= 0.0:
+		return [rest_h, rest_a]
+	var p := 1.0 - clampf(u.attack_anim / 0.35, 0.0, 1.0)
+	if p < 0.4:
+		var k1 := smoothstep(0.0, 0.4, p)
+		return [rest_h.lerp(up_h, k1), lerpf(rest_a, up_a, k1)]
+	if p < 0.62:
+		var k2 := smoothstep(0.4, 0.62, p)
+		return [up_h.lerp(hit_h, k2), lerpf(up_a, hit_a, k2)]
+	var k3 := smoothstep(0.62, 1.0, p)
+	return [hit_h.lerp(rest_h, k3), lerpf(hit_a, rest_a, k3)]
+
+
+static func _arm(ci: CanvasItem, shoulder: Vector2, hand_off: Vector2, sleeve: Color, a: float, flash: bool, seg := 12.0) -> Vector2:
+	## Yelka -> tirsak -> bilak (tirsak pastga bukiladi). Qo'l nuqtasini qaytaradi.
+	var hand := shoulder + hand_off
+	if style_v2:
+		var d := hand_off.length()
+		var perp := Vector2(-hand_off.y, hand_off.x).normalized()
+		if perp.y < 0.0:
+			perp = -perp
+		var elbow := shoulder + hand_off * 0.5 + perp * sqrt(maxf(0.0, seg * seg - d * d * 0.25))
+		_limb(ci, shoulder, elbow, hand, 4.5, sleeve, a, flash)
+		ci.draw_circle(hand, 2.8, _c(SKIN, a, flash))
+	else:
+		ci.draw_line(shoulder, hand, _c(SKIN, a, flash), 5.0, true)
+	return hand
 
 
 static func _draw_body_v2(ci: CanvasItem, u: UnitState, cols: Array, walk: float, a: float, flash: bool) -> void:
@@ -262,9 +319,9 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 	# Qurol va old qo'l
 	match u.type:
 		"worker":
-			var ang := lerpf(-1.9, 0.5, swing)
-			var hand := shoulder + Vector2(10, 8)
-			ci.draw_line(shoulder, hand, _c(SKIN, a, flash), 5.0, true)
+			var wp := _strike_pose(u, Vector2(10, 8), Vector2(8, -12), Vector2(15, 6), -1.6, -2.4, 0.5)
+			var ang: float = wp[1]
+			var hand := _arm(ci, shoulder, wp[0], tunic, a, flash)
 			var tip := hand + Vector2.from_angle(ang) * 30.0
 			ci.draw_line(hand, tip, _c(WOOD, a), 3.5, true)
 			var perp := Vector2.from_angle(ang + PI * 0.5) * 9.0
@@ -273,9 +330,9 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 				ci.draw_circle(Vector2(-12, -46), 9.0, _c(Color(0.62, 0.48, 0.3), a))
 				ci.draw_circle(Vector2(-12, -52), 3.0, _c(GOLD, a))
 		"swordsman":
-			var ang2 := lerpf(-2.2, 0.35, swing)
-			var hand2 := shoulder + Vector2(9, 10)
-			ci.draw_line(shoulder, hand2, _c(SKIN, a, flash), 5.0, true)
+			var sp := _strike_pose(u, Vector2(11, 9), Vector2(12, -12), Vector2(17, 4), -0.9, -2.0, 0.4)
+			var ang2: float = sp[1]
+			var hand2 := _arm(ci, shoulder, sp[0], tunic, a, flash)
 			var dir2 := Vector2.from_angle(ang2)
 			ci.draw_line(hand2, hand2 + dir2 * 34.0, _c(STEEL, a), 4.0, true)
 			ci.draw_line(hand2 - dir2.orthogonal() * 6.0, hand2 + dir2.orthogonal() * 6.0, _c(GOLD, a), 3.0)
@@ -283,9 +340,9 @@ static func _draw_person(ci: CanvasItem, u: UnitState, cols: Array, walk: float,
 			ci.draw_circle(Vector2(-11, -44), 9.0, _c(trim.darkened(0.2), a))
 			ci.draw_circle(Vector2(-11, -44), 3.0, _c(STEEL, a))
 		"spearman":
-			var thrust := swing * 16.0
-			var hand3 := shoulder + Vector2(8 + thrust, 6)
-			ci.draw_line(shoulder, hand3, _c(SKIN, a, flash), 5.0, true)
+			# Nayza: avval orqaga tortiladi, so'ng keskin oldinga sanchiladi
+			var tp := _strike_pose(u, Vector2(8, 6), Vector2(-2, 5), Vector2(22, 4), 0.0, 0.0, 0.0)
+			var hand3 := _arm(ci, shoulder, tp[0], tunic, a, flash, 14.0)
 			ci.draw_line(hand3 + Vector2(-30, 3), hand3 + Vector2(44, -3), _c(WOOD, a), 3.5, true)
 			ci.draw_colored_polygon(PackedVector2Array([hand3 + Vector2(44, -7), hand3 + Vector2(58, -3.5), hand3 + Vector2(44, 1)]), _c(STEEL, a))
 			# Katta qalqon oldinda
@@ -480,7 +537,7 @@ static func _draw_horse(ci: CanvasItem, u: UnitState, walk: float, a: float, t: 
 			ci.draw_circle(Vector2(-18 + i * 8, -22 + bob), 2.0, _c(GOLD, a))
 
 
-static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float, a: float, flash: bool) -> void:
+static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, _swing: float, a: float, flash: bool) -> void:
 	var tunic: Color = cols[0]
 	var head := Vector2(1, -50)
 	if style_v2:
@@ -528,9 +585,10 @@ static func _draw_rider(ci: CanvasItem, u: UnitState, cols: Array, swing: float,
 		ci.draw_line(pull, bot, _c(Color(0.9, 0.9, 0.85), a), 1.2)
 		ci.draw_line(shoulder, pull, _c(SKIN.darkened(0.1), a, flash), 4.0, true)
 		return
-	var ang := lerpf(-2.4, 0.4, swing)
-	var hand := shoulder + Vector2(9, 8)
-	ci.draw_line(shoulder, hand, _c(SKIN, a, flash), 5.0, true)
+	# Qilich zarbasi: qo'l va qilich bir butun harakat qiladi (qilich yuz ustidan aylanmaydi)
+	var pose := _strike_pose(u, Vector2(10, 9), Vector2(14, -13), Vector2(17, 5), -0.95, -2.1, 0.45)
+	var ang: float = pose[1]
+	var hand := _arm(ci, shoulder, pose[0], tunic, a, flash)
 	# Egri qilich (sabre)
 	var pts := PackedVector2Array()
 	for i in 8:

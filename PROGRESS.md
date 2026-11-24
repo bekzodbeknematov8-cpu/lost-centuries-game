@@ -6,6 +6,19 @@
 - Zaxira qo'shin paketlari (masalan, 100 kamonchi ≤ 4 000 so'm), adolatli narxlar, pulga yutiladigan o'yin bo'lmasin.
 
 
+### 2026-11-24 (36) — Foydalanuvchi fikri: sardor qo'li, musiqa, jonlilik
+- Xato: otliq/sardor qilichi qotib turgan qo'l atrofida aylanib, yuz ustidan o'tardi ("qo'lida g'alati harakat").
+  Endi qo'l (yelka-tirsak-bilak) va qurol birga harakat qiladi: ko'tarish -> urish -> qaytish.
+  Qilichboz, ishchi (cho'kich) va nayzachi (orqaga tortib sanchish) ham shu umumiy zarba pozasida.
+- Musiqa qayta yozildi (asabga tegardi): tasodifiy 8 notali takror o'rniga oldindan tuzilgan kuy,
+  re minor, akkordlar ketma-ketligi, bo'limlar (kirish/A/B/tanaffus), dutor + nay + torli "pad" + bass,
+  yumshoq doira (keskin "tak"lar kamaytirildi), temp 126 -> 100. Jang 96 s, menyu 80 s, halqa uzilishsiz.
+- Xato: dutor (Karplus-Strong) notalari 30 sentgacha "fals" edi -> aniq chastotada sintez (0.5 sentdan kam xato).
+- Jonlilik: sardorlarga tug' (oltin bezak, ot qili shokilasi, hilpirovchi bayroqcha); relyefga mos havo zarralari
+  (tog'da qor, cho'lda qum to'zoni, dashtda uchar urug'lar, vodiyda barglar).
+- Testlar 75/75, smoke 44/44. Stress (150): bu konteynerda eski versiya 11.3-11.5 ms, yangi 11.1-12.8 ms (farq shovqin ichida;
+  mashina avvalgidan sekinroq).
+
 ### 2026-11-23 (35) — Jonli grafika (3): harakat va ovoz
 - Askarlar turganda nafas oladi, zarbadan oldin oldinga engashadi, zarba yeganda chayqaladi.
 - Yiqilish tabiiyroq: sekinlashib yerga tushadi, biroz sakraydi, so'ng asta yo'qoladi (qonsiz).
